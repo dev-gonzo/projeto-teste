@@ -9,7 +9,7 @@
       <h6 class="mb-0 mt-[-5px] font-bold capitalize text-[#1276c9]">
         70 DP Tatuapé
       </h6>
-      <p class="text-xs mt-[-3px] text-black mb-0">Alterar delegacia</p>
+      <p class="text-xs mt-[-3px] text-black mb-0">Alterar unidade operacional</p>
     </nav>
   </ng-template>
   <ng-template pTemplate="end">
@@ -43,9 +43,9 @@
             <span class="text-white font-bold text-lg">UM</span>
           </a>
           <div class="pl-2 flex flex-col items-start">
-            <p class="mb-0 text-[#1276c9] font-bold pb-2">Usuário Mocado</p>
+            <p class="mb-0 text-[#1276c9] font-bold pb-2">{{ usuario }}</p>
             <p class="mb-0 mt-[-10px] text-sm text-black">
-              Delegada da Policia
+              {{ unidade_operacional }}
             </p>
           </div>
         </li>

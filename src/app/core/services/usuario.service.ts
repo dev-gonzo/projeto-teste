@@ -22,9 +22,9 @@ export class UsuarioApiService {
   endpoint: string = `${environment.apiUrl}/cadastros/usuarios/`;
   urlUpload: string = `${environment.apiUrl}/cadastros/usuarios/upload-file`;
   urlLogs: string = `${environment.apiUrl}/cadastros/usuarios/logs/`;
-  private baseUrl = environment.apiUrl;
-  private token = localStorage.getItem(keys.TOKEN)
-  constructor(private http: HttpClient) {}
+  private readonly baseUrl = environment.apiUrl;
+  private readonly token = localStorage.getItem(keys.TOKEN)
+  constructor(private readonly http: HttpClient) {}
 
   query(params?: HttpParams): Observable<Page<Usuario>> {
     const headers = new HttpHeaders({

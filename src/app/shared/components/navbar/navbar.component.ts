@@ -7,5 +7,6 @@ import { Component } from '@angular/core';
   styleUrl: './navbar.component.scss'
 })
 export class NavbarComponent {
-
+  usuario = "Nome do Usuário";
+  unidade_operacional = "Unidade Operacional";
 }

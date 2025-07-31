@@ -2,7 +2,6 @@ import { Component, ViewChild } from '@angular/core';
 
 import { FaIconLibrary } from '@fortawesome/angular-fontawesome';
 import { fas } from '@fortawesome/free-solid-svg-icons';
-import { AuthService } from '../../services';
 import { Router } from '@angular/router';
 import { ConfirmLogoutComponent } from '../../../shared/components/confirm-logout/confirm-logout.component';
 
@@ -16,8 +15,7 @@ export class SidebarLayoutComponent {
 
   constructor(
     library: FaIconLibrary,
-    private authService: AuthService,
-    private router: Router
+    private readonly router: Router
   ) {
     library.addIconPacks(fas);
   }
@@ -29,7 +27,6 @@ export class SidebarLayoutComponent {
   }
 
   logout() {
-    this.authService.logout();
     this.router.navigate(['/auth/login']);
   };
 

@@ -1,6 +1,5 @@
 import { Component, EventEmitter, Input, Output } from '@angular/core';
 import { Router } from '@angular/router';
-import { AuthService } from '../../../core/services';
 
 @Component({
   selector: 'app-confirm-logout',
@@ -12,8 +11,7 @@ export class ConfirmLogoutComponent {
   display: boolean = false;
 
   constructor(
-    private router: Router,
-    private authService: AuthService
+    private readonly router: Router
   ){
 
   }
@@ -32,7 +30,6 @@ export class ConfirmLogoutComponent {
   }
 
   confirm(){
-    this.authService.logout();
     this.router.navigate(['/auth/login']);
     this.confirmLogout.emit();
     this.close();

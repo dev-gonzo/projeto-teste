@@ -1,12 +1,12 @@
 export enum SituacaoOitiva {
-    AguardandoProcessamento = 'Aguardando processamento',
+    AguardandoProcessamento = 'AGUARDANDO PROCESSAMENTO',
     Disponivel = 'DISPONÍVEL',
     Aguardando = 'AGUARDE',
     Transcrevendo = 'EM TRANSCREVENDO',
     Aprovada = 'APROVADA',
-    ErroTranscricao = 'Erro de transcrição',
-    VideoSemAudio = 'Vídeo sem áudio',
-    TentativasEsgotadas = 'Tentativas esgotadas',
+    ErroTranscricao = 'ERRO DE TRANSCRIÇÃO',
+    VideoSemAudio = 'VÍDEO SEM AÚDIO',
+    TentativasEsgotadas = 'TENTATIVAS ESGOTADAS',
     MidiaSemAudio = 'MÍDIA SEM ÁUDIO',
     Editando = 'EDITANDO'
 }

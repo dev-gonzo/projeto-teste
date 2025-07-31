@@ -1,12 +1,15 @@
 <aside class="sidenav" [ngClass]="{ 'sidenav-collapsed': isCollapsed }">
   <div class="logo-container">
     <button (click)="toggleCollapse()" class="text-gray-600">
-      <fa-icon
-        [icon]="['fas', isCollapsed ? 'bars' : 'bars']"
-      ></fa-icon>
+      <fa-icon [icon]="['fas', isCollapsed ? 'bars' : 'bars']"></fa-icon>
     </button>
     <a>
-      <img src="/assets/img/logoPortal.png" alt="Logo" class="logo" [ngClass]="isCollapsed ? 'hidden' : 'block'" />
+      <img
+        src="/assets/img/logoPortal.png"
+        alt="Logo"
+        class="logo"
+        [ngClass]="isCollapsed ? 'hidden' : 'block'"
+      />
     </a>
   </div>
   <div class="menu-container">
@@ -15,9 +18,10 @@
         <a
           [ngClass]="
             currentRoute == route.url
-              ? 'rounded-md py-2.7 bg-[#1276c9] text-white text-sm ease-nav-brand my-0 mx-2 flex items-center whitespace-nowrap px-4 font-semibold text-slate-700 transition-colors'
-              : 'text-gray-500 py-2.7 text-[15px] font-bold ease-nav-brand my-0 mx-2 flex items-center whitespace-nowrap px-4 transition-colors'
+              ? 'rounded-md bg-[#1276c9] text-white text-sm font-semibold text-slate-700 '
+              : 'text-gray-500 text-[15px] font-bold '
           "
+          class="py-2.7 ease-nav-brand my-0 mx-2 flex items-center whitespace-nowrap px-4 transition-colors"
           [routerLink]="route.url"
           (click)="updateRoute(route.url)"
         >
@@ -27,8 +31,8 @@
             <fa-icon [icon]="route.icon"></fa-icon>
           </div>
           <span
-            class="ml-1 duration-300 opacity-100 pointer-events-none ease" [ngClass]="isCollapsed ? 'hidden' : 'block'"
-
+            class="ml-1 duration-300 opacity-100 pointer-events-none ease"
+            [ngClass]="isCollapsed ? 'hidden' : 'block'"
             >{{ route.title }}</span
           >
         </a>
@@ -41,19 +45,18 @@
     <div>
       <ul class="flex flex-col pl-0 mb-0">
         <li
-          class="mt-0.5 w-full"
           *ngFor="let route of sidebarDownRoutes"
+          class="mt-0.5 w-full ease-nav-brand my-0 flex items-center whitespace-nowrap transition-colors"
           [ngClass]="
             currentRoute == route.url
-              ? 'rounded-md  bg-[#1276c9] text-white text-sm ease-nav-brand my-0 flex items-center whitespace-nowrap  font-semibold text-slate-700 transition-colors'
-              : 'text-gray-500 text-[15px] ease-nav-brand my-0 flex items-center whitespace-nowrap transition-colors'
+              ? 'rounded-md  bg-[#1276c9] text-white text-sm  font-semibold text-slate-700'
+              : 'text-gray-500 text-[15px]'
           "
         >
           <a
+            class="py-2.7 text-sm ease-nav-brand my-0 mx-2 flex items-center whitespace-nowrap transition-colors"
             [ngClass]="
-              currentRoute == route.url
-                ? 'text-white py-2.7 text-sm ease-nav-brand my-0 mx-2 flex items-center whitespace-nowrap transition-colors'
-                : 'text-gray-600 py-2.7 text-sm ease-nav-brand my-0 mx-2 flex items-center  whitespace-nowrap transition-colors'
+              currentRoute == route.url ? 'text-white' : 'text-gray-600'
             "
             [href]="route.url"
           >
@@ -63,7 +66,8 @@
               <fa-icon [icon]="route.icon"></fa-icon>
             </div>
             <span
-              class="ml-1 duration-300 opacity-100 pointer-events-none ease" [ngClass]="isCollapsed ? 'hidden' : 'block'"
+              class="ml-1 duration-300 opacity-100 pointer-events-none ease"
+              [ngClass]="isCollapsed ? 'hidden' : 'block'"
               >{{ route.title }}</span
             >
           </a>

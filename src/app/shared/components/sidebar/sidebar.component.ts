@@ -13,7 +13,6 @@ import { SidebarLinkModel } from '../../models';
 })
 export class SidebarComponent {
   currentRoute: string = '';
-  aberto: number | null = null;
   isCollapsed = false;
 
   @Output() collapseChange = new EventEmitter<boolean>();
@@ -63,7 +62,5 @@ export class SidebarComponent {
 
       this.collapseChange.emit(false);
     }
-    this.aberto = this.aberto === i ? null : i;
   }
-
 }

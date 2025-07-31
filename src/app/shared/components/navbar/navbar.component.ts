@@ -9,4 +9,5 @@ import { Component } from '@angular/core';
 export class NavbarComponent {
   usuario = "Nome do Usuário";
   unidade_operacional = "Unidade Operacional";
+  unidade_operacional_atual = "70 DP Tatuapé"
 }

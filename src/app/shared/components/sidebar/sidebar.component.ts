@@ -16,7 +16,6 @@ export class SidebarComponent {
   aberto: number | null = null;
   isCollapsed = false;
 
-  @Output() openLogoutModal = new EventEmitter<void>();
   @Output() collapseChange = new EventEmitter<boolean>();
 
   constructor(private readonly router: Router) {
@@ -51,14 +50,6 @@ export class SidebarComponent {
 
   updateRoute(newUrl: string): void {
     this.currentRoute = newUrl;
-  }
-
-  confirmLogout() {
-    this.openLogoutModal.emit();
-  }
-
-  logout() {
-    this.router.navigate(['/auth/login']);
   }
 
   toggleCollapse(): void {

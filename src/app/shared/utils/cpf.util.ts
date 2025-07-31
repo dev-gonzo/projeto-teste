@@ -30,7 +30,7 @@ export class CpfUtils {
 
   static validate(cpf: string): boolean {
     if (!cpf) {
-      return true;
+      return false;
     }
 
     const value = typeof cpf === 'string' ? cpf.replace(/[^\d]+/g, '') : cpf;

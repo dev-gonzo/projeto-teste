@@ -3,7 +3,6 @@ import { Component, ViewChild } from '@angular/core';
 import { FaIconLibrary } from '@fortawesome/angular-fontawesome';
 import { fas } from '@fortawesome/free-solid-svg-icons';
 import { Router } from '@angular/router';
-import { ConfirmLogoutComponent } from '../../../shared/components/confirm-logout/confirm-logout.component';
 
 @Component({
   selector: 'sidebar-layout',
@@ -19,20 +18,6 @@ export class SidebarLayoutComponent {
   ) {
     library.addIconPacks(fas);
   }
-
-  @ViewChild(ConfirmLogoutComponent) logoutModal!: ConfirmLogoutComponent;
-
-  openLogoutModal() {
-    this.logoutModal.open();
-  }
-
-  logout() {
-    this.router.navigate(['/auth/login']);
-  };
-
-  cancelLogout() {
-    this.logoutModal.close();
-  };
 
   onCollapseChange(isCollapsed: boolean): void {
     this.isSidebarCollapsed = isCollapsed;

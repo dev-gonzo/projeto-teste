@@ -1,0 +1,5 @@
+include:
+  - project: 'smart-solution/produtos/seguranca-publica/devops/gitlab-library'
+    file: '/templates/Angular.gitlab-ci.yml'
+    ref: pdm
+

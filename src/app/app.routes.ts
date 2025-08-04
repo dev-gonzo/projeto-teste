@@ -4,6 +4,15 @@ import { SidebarLayoutComponent } from './core/components/sidebar-layout/sidebar
 export const routes: Routes = [
     {
         path: '',
-        component: SidebarLayoutComponent
+        component: SidebarLayoutComponent,
+        children: [
+            {
+                path: 'unidade-operacional',
+                loadChildren: () =>
+                    import('./features/unidade-operacional/unidade-operacional.routes').then(
+                        (routes) => routes.routes
+                    )
+            }
+        ]
     },
 ];

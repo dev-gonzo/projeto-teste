@@ -16,6 +16,3 @@ export function transformarTelefones(value: UnidadeOperacional): UnidadeOperacio
 
   return value;
 }
-  prepare(form: FormGroup | FormArray, id?: number): UnidadeOperacional {
-    return transformarTelefones(form, id);
-  }

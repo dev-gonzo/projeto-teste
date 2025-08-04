@@ -1,5 +1,3 @@
-export * from './auth.service';
-export * from './cargo.service';
 export * from './unidadeOperacional.service';
 export * from './municipio.service';
 export * from './perfil.service';
@@ -7,6 +5,5 @@ export * from './seo.service';
 export * from './shared.service';
 export * from './uf.service';
 export * from './usuario.service';
-export * from './dadosUsuario.service'
-export * from './email.service'
+export * from './email.service';
 export * from './senha.service';

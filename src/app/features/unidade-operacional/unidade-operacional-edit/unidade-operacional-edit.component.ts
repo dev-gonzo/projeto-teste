@@ -18,6 +18,7 @@ import { UnidadeOperacionalFormComponent } from '../shared/unidade-operacional-f
 import { ErrorResponseHttp, ResponseSuccessHttp, Uf, UnidadeOperacional } from '../../../shared/models';
 import { MunicipioApiService, UfApiService, UnidadeOperacionalApiService } from '../../../core/services';
 import { FormUtils } from '../../../shared/utils';
+import { separarTelefone } from '../../../shared/utils/telefone.utils';
 
 
 @Component({
@@ -107,7 +108,6 @@ export class UnidadeOperacionalEditComponent implements OnDestroy {
 
   prepare(form: FormGroup | FormArray, id?: number): UnidadeOperacional {
     let value: UnidadeOperacional = form.getRawValue();
-    const DDD_LENGTH = 2;
 
     if (id) {
       value = { ...value, id };
@@ -116,13 +116,15 @@ export class UnidadeOperacionalEditComponent implements OnDestroy {
     value.status = this.model.status;
 
     if (value.telefonePrincipal) {
-      value.telefoneDDD = value.telefonePrincipal.substring(0, DDD_LENGTH);
-      value.telefonePrincipal = value.telefonePrincipal.substring(DDD_LENGTH, 11);
+      const { ddd, numero } = separarTelefone(value.telefonePrincipal);
+      value.telefoneDDD = ddd;
+      value.telefonePrincipal = numero;
     }
 
     if (value.telefoneSecundario) {
-      value.telefoneSecundarioDDD = value.telefoneSecundario.substring(0, DDD_LENGTH);
-      value.telefoneSecundario = value.telefoneSecundario.substring(DDD_LENGTH, 11);
+      const { ddd, numero } = separarTelefone(value.telefoneSecundario);
+      value.telefoneSecundarioDDD = ddd;
+      value.telefoneSecundario = numero;
     }
 
     return value;

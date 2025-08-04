@@ -17,10 +17,6 @@ export class LogsUploadFileComponent {
   }
 
   verifyErros(): boolean {
-    if (Array.isArray(this.logs.logErros) && this.logs.logErros.length > 0) {
-      return false;
-    } else {
-      return true;
-    }
+    return Array.isArray(this.logs.logErros) && this.logs.logErros.length > 0;
   }
 }

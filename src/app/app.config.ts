@@ -14,9 +14,11 @@ import { providePrimeNG } from 'primeng/config';
 
 import { routes } from './app.routes';
 import { SharedModule } from './shared/shared.module';
+import { AuthInterceptor } from './core/interceptor/auth.interceptor';
 
 export const appConfig: ApplicationConfig = {
   providers: [
+    { provide: HTTP_INTERCEPTORS, useClass: AuthInterceptor, multi: true },
     provideZoneChangeDetection({ eventCoalescing: true }),
     provideRouter(routes),
     provideHttpClient(withInterceptorsFromDi()),
@@ -29,9 +31,9 @@ export const appConfig: ApplicationConfig = {
     importProvidersFrom(SharedModule),
     provideAnimationsAsync(),
     providePrimeNG({
-    //   theme: {
-    //     preset: Material
-    // }
+      //   theme: {
+      //     preset: Material
+      // }
     }),
   ],
 };

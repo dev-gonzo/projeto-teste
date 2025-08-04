@@ -27,6 +27,7 @@ import {
   UnidadeOperacional,
 } from '../../../shared/models';
 import { UnidadeOperacionalFormComponent } from '../shared/unidade-operacional-form/unidade-operacional-form.component';
+import { separarTelefone } from '../../../shared/utils/telefone.utils';
 
 @Component({
   selector: 'app-unidade-operacional-new',
@@ -104,13 +105,15 @@ export class UnidadeOperacionalNewComponent implements OnDestroy {
     }
 
     if (value.telefonePrincipal) {
-      value.telefoneDDD = value.telefonePrincipal.substring(0, 2);
-      value.telefonePrincipal = value.telefonePrincipal.substring(2, 11);
+      const { ddd, numero } = separarTelefone(value.telefonePrincipal);
+      value.telefoneDDD = ddd;
+      value.telefonePrincipal = numero;
     }
 
     if (value.telefoneSecundario) {
-      value.telefoneSecundarioDDD = value.telefoneSecundario.substring(0, 2);
-      value.telefoneSecundario = value.telefoneSecundario.substring(2, 11);
+      const { ddd, numero } = separarTelefone(value.telefoneSecundario);
+      value.telefoneSecundarioDDD = ddd;
+      value.telefoneSecundario = numero;
     }
 
     return value;

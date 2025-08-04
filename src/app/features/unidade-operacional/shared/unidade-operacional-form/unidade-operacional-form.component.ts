@@ -51,7 +51,7 @@ import { MunicipioApiService } from '../../../../core/services';
 })
 export class UnidadeOperacionalFormComponent implements OnInit, OnChanges, OnDestroy {
   @Input() unidadeOperacional!: UnidadeOperacional | null;
-  @Input() ufs: Uf[] | any = [];
+  @Input() ufs?: Uf[];
   @Input() municipioService!: MunicipioApiService;
 
   private readonly buscaMunicipio$ = new Subject<string>();

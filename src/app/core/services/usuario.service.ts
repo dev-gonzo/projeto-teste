@@ -1,7 +1,6 @@
 import { Injectable } from '@angular/core';
-import { HttpClient, HttpHeaders, HttpParams } from '@angular/common/http';
+import { HttpClient, HttpParams } from '@angular/common/http';
 import { ActivatedRouteSnapshot, RouterStateSnapshot } from '@angular/router';
-import { keys } from '../../shared/utils/variables';
 import { Observable, filter, take } from 'rxjs';
 import { map } from 'rxjs/operators';
 
@@ -18,43 +17,27 @@ import { environment } from '../../../environments/environment';
   providedIn: 'root',
 })
 export class UsuarioApiService {
-  endpoint: string = `${environment.apiUrl}/cadastros/usuarios/`;
-  urlUpload: string = `${environment.apiUrl}/cadastros/usuarios/upload-file`;
-  urlLogs: string = `${environment.apiUrl}/cadastros/usuarios/logs/`;
-  private readonly token = localStorage.getItem(keys.TOKEN)
+  private readonly endpoint = `${environment.apiUrl}/cadastros/usuarios/`;
+  private readonly urlUpload = `${environment.apiUrl}/cadastros/usuarios/upload-file`;
+  private readonly urlLogs = `${environment.apiUrl}/cadastros/usuarios/logs/`;
+
   constructor(private readonly http: HttpClient) {}
 
   query(params: HttpParams): Observable<Page<Usuario>> {
-    const headers = new HttpHeaders({
-      'Content-Type': 'application/json; charset=utf-8',
-      'Authorization': `Bearer ${this.token}`,
-    });
-
     return this.http
-      .get<Page<Usuario>>(`${this.endpoint}`, {
-        headers,
-        params,
-      })
+      .get<Page<Usuario>>(`${this.endpoint}`, { params })
       .pipe(
         map((response: any) => {
           const count = response.totalElements;
           const data: Usuario[] = response.content;
-
           return PageImpl.of(data, count) as Page<Usuario>;
         })
       );
   }
 
   getLogs(params: HttpParams, id: number): Observable<Page<HistoricoAcoes>> {
-    const headers = new HttpHeaders({
-      'Content-Type': 'application/json; charset=utf-8',
-      'Authorization': `Bearer ${this.token}`,
-    }); 
     return this.http
-      .get<Page<HistoricoAcoes>>(`${this.urlLogs}${id}`, {
-        headers,
-        params,
-      })
+      .get<Page<HistoricoAcoes>>(`${this.urlLogs}${id}`, { params })
       .pipe(
         map((response: any) => {
           const count = response.totalElements;
@@ -65,41 +48,19 @@ export class UsuarioApiService {
   }
 
   insert(model: Usuario): Observable<ResponseSuccessHttp> {
-    const headers = new HttpHeaders({
-      'Content-Type': 'application/json; charset=utf-8',
-    });
-
-    return this.http.post<ResponseSuccessHttp>(`${this.endpoint}`, model, {
-      headers,
-    });
+    return this.http.post<ResponseSuccessHttp>(`${this.endpoint}`, model);
   }
 
   update(model: Usuario, id: number): Observable<ResponseSuccessHttp> {
-    const headers = new HttpHeaders({
-      'Content-Type': 'application/json; charset=utf-8',
-      'Authorization': `Bearer ${this.token}`,
-    });
-    return this.http.put<ResponseSuccessHttp>(
-      `${this.endpoint}${id}`,
-      model,
-      {
-        headers,
-      }
-    );
+    return this.http.put<ResponseSuccessHttp>(`${this.endpoint}${id}`, model);
   }
 
   delete(id: number | undefined): Observable<ResponseSuccessHttp> {
-    const headers = new HttpHeaders({
-      'Content-Type': 'application/json; charset=utf-8',
-    });
-
-    return this.http.delete<ResponseSuccessHttp>(`${this.endpoint + id}`, {
-      headers,
-    });
+    return this.http.delete<ResponseSuccessHttp>(`${this.endpoint}${id}`);
   }
 
   findById(id: number): Observable<Usuario> {
-    return this.http.get<Usuario>(`${this.endpoint + id}`);
+    return this.http.get<Usuario>(`${this.endpoint}${id}`);
   }
 
   resolve(
@@ -115,26 +76,20 @@ export class UsuarioApiService {
   }
 
   baixarModelo(): Observable<Blob> {
-    const params: any = { responseType: 'arraybuffer' };
-
-    return this.http.get(`${this.endpoint}arquivo-usuario`, params).pipe(
-      map((data: ArrayBuffer) => {
-        return new Blob([data], { type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' });
+    return this.http
+      .get(`${this.endpoint}arquivo-usuario`, {
+        responseType: 'arraybuffer',
       })
-    );
+      .pipe(
+        map((data: ArrayBuffer) => {
+          return new Blob([data], {
+            type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
+          });
+        })
+      );
   }
 
   finalizarUpload(): Observable<ResponseSuccessHttp> {
-    const headers = new HttpHeaders({
-      'Content-Type': 'application/json; charset=utf-8',
-    });
-
-    return this.http.post<ResponseSuccessHttp>(
-      `${this.endpoint}finalizar`,
-      {},
-      {
-        headers,
-      }
-    );
+    return this.http.post<ResponseSuccessHttp>(`${this.endpoint}finalizar`, {});
   }
 }

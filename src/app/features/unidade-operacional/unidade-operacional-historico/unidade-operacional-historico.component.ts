@@ -11,6 +11,7 @@ import { SharedModule } from '../../../shared/shared.module';
 import { ButtonModule } from 'primeng/button';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 import { UnidadeOperacionalHistoricoTableComponent } from '../shared/unidade-operacional-historico-table/unidade-operacional-historico-table.component';
+import { DatePipe } from '@angular/common';
 
 @Component({
   selector: 'app-unidade-operacional-historico',
@@ -97,12 +98,11 @@ export class UnidadeOperacionalHistoricoComponent implements OnDestroy, OnInit {
 
   get searchParams(): { [param: string]: string } {
     const searchParams = this.filterForm ? this.filterForm.form.value : {};
+    const datePipe = new DatePipe('pt-BR');
+
     if (searchParams['dataAcao']) {
       const data = new Date(searchParams['dataAcao']);
-      const ano = data.getUTCFullYear();
-      const mes = (data.getUTCMonth() + 1).toString().padStart(2, '0');
-      const diaFormatado = data.getUTCDate().toString().padStart(2, '0');
-      searchParams['dataAcao'] = `${ano}-${mes}-${diaFormatado}`;
+      searchParams['dataAcao'] = datePipe.transform(data, 'yyyy-MM-dd') ?? searchParams['dataAcao'];
     }
     return pickBy(searchParams, identity);
   }

@@ -1,4 +1,4 @@
-export * from './unidadeOperacional.service';
+export * from './unidade-operacional.service';
 export * from './municipio.service';
 export * from './seo.service';
 export * from './shared.service';

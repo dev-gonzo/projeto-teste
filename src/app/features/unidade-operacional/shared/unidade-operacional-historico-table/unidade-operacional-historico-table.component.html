@@ -25,7 +25,7 @@
     </ng-template>
     <ng-template #body let-historico class="rounded-2xl bg-white">
       <tr class="rounded-2xl bg-white text-gray-800">
-        <td>{{ historico?.dataAcao + ' - ' + historico?.horaAcao }}</td>
+        <td>{{ historico?.dataAcao + ' - ' + historico?.horaAcao | date:'HH:mm:ss'  }}</td>
         <td>{{ historico?.usuario?.nome }}</td>
         <td>{{ historico?.acao }}</td>
         <td>{{ historico?.ip }}</td>

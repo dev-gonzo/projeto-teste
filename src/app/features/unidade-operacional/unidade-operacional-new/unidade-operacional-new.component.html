@@ -9,8 +9,7 @@
   <p-panel header="Dados da Unidade Operacional" [toggleable]="false">
   </p-panel>
   <app-unidade-operacional-form
-    [ufs]="ufs$ | async"
-    [municipioService]="municipioService"
+    [ufs]="ufs$ | async" 
     #unidadeOperacionalForm
   ></app-unidade-operacional-form>
   <div class="w-full flex justify-end py-4">

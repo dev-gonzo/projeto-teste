@@ -67,8 +67,8 @@ export class UsuarioApiService {
     route: ActivatedRouteSnapshot,
     state: RouterStateSnapshot
   ): Observable<Usuario> {
-    const id: any = route.paramMap.get('id');
-    const numeroId = parseInt(id);
+    const id = route.paramMap.get('id'); 
+    const numeroId = id ? parseInt(id, 10) : 0;
 
     return this.findById(numeroId).pipe(
       filter((model: Usuario) => !!model),

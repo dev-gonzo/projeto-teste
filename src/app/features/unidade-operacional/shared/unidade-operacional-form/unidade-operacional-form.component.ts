@@ -51,8 +51,7 @@ import { MunicipioApiService } from '../../../../core/services';
 })
 export class UnidadeOperacionalFormComponent implements OnInit, OnChanges, OnDestroy {
   @Input() unidadeOperacional!: UnidadeOperacional | null;
-  @Input() ufs?: Uf[];
-  @Input() municipioService!: MunicipioApiService;
+  @Input() ufs?: Uf[] | null;
 
   private readonly buscaMunicipio$ = new Subject<string>();
   private readonly destroy$ = new Subject<void>();
@@ -62,7 +61,8 @@ export class UnidadeOperacionalFormComponent implements OnInit, OnChanges, OnDes
 
   constructor(
     public formBuilder: FormBuilder,
-    private readonly cdr: ChangeDetectorRef
+    private readonly cdr: ChangeDetectorRef,
+    private readonly municipioService: MunicipioApiService
   ) {
     this.form = this.formBuilder.group({
       nomeUnidadeOperacional: [null, [Validators.required, Validators.maxLength(100)]],

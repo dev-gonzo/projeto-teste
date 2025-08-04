@@ -73,12 +73,14 @@ export class UnidadeOperacionalHistoricoComponent implements OnDestroy, OnInit {
       },
     });
 
+    const datePipe = new DatePipe('pt-BR');
+
     this.subscription = this.unidadeOperacionalService
       .getLogs(httpParams, this.route.snapshot.params['id'])
       .pipe(
         map((value) => {
           value.data.forEach((item) => {
-            const horaFormatada = item.horaAcao?.slice(0, 8);
+            const horaFormatada = datePipe.transform(item.horaAcao, 'HH:mm:ss') ?? item.horaAcao;
             item.horaAcao = horaFormatada;
           });
 

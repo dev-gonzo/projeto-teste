@@ -22,8 +22,8 @@ export interface DadosBasicos{
     unidadeOperacionalBoInquerito: {id: number, nomeUnidadeOperacional: string},
     unidadeOperacionalOitiva: {id: number, nomeUnidadeOperacional: string},
     respondavelUnidade: {id: number, nome: string, UnidadeOperacionalPrincipal: {id: number}},
-    depoente: {id: number, nome: string, UnidadeOperacionalPrincipal: {id: number}},
-    digitador: {id: number, nome: string, UnidadeOperacionalPrincipal: {id: number}},
+    depoente: {id: number, nome: string, unidadeOperacionalPrincipal: {id: number}},
+    digitador: {id: number, nome: string, unidadeOperacionalPrincipal: {id: number}},
     sigilo: {opcao: string, valor: boolean},
 }
 

@@ -10,11 +10,12 @@ import { keys } from '../../shared/utils/variables';
 
 @Injectable()
 export class AuthInterceptor implements HttpInterceptor {
+
   intercept(
     req: HttpRequest<any>,
     next: HttpHandler
   ): Observable<HttpEvent<any>> {
-    const token = localStorage.getItem(keys.TOKEN);
+    const token = this.getTokenFromCookie(keys.TOKEN);
 
     if (token) {
       const cloned = req.clone({
@@ -26,5 +27,22 @@ export class AuthInterceptor implements HttpInterceptor {
     }
 
     return next.handle(req);
+  }
+
+  private getTokenFromCookie(name: string): string | null {
+    if (typeof document === 'undefined') {
+      return null;
+    }
+
+    const match = document.cookie
+      .split(';')
+      .map(c => c.trim())
+      .find(c => c.startsWith(`${name}=`));
+
+    if (!match) {
+      return null;
+    }
+
+    return decodeURIComponent(match.substring(name.length + 1));
   }
 }

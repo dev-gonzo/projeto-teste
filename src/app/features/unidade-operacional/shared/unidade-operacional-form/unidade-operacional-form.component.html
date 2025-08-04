@@ -82,7 +82,7 @@
 
     <div class="col-span-2 mb-5">
       <label for="uf" class="block font-semibold mb-2">Estado</label>
-      <p-select id="uf" formControlName="uf" name="uf" [options]="ufs" optionLabel="sigla" [filter]="true"
+      <p-select id="uf" formControlName="uf" name="uf" [options]="ufs || []" optionLabel="sigla" [filter]="true"
         filterBy="nome,sigla" placeholder="Selecione um estado" class="w-full text-sm border rounded-lg" />
     </div>
 

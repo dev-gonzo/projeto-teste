@@ -5,7 +5,7 @@ import { Subscription } from 'rxjs';
 import { ActivatedRoute, Router } from '@angular/router';
 import { UnidadeOperacionalApiService } from '../../../core/services';
 import { HttpParams } from '@angular/common/http';
-import { identity, pickBy } from 'lodash';
+import { identity, pickBy } from 'lodash-es';
 import { SharedModule } from '../../../shared/shared.module';
 import { ButtonModule } from 'primeng/button';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';

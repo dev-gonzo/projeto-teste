@@ -9,7 +9,7 @@ import { Tooltip } from 'primeng/tooltip';
 import { Panel } from 'primeng/panel';
 import { Toast } from 'primeng/toast';
 import { Dialog } from 'primeng/dialog';
-import { pickBy, identity } from 'lodash';
+import { pickBy, identity } from 'lodash-es';
 import { Subscription } from 'rxjs';
 
 import { SharedModule } from '../../../shared/shared.module';

@@ -35,6 +35,7 @@ import { UnidadeOperacionalFormComponent } from '../shared/unidade-operacional-f
   templateUrl: './unidade-operacional-new.component.html',
   styleUrl: './unidade-operacional-new.component.scss',
   providers: [MessageService],
+  encapsulation: ViewEncapsulation.None
 })
 
 export class UnidadeOperacionalNewComponent implements OnDestroy {

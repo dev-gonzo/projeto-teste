@@ -1,17 +1,17 @@
+import { SplitButton } from 'primeng/splitbutton';
 import { Component, EventEmitter, Input, Output } from '@angular/core';
 import { CommonModule } from '@angular/common';
-
 import { TableModule } from 'primeng/table';
 import { MenuItem } from 'primeng/api';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
-
 import { UnidadeOperacional, Page } from '../../../../shared/models';
 import { Router } from '@angular/router';
+import { CepPipe } from '../../../../shared/pipes';
 
 @Component({
   selector: 'app-unidade-operacional-table',
   standalone: true,
-  imports: [CommonModule, TableModule, FontAwesomeModule],
+  imports: [CommonModule, TableModule, FontAwesomeModule, SplitButton, CepPipe],
   templateUrl: './unidade-operacional-table.component.html',
   styleUrl: './unidade-operacional-table.component.scss'
 })
@@ -22,9 +22,10 @@ export class UnidadeOperacionalTableComponent {
   @Output() remove = new EventEmitter<UnidadeOperacional>();
   @Output() edit = new EventEmitter<UnidadeOperacional>();
 
-  constructor(private readonly router: Router) {}
+  constructor(private readonly router: Router) { }
 
   row!: UnidadeOperacional;
+
   model: MenuItem[] = [
     {
       id: 'edit',
@@ -54,11 +55,11 @@ export class UnidadeOperacionalTableComponent {
     this.pageChanged.emit(pageable);
   }
 
-  onEdit(data?: UnidadeOperacional): void {
+  onEdit(): void {
     this.edit.emit(this.row);
   }
 
-  onRemove(data?: UnidadeOperacional): void {
+  onRemove(): void {
     this.remove.emit(this.row);
   }
 

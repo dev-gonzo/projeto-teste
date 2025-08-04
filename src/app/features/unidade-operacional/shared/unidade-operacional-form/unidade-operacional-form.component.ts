@@ -5,6 +5,7 @@ import {
   Input,
   OnChanges,
   OnDestroy,
+  OnInit,
 } from '@angular/core';
 import {
   AbstractControl,
@@ -16,7 +17,12 @@ import {
 } from '@angular/forms';
 import { CommonModule } from '@angular/common';
 
-import { Subscription, debounceTime } from 'rxjs';
+import {
+  Subject,
+  debounceTime,
+  switchMap,
+  takeUntil,
+} from 'rxjs';
 import { NgxMaskDirective } from 'ngx-mask';
 import { Select } from 'primeng/select';
 import {
@@ -43,18 +49,21 @@ import { MunicipioApiService } from '../../../../core/services';
   styleUrl: './unidade-operacional-form.component.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-
-export class UnidadeOperacionalFormComponent implements OnChanges, OnDestroy {
+export class UnidadeOperacionalFormComponent implements OnInit, OnChanges, OnDestroy {
   @Input() unidadeOperacional!: UnidadeOperacional | null;
   @Input() ufs: Uf[] | any = [];
   @Input() municipioService!: MunicipioApiService;
 
+  private readonly buscaMunicipio$ = new Subject<string>();
+  private readonly destroy$ = new Subject<void>();
+
   municipios: Municipio[] = [];
   form: FormGroup;
 
-  private subscription!: Subscription;
-
-  constructor(public formBuilder: FormBuilder, private readonly cdr: ChangeDetectorRef) {
+  constructor(
+    public formBuilder: FormBuilder,
+    private readonly cdr: ChangeDetectorRef
+  ) {
     this.form = this.formBuilder.group({
       nomeUnidadeOperacional: [null, [Validators.required, Validators.maxLength(100)]],
       cep: [null, [Validators.maxLength(8)]],
@@ -70,10 +79,22 @@ export class UnidadeOperacionalFormComponent implements OnChanges, OnDestroy {
     });
   }
 
+  ngOnInit(): void {
+    this.buscaMunicipio$
+      .pipe(
+        debounceTime(500),
+        switchMap((query) => this.municipioService.query(query)),
+        takeUntil(this.destroy$)
+      )
+      .subscribe((municipios) => {
+        this.municipios = [...municipios];
+        this.cdr.detectChanges();
+      });
+  }
+
   ngOnDestroy(): void {
-    if (this.subscription) {
-      this.subscription.unsubscribe();
-    }
+    this.destroy$.next();
+    this.destroy$.complete();
   }
 
   ngOnChanges(): void {
@@ -97,14 +118,8 @@ export class UnidadeOperacionalFormComponent implements OnChanges, OnDestroy {
     }
   }
 
-  buscarMunicipio(nome: AutoCompleteCompleteEvent): void {
-    this.subscription = this.municipioService
-      .query(nome.query)
-      .pipe(debounceTime(500))
-      .subscribe((municipios) => {
-        this.municipios = [...municipios];
-        this.cdr.detectChanges();
-      });
+  buscarMunicipio(event: AutoCompleteCompleteEvent): void {
+    this.buscaMunicipio$.next(event.query);
   }
 
   setUf(municipio: AutoCompleteSelectEvent): void {

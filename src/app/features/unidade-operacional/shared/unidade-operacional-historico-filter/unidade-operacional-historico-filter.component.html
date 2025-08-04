@@ -1,0 +1,23 @@
+<form id="form" class="bg-white text-gray-800 rounded-md py-4 px-6" name="form" [formGroup]="form">
+  <div class="grid grid-cols-6 gap-4 ">
+    <div class="col-span-2 mb-5">
+      <label for="nomeUsuario" class="block font-semibold">Nome do usuário</label>
+      <input pInputText id="nomeUsuario" type="text" class="w-full text-sm px-4 py-2 border rounded-lg border-gray-300"
+        name="nomeUsuario" formControlName="nomeUsuario" placeholder="Digite um nome do usuário" />
+    </div>
+
+    <div class="col-span-2 mb-5">
+      <label for="dataAcao" class="block font-semibold">Data da ação</label>
+      <p-datepicker id="dataAcao" styleClass="w-full text-sm px-4 py-2 border rounded-lg border-gray-300" name="dataAcao"
+        formControlName="dataAcao" dateFormat="dd/mm/yy" placeholder="DD/MM/AAAA" [maxDate]="hoje"
+        [showButtonBar]="true" />
+    </div>
+
+    <div class="col-span-2 mb-5">
+      <label for="acao" class="block font-semibold">Ação</label>
+      <p-select id="acao" formControlName="acao" name="acao" [options]="acoes"
+        optionLabel="descricao" optionValue="value" placeholder="Selecione uma ação"
+        class="w-full text-sm border rounded-lg border-gray-300 mt-[-3px]" />
+    </div>
+  </div>
+</form>

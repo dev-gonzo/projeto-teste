@@ -1,0 +1,40 @@
+<p-toast
+  position="top-center"
+  [showTransitionOptions]="'1000ms'"
+  [hideTransitionOptions]="'1000ms'"
+/>
+
+<div class="w-full px-6 py-6 mx-auto bg-white">
+  <breadcrumb [items]="breadcrumb"></breadcrumb>
+
+  <p-panel
+    header="Editar Unidade Operacional"
+    [toggleable]="false"
+    class="bg-white text-gray-800"
+  >
+    <app-unidade-operacional-form
+      [unidadeOperacional]="model$ | async"
+      [municipioService]="municipioService"
+      [ufs]="ufs$ | async"
+      #unidadeOperacionalForm
+    ></app-unidade-operacional-form>
+  </p-panel>
+
+  <div class="w-full flex justify-end py-4">
+    <button
+      type="button"
+      (click)="cancelar()"
+      class="text-white bg-red-700 hover:bg-red-800 focus:ring-4 focus:outline-none focus:ring-red-300 font-medium rounded-2xl p-2.5 text-center inline-flex items-center me-2"
+    >
+      <span>Cancelar e voltar</span>
+    </button>
+
+    <button
+      type="button"
+      (click)="salvar()"
+      class="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-2xl p-2.5 text-center inline-flex items-center me-2"
+    >
+      <span>Salvar</span>
+    </button>
+  </div>
+</div>

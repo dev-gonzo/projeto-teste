@@ -10,6 +10,7 @@ import {
   Page,
   PageImpl,
   ResponseSuccessHttp,
+  PageResponse,
 } from '../../shared/models';
 import { environment } from '../../../environments/environment';
 
@@ -21,7 +22,7 @@ export class UnidadeOperacionalApiService {
   private readonly urlUpload = `${environment.apiUrl}/cadastros/unidade-operacional/upload-file`;
   private readonly urlLogs = `${environment.apiUrl}/cadastros/unidade-operacional/logs/`;
 
-  constructor(private readonly http: HttpClient) {}
+  constructor(private readonly http: HttpClient) { }
 
   private get jsonHeaders(): HttpHeaders {
     return new HttpHeaders({
@@ -30,21 +31,17 @@ export class UnidadeOperacionalApiService {
   }
 
   query(params: HttpParams): Observable<Page<UnidadeOperacional>> {
-    return this.http.get<Page<UnidadeOperacional>>(this.endpoint, { params }).pipe(
-      map((response: any) => {
-        const count = response.totalElements;
-        const data: UnidadeOperacional[] = response.content;
-        return PageImpl.of(data, count);
+    return this.http.get<PageResponse<UnidadeOperacional>>(this.endpoint, { params }).pipe(
+      map((response) => {
+        return PageImpl.of(response.content, response.totalElements);
       })
     );
   }
 
   getLogs(params: HttpParams, id: number): Observable<Page<HistoricoAcoes>> {
-    return this.http.get<Page<HistoricoAcoes>>(`${this.urlLogs}${id}`, { params }).pipe(
-      map((response: any) => {
-        const count = response.totalElements;
-        const data: HistoricoAcoes[] = response.content;
-        return PageImpl.of(data, count);
+    return this.http.get<PageResponse<HistoricoAcoes>>(`${this.urlLogs}${id}`, { params }).pipe(
+      map((response) => {
+        return PageImpl.of(response.content, response.totalElements);
       })
     );
   }
@@ -90,8 +87,12 @@ export class UnidadeOperacionalApiService {
     state: RouterStateSnapshot
   ): Observable<UnidadeOperacional> {
     const id = route.paramMap.get('id');
+    if (!id) {
+      return throwError(() => new Error('ID não encontrado na rota'));
+    }
+
     return this.findById(Number(id)).pipe(
-      filter((model: UnidadeOperacional) => !!model),
+      filter((model) => !!model),
       take(1)
     );
   }

@@ -11,15 +11,9 @@ import { environment } from '../../../environments/environment';
 })
 export class MunicipioApiService {
   endpoint: string = `${environment.apiUrl}/cadastros/municipios`;
-  constructor(private http: HttpClient) {}
+  constructor(private readonly http: HttpClient) {}
 
   query(nome: string): Observable<Municipio[]> {
-    const headers = new HttpHeaders({
-      'Content-Type': 'application/json; charset=utf-8',
-    });
-
-    return this.http.get<Municipio[]>(`${this.endpoint}/${nome}`, {
-      headers,
-    });
+    return this.http.get<Municipio[]>(`${this.endpoint}/${nome}`);
   }
 }

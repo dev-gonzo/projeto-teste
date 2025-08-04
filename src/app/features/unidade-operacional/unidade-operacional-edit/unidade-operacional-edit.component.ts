@@ -16,7 +16,7 @@ import { MessageService } from 'primeng/api';
 import { SharedModule } from '../../../shared/shared.module';
 import { UnidadeOperacionalFormComponent } from '../shared/unidade-operacional-form/unidade-operacional-form.component';
 import { ErrorResponseHttp, ResponseSuccessHttp, Uf, UnidadeOperacional } from '../../../shared/models';
-import { MunicipioApiService, UfApiService, UnidadeOperacionalApiService } from '../../../core/services';
+import { MunicipioApiService, transformarTelefones, UfApiService, UnidadeOperacionalApiService } from '../../../core/services';
 import { FormUtils } from '../../../shared/utils';
 import { separarTelefone } from '../../../shared/utils/telefone.utils';
 
@@ -113,21 +113,7 @@ export class UnidadeOperacionalEditComponent implements OnDestroy {
       value = { ...value, id };
     }
 
-    value.status = this.model.status;
-
-    if (value.telefonePrincipal) {
-      const { ddd, numero } = separarTelefone(value.telefonePrincipal);
-      value.telefoneDDD = ddd;
-      value.telefonePrincipal = numero;
-    }
-
-    if (value.telefoneSecundario) {
-      const { ddd, numero } = separarTelefone(value.telefoneSecundario);
-      value.telefoneSecundarioDDD = ddd;
-      value.telefoneSecundario = numero;
-    }
-
-    return value;
+    return transformarTelefones(value);
   }
 }
 

@@ -19,6 +19,7 @@ import {
   UfApiService,
   MunicipioApiService,
   UnidadeOperacionalApiService,
+  transformarTelefones,
 } from '../../../core/services';
 import {
   ErrorResponseHttp,
@@ -104,18 +105,7 @@ export class UnidadeOperacionalNewComponent implements OnDestroy {
       value = { ...value, id };
     }
 
-    if (value.telefonePrincipal) {
-      const { ddd, numero } = separarTelefone(value.telefonePrincipal);
-      value.telefoneDDD = ddd;
-      value.telefonePrincipal = numero;
-    }
-
-    if (value.telefoneSecundario) {
-      const { ddd, numero } = separarTelefone(value.telefoneSecundario);
-      value.telefoneSecundarioDDD = ddd;
-      value.telefoneSecundario = numero;
-    }
-
-    return value;
+    return transformarTelefones(value);
   }
+
 }

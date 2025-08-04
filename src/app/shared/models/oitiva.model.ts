@@ -3,12 +3,12 @@ import { Usuario } from "./usuario.model";
 export interface Oitiva {
     id: number,
     status: string,
-    nomeDelegaciaBoInquerito: string,
-    nomeDelegaciaOitiva: string,
+    nomeUnidadeOperacionalBoInquerito: string,
+    nomeUnidadeOperacionalOitiva: string,
     codigoBoInquerito: string,
     ano: number,
     nomeDepoente: string,
-    delegado: Usuario,
+    respondavelUnidade: Usuario,
     digitador: Usuario,
     flagSigilo: string,
     dataCadastro: string,
@@ -19,11 +19,11 @@ export interface Oitiva {
 export interface DadosBasicos{
     ano: number,
     boInquerito: string,
-    delegaciaBoInquerito: {id: number, nomeDelegacia: string},
-    delegaciaOitiva: {id: number, nomeDelegacia: string},
-    delegado: {id: number, nome: string, delegaciaPrincipal: {id: number}},
-    depoente: {id: number, nome: string, delegaciaPrincipal: {id: number}},
-    digitador: {id: number, nome: string, delegaciaPrincipal: {id: number}},
+    unidadeOperacionalBoInquerito: {id: number, nomeUnidadeOperacional: string},
+    unidadeOperacionalOitiva: {id: number, nomeUnidadeOperacional: string},
+    respondavelUnidade: {id: number, nome: string, UnidadeOperacionalPrincipal: {id: number}},
+    depoente: {id: number, nome: string, UnidadeOperacionalPrincipal: {id: number}},
+    digitador: {id: number, nome: string, UnidadeOperacionalPrincipal: {id: number}},
     sigilo: {opcao: string, valor: boolean},
 }
 
@@ -31,28 +31,28 @@ export interface OitivaGeral {
     usuario: {
         nome: string;
         id: number;
-        delegaciaPrincipal: {
+        unidadeOperacionalPrincipal: {
           id: number;
         };
       };
-    delegado: {
+    respondavelUnidade: {
         nome: string;
         id: number;
-        delegaciaPrincipal: {
+        unidadeOperacionalPrincipal: {
             id: number;
         };
     };
     digitador: {
         id: number;
         nome: string;
-        delegaciaPrincipal: {
+        unidadeOperacionalPrincipal: {
             id: number;
         };
     };
-    delegaciaBoInquerito: {
+    unidadeOperacionalBoInquerito: {
         id: number;
     };
-    delegaciaOitiva: {
+    unidadeOperacionalOitiva: {
         id: number;
     };
     codigoBoInquerito: string;
@@ -104,11 +104,11 @@ export interface DetalhesOitiva{
     id: number;
     codigoBoInquerito: string;
     nomeDepoente: string;
-    nomeDelegado: string;
+    nomeResponsavelUnidade: string;
     nomeDigitador: string;
     dataCadastro: string;
     flagSigilo: boolean;
-    nomeDelegaciaOitiva: string;
+    nomeUnidadeOperacionalOitiva: string;
     transcricao: TranscricaoOitiva[];
     nomeOitiva: string | null;
     descricaoOitiva: string | null;

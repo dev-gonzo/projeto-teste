@@ -1,7 +1,7 @@
 import { AbstractModel, Municipio, Uf } from '.';
 
-export interface Delegacia extends AbstractModel<number> {
-  nomeDelegacia: string;
+export interface UnidadeOperacional extends AbstractModel<number> {
+  nomeUnidadeOperacional: string;
   cep?: string;
   nomeLogradouro?: string;
   numeroLogradouro?: string;
@@ -13,6 +13,6 @@ export interface Delegacia extends AbstractModel<number> {
   telefonePrincipal?: string;
   telefoneSecundarioDDD?: string;
   telefoneSecundario?: string;
-  nomeDelegado?: string;
+  nomeResponsavelUnidade?: string;
   status?: string;
 }

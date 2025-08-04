@@ -1,5 +1,5 @@
 export class CepUtils {
-  static CEP_REGEX: RegExp = /^([\d]{5})\-*([\d]{3})/;
+  static readonly CEP_REGEX: RegExp = /^([\d]{5})\-*([\d]{3})/;
 
   static format(value: string): string {
     const newValue = value && value.trim();

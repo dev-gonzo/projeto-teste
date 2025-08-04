@@ -1,7 +1,7 @@
 export class CpfUtils {
-  static CPF_PATTERN = '###.###.###-##';
+  static readonly CPF_PATTERN = '###.###.###-##';
 
-  static INVALID_VALUES = [
+  static readonly INVALID_VALUES = [
     '00000000000',
     '11111111111',
     '22222222222',

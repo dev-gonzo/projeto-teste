@@ -1,8 +1,8 @@
 export interface Upload{
     id: number,
     status: string,
-    nomeDelegaciaBoInquerito: string,
-    nomeDelegaciaOitiva: string,
+    nomeUnidadeOperacionalBoInquerito: string,
+    nomeUnidadeOperacionalOitiva: string,
     codigoBoInquerito: string,
     ano: number,
     origemMidia: string,

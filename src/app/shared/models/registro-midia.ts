@@ -1,8 +1,8 @@
 export interface RegistroMidia {
     ano: string;
     boInquerito: string;
-    delegacia: {id: number, nomeDelegacia: string};
-    delegaciaBoInquerito: {id: number, nomeDelegacia: string};
+    unidadeOperacional: {id: number, nomeUnidadeOperacional: string};
+    unidadeOperacionalBoInquerito: {id: number, nomeUnidadeOperacional: string};
     descricao: string;
     origem: {id: number, descricao: string};
     registroSigiloso: string;

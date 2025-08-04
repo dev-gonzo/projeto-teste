@@ -24,7 +24,7 @@ export class UnidadeOperacionalApiService {
   private readonly token = localStorage.getItem(keys.TOKEN)
 
 
-  constructor(private readonly http: HttpClient) {}
+  constructor(private readonly http: HttpClient) { }
 
   query(params: HttpParams): Observable<Page<UnidadeOperacional>> {
     const headers = new HttpHeaders({
@@ -137,11 +137,11 @@ export class UnidadeOperacionalApiService {
   }
 
   baixarModelo(): Observable<Blob> {
-    const params: any = { responseType: 'arraybuffer' };
-
-    return this.http.get(`${this.endpoint}arquivo-UnidadeOperacional`, params).pipe(
-      map((data: ArrayBuffer) => {
-        return new Blob([data], { type: 'xlsx' });
+    return this.http.get(`${this.endpoint}arquivo-UnidadeOperacional`, { responseType: 'blob' }).pipe(
+      map((data: Blob) => {
+        return new Blob([data], {
+          type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'
+        });
       })
     );
   }

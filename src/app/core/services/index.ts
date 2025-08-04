@@ -1,6 +1,5 @@
 export * from './unidadeOperacional.service';
 export * from './municipio.service';
-export * from './perfil.service';
 export * from './seo.service';
 export * from './shared.service';
 export * from './uf.service';

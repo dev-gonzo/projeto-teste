@@ -1,7 +1,7 @@
 import { Component, EventEmitter, Output } from '@angular/core';
 import { Router } from '@angular/router';
 
-import { faGear, faVideo, faArrowUpFromBracket, faTv } from '@fortawesome/free-solid-svg-icons';
+import { faGear, faVideo, faArrowUpFromBracket, faTv, faBuildingShield } from '@fortawesome/free-solid-svg-icons';
 
 import { SidebarLinkModel } from '../../models';
 
@@ -37,6 +37,11 @@ export class SidebarComponent {
       title: 'Upload de mídia',
       url: '/upload',
     },
+    {
+      icon: faBuildingShield,
+      title: 'Unidade Operacional',
+      url: '/unidade-operacional',
+    }
   ];
 
   sidebarDownRoutes: SidebarLinkModel[] = [

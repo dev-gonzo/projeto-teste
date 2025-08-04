@@ -1,0 +1,22 @@
+<div class="flex items-center justify-center flex-col border-2 border-dashed border-black rounded-md w-full h-[500px]">
+  <h5 class="mb-10"><a class="underline cursor-pointer text-blue-500" (click)="baixarModelo()">Cliquei aqui e baixe o
+      modelo XLSX a ser
+      utilizado</a>
+  </h5>
+  <p-fileupload styleClass="border rounded-lg bg-white" name="file" [url]="apiService.urlUpload"
+    (onUpload)="onUpload($event)" accept=".xlsx" maxFileSize="2000000000" mode="advanced"
+    chooseLabel="Selecione o arquivo" cancelLabel="Cancelar"
+    [invalidFileTypeMessageSummary]="invalidFileTypeMessageSummary"
+    [invalidFileTypeMessageDetail]="invalidFileTypeMessageDetail"
+    [invalidFileSizeMessageSummary]="invalidFileSizeMessageSummary"
+    [invalidFileSizeMessageDetail]="invalidFileSizeMessageDetail">
+    <ng-template #empty>
+      <div style="color: #000; text-align: center">Arraste para adicionar o arquivo</div>
+    </ng-template>
+    <ng-template #content>
+      <ul *ngIf="uploadedFiles.length">
+        <li *ngFor="let file of uploadedFiles">{{ file.name }} - {{ file.size }} bytes</li>
+      </ul>
+    </ng-template>
+  </p-fileupload>
+</div>

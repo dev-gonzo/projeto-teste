@@ -7,9 +7,10 @@ $cor-fundo: azure;
   top: 0;
   display: grid;
   grid-template-rows: 1fr 1.5fr 1fr;
+  justify-content: center;
   height: 100dvh;
   width: 16.5rem;
-  padding: 1rem;
+  padding: 1rem .5rem;
   background-color: $cor-fundo;
   transition: width 0.3s ease;
 
@@ -92,9 +93,4 @@ $cor-fundo: azure;
       }
     }
   }
-}
-
-
-.activate-link {
-  
 }

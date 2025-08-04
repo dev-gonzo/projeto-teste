@@ -107,6 +107,7 @@ export class UnidadeOperacionalEditComponent implements OnDestroy {
 
   prepare(form: FormGroup | FormArray, id?: number): UnidadeOperacional {
     let value: UnidadeOperacional = form.getRawValue();
+    const DDD_LENGTH = 2;
 
     if (id) {
       value = { ...value, id };
@@ -115,13 +116,13 @@ export class UnidadeOperacionalEditComponent implements OnDestroy {
     value.status = this.model.status;
 
     if (value.telefonePrincipal) {
-      value.telefoneDDD = value.telefonePrincipal.substring(0, 2);
-      value.telefonePrincipal = value.telefonePrincipal.substring(2, 11);
+      value.telefoneDDD = value.telefonePrincipal.substring(0, DDD_LENGTH);
+      value.telefonePrincipal = value.telefonePrincipal.substring(DDD_LENGTH, 11);
     }
 
     if (value.telefoneSecundario) {
-      value.telefoneSecundarioDDD = value.telefoneSecundario.substring(0, 2);
-      value.telefoneSecundario = value.telefoneSecundario.substring(2, 11);
+      value.telefoneSecundarioDDD = value.telefoneSecundario.substring(0, DDD_LENGTH);
+      value.telefoneSecundario = value.telefoneSecundario.substring(DDD_LENGTH, 11);
     }
 
     return value;

@@ -21,8 +21,8 @@ export class UsuarioApiService {
   endpoint: string = `${environment.apiUrl}/cadastros/usuarios/`;
   urlUpload: string = `${environment.apiUrl}/cadastros/usuarios/upload-file`;
   urlLogs: string = `${environment.apiUrl}/cadastros/usuarios/logs/`;
-  private token = localStorage.getItem(keys.TOKEN)
-  constructor(private http: HttpClient) {}
+  private readonly token = localStorage.getItem(keys.TOKEN)
+  constructor(private readonly http: HttpClient) {}
 
   query(params: HttpParams): Observable<Page<Usuario>> {
     const headers = new HttpHeaders({
@@ -119,7 +119,7 @@ export class UsuarioApiService {
 
     return this.http.get(`${this.endpoint}arquivo-usuario`, params).pipe(
       map((data: ArrayBuffer) => {
-        return new Blob([data], { type: 'xlsx' });
+        return new Blob([data], { type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' });
       })
     );
   }

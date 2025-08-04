@@ -17,7 +17,7 @@ export class LogsUploadFileComponent {
   }
 
   verifyErros(): boolean {
-    if (typeof this.logs.logErros === 'string') {
+    if (Array.isArray(this.logs.logErros) && this.logs.logErros.length > 0) {
       return false;
     } else {
       return true;

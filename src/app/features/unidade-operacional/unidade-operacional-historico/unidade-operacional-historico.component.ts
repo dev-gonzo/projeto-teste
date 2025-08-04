@@ -1,3 +1,4 @@
+import { map } from 'rxjs/operators';
 import { Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { UnidadeOperacionalHistoricoFilterComponent } from '../shared/unidade-operacional-historico-filter/unidade-operacional-historico-filter.component';
 import { HistoricoAcoes, Page, Pageable, PageImpl } from '../../../shared/models';
@@ -73,13 +74,20 @@ export class UnidadeOperacionalHistoricoComponent implements OnDestroy, OnInit {
 
     this.subscription = this.unidadeOperacionalService
       .getLogs(httpParams, this.route.snapshot.params['id'])
+      .pipe(
+        map((value) => {
+          value.data.forEach((item) => {
+            const horaFormatada = item.horaAcao?.slice(0, 8);
+            item.horaAcao = horaFormatada;
+          });
+
+          return value;
+        })
+      )
       .subscribe((value) => {
         this.dataSource = value;
-        this.dataSource.data.forEach((item) => {
-          const horaFormatada = item.horaAcao?.slice(0, 8);
-          item.horaAcao = horaFormatada
-        })
       });
+
   }
 
   onPageChanged(pageable: { first: number; rows: number }): void {

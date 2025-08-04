@@ -14,7 +14,6 @@ import { Dialog, DialogModule } from 'primeng/dialog';
 import { TableModule } from 'primeng/table';
 import { MenubarModule } from 'primeng/menubar';
 
-import { SharedService } from '../core/services';
 import { NavbarComponent } from './components/navbar/navbar.component';
 import { SidebarComponent } from './components/sidebar/sidebar.component';
 import { BreadcrumbComponent } from './components/breadcrumb/breadcrumb.component';
@@ -48,7 +47,7 @@ import { ByteToSizePipe } from './pipes';
     ButtonModule,
     MenubarModule
   ],
-  providers: [SharedService],
+  providers: [],
   exports: [
     SidebarComponent,
     NavbarComponent,

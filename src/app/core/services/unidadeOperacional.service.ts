@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders, HttpParams } from '@angular/common/http';
 import { ActivatedRouteSnapshot, RouterStateSnapshot } from '@angular/router';
 import { keys } from '../../shared/utils/variables';
-import { Observable, filter, take } from 'rxjs';
+import { Observable, filter, take, throwError } from 'rxjs';
 import { map } from 'rxjs/operators';
 
 import {
@@ -115,6 +115,10 @@ export class UnidadeOperacionalApiService {
       'Content-Type': 'application/json; charset=utf-8',
     });
 
+    if (!id) { 
+      return throwError(() => new Error('ID is required')); 
+    }
+    
     return this.http.delete<ResponseSuccessHttp>(`${this.endpoint + id}`, {
       headers,
     });

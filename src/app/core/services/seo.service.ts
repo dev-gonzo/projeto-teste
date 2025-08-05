@@ -5,7 +5,7 @@ import { Meta, Title } from '@angular/platform-browser';
   providedIn: 'root',
 })
 export class SeoService {
-  constructor(private meta: Meta, private titleService: Title) {}
+  constructor(private readonly meta: Meta, private readonly titleService: Title) {}
 
   public setMetaDescription(content: string) {
     this.meta.updateTag({

@@ -24,11 +24,10 @@ export class UnidadeOperacionalApiService {
 
   constructor(private readonly http: HttpClient) { }
 
-  private get jsonHeaders(): HttpHeaders {
-    return new HttpHeaders({
-      'Content-Type': 'application/json; charset=utf-8',
-    });
-  }
+  private readonly jsonHeaders = new HttpHeaders({
+    'Content-Type': 'application/json; charset=utf-8',
+  });
+
 
   query(params: HttpParams): Observable<Page<UnidadeOperacional>> {
     return this.http.get<PageResponse<UnidadeOperacional>>(this.endpoint, { params }).pipe(

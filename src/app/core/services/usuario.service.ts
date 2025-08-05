@@ -31,7 +31,7 @@ export class UsuarioApiService {
         map((response) => {
           const count = response.totalElements;
           const data: Usuario[] = response.content;
-          return PageImpl.of(data, count) as Page<Usuario>;
+          return PageImpl.of(data, count);
         })
       );
   }
@@ -44,7 +44,7 @@ export class UsuarioApiService {
         map((response) => {
           const count = response.totalElements;
           const data: HistoricoAcoes[] = response.content;
-          return PageImpl.of(data, count) as Page<HistoricoAcoes>;
+          return PageImpl.of(data, count);
         })
       );
   }

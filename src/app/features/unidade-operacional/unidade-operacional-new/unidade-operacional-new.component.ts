@@ -18,7 +18,6 @@ import {
   UfApiService,
   MunicipioService,
   UnidadeOperacionalApiService,
-  transformarTelefones,
 } from '../../../core/services';
 import {
   ErrorResponseHttp,
@@ -27,6 +26,7 @@ import {
   UnidadeOperacional,
 } from '../../../shared/models';
 import { UnidadeOperacionalFormComponent } from '../shared/unidade-operacional-form/unidade-operacional-form.component';
+import { transformarTelefones } from '../../../shared/utils/telefone.utils';
 
 @Component({
   selector: 'app-unidade-operacional-new',

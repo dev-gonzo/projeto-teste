@@ -15,8 +15,9 @@ import { MessageService } from 'primeng/api';
 import { SharedModule } from '../../../shared/shared.module';
 import { UnidadeOperacionalFormComponent } from '../shared/unidade-operacional-form/unidade-operacional-form.component';
 import { ErrorResponseHttp, ResponseSuccessHttp, Uf, UnidadeOperacional } from '../../../shared/models';
-import { MunicipioService, transformarTelefones, UfApiService, UnidadeOperacionalApiService } from '../../../core/services';
+import { MunicipioService, UfApiService, UnidadeOperacionalApiService } from '../../../core/services';
 import { FormUtils } from '../../../shared/utils';
+import { transformarTelefones } from '../../../shared/utils/telefone.utils';
 
 
 @Component({

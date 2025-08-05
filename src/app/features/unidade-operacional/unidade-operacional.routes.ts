@@ -29,7 +29,7 @@ export const routes: Routes = [
     },
   },
   {
-    path: 'historico-acoes',
+    path: 'historico-acoes/:id',
     component: UnidadeOperacionalHistoricoComponent
   },
   {

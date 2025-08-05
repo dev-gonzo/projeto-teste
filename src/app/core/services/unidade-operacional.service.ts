@@ -17,7 +17,7 @@ import { environment } from '../../../environments/environment';
 @Injectable({
   providedIn: 'root',
 })
-export class UnidadeOperacionalApiService {
+export class UnidadeOperacionalService {
   private readonly endpoint = `${environment.apiUrl}/cadastros/unidade-operacional/`;
   public readonly urlUpload = `${environment.apiUrl}/cadastros/unidade-operacional/upload-file`;
   private readonly urlLogs = `${environment.apiUrl}/cadastros/unidade-operacional/logs/`;

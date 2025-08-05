@@ -10,10 +10,9 @@ import { Panel } from 'primeng/panel';
 import { Toast } from 'primeng/toast';
 import { Dialog } from 'primeng/dialog';
 import { pickBy, identity } from 'lodash-es';
-import { Subscription } from 'rxjs';
+import { finalize, Subject, takeUntil } from 'rxjs';
 
 import { SharedModule } from '../../../shared/shared.module';
-
 
 import {
   UnidadeOperacional,
@@ -25,7 +24,7 @@ import {
 } from '../../../shared/models';
 import { UnidadeOperacionalFilterComponent } from '../shared/unidade-operacional-filter/unidade-operacional-filter.component';
 import { UnidadeOperacionalTableComponent } from '../shared/unidade-operacional-table/unidade-operacional-table.component';
-import { UnidadeOperacionalApiService } from '../../../core/services';
+import { UnidadeOperacionalService } from '../../../core/services';
 
 @Component({
   selector: 'app-unidade-operacional-list',
@@ -44,7 +43,6 @@ import { UnidadeOperacionalApiService } from '../../../core/services';
   styleUrl: './unidade-operacional-list.component.scss',
   providers: [MessageService]
 })
-
 export class UnidadeOperacionalListComponent implements OnDestroy, OnInit {
   @ViewChild('filterForm', { static: false })
   filterForm!: UnidadeOperacionalFilterComponent;
@@ -55,12 +53,12 @@ export class UnidadeOperacionalListComponent implements OnDestroy, OnInit {
   idRemove: number | undefined;
   row!: UnidadeOperacional;
 
-  private subscription!: Subscription;
+  private readonly destroy$ = new Subject<void>();
 
   constructor(
     private readonly activatedRoute: ActivatedRoute,
     private readonly router: Router,
-    private readonly unidadeOperacionalService: UnidadeOperacionalApiService,
+    private readonly unidadeOperacionalService: UnidadeOperacionalService,
     private readonly messageService: MessageService
   ) { }
 
@@ -69,9 +67,8 @@ export class UnidadeOperacionalListComponent implements OnDestroy, OnInit {
   }
 
   ngOnDestroy(): void {
-    if (this.subscription) {
-      this.subscription.unsubscribe();
-    }
+    this.destroy$.next();
+    this.destroy$.complete();
   }
 
   reset(): void {
@@ -90,8 +87,9 @@ export class UnidadeOperacionalListComponent implements OnDestroy, OnInit {
       },
     });
 
-    this.subscription = this.unidadeOperacionalService
+    this.unidadeOperacionalService
       .query(httpParams)
+      .pipe(takeUntil(this.destroy$))
       .subscribe((value) => {
         this.dataSource = value;
       });
@@ -111,28 +109,33 @@ export class UnidadeOperacionalListComponent implements OnDestroy, OnInit {
   }
 
   confirmRemove(): void {
-    this.subscription = this.unidadeOperacionalService.delete(this.idRemove).subscribe({
-      next: (response: ResponseSuccessHttp) => {
-        this.messageService.add({
-          severity: 'success',
-          summary: '',
-          detail: response.mensagem,
-        });
-        this.search();
-        this.confirmRemoveVisible = false;
-        this.idRemove = undefined;
-      },
-      error: (error: ErrorResponseHttp) => {
-        this.messageService.add({
-          severity: 'error',
-          summary: '',
-          detail: error.erro,
-        });
-        this.confirmRemoveVisible = false;
-        this.idRemove = undefined;
-      },
-    });
+    this.unidadeOperacionalService.delete(this.idRemove)
+      .pipe(
+        takeUntil(this.destroy$),
+        finalize(() => {
+          this.confirmRemoveVisible = false;
+          this.idRemove = undefined;
+        })
+      )
+      .subscribe({
+        next: (response: ResponseSuccessHttp) => {
+          this.messageService.add({
+            severity: 'success',
+            summary: '',
+            detail: response.mensagem,
+          });
+          this.search();
+        },
+        error: (error: ErrorResponseHttp) => {
+          this.messageService.add({
+            severity: 'error',
+            summary: '',
+            detail: error.erro,
+          });
+        }
+      });
   }
+
 
   cancelRemove(): void {
     this.confirmRemoveVisible = false;
@@ -146,7 +149,6 @@ export class UnidadeOperacionalListComponent implements OnDestroy, OnInit {
   onHistorico(): void {
     this.router.navigate(['../historico-geral'], { relativeTo: this.activatedRoute });
   }
-
 
   onPageChanged(pageable: { first: number; rows: number }): void {
     const pageNumber = pageable.first / pageable.rows + 1;

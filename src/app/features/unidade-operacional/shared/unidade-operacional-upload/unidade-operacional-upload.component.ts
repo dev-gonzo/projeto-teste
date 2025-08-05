@@ -13,7 +13,7 @@ import { ToastModule } from 'primeng/toast';
 import { Panel } from 'primeng/panel';
 import { Subscription } from 'rxjs';
 
-import { UnidadeOperacionalApiService } from '../../../../core/services';
+import { UnidadeOperacionalService } from '../../../../core/services';
 import { SharedModule } from '../../../../shared/shared.module';
 import {
   ErrorResponseHttp,
@@ -47,7 +47,7 @@ export class UnidadeOperacionalUploadComponent implements OnDestroy {
     private readonly router: Router,
     private readonly messageService: MessageService,
     private readonly cdr: ChangeDetectorRef,
-    public unidadeOperacionalService: UnidadeOperacionalApiService
+    public unidadeOperacionalService: UnidadeOperacionalService
   ) {}
 
   ngOnDestroy(): void {

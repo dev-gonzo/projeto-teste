@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpParams } from '@angular/common/http';
 
 import { Observable } from 'rxjs';
 
@@ -14,6 +14,6 @@ export class MunicipioService {
   constructor(private readonly http: HttpClient) {}
 
   query(nome: string): Observable<Municipio[]> {
-    return this.http.get<Municipio[]>(`${this.endpoint}/${nome}`);
+     return this.http.get<Municipio[]>(this.endpoint, { params: new HttpParams().set('nome', nome) });
   }
 }

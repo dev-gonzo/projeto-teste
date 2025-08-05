@@ -15,7 +15,7 @@ import { MessageService } from 'primeng/api';
 import { SharedModule } from '../../../shared/shared.module';
 import { UnidadeOperacionalFormComponent } from '../shared/unidade-operacional-form/unidade-operacional-form.component';
 import { ErrorResponseHttp, ResponseSuccessHttp, Uf, UnidadeOperacional } from '../../../shared/models';
-import { MunicipioService, UfService, UnidadeOperacionalApiService } from '../../../core/services';
+import { MunicipioService, UfService, UnidadeOperacionalService } from '../../../core/services';
 import { FormUtils } from '../../../shared/utils';
 import { Prepare } from '../../../shared/utils/unidade-operacional.util';
 
@@ -53,7 +53,7 @@ export class UnidadeOperacionalEditComponent implements OnDestroy {
     public municipioService: MunicipioService,
     private readonly router: Router,
     private readonly activatedRoute: ActivatedRoute,
-    private readonly unidadeOperacionalService: UnidadeOperacionalApiService,
+    private readonly unidadeOperacionalService: UnidadeOperacionalService,
     private readonly ufService: UfService,
     private readonly messageService: MessageService
   ) {

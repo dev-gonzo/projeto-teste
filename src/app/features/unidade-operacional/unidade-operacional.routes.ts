@@ -1,6 +1,6 @@
 import { Routes } from '@angular/router';
 
-import { UnidadeOperacionalApiService } from '../../core/services';
+import { UnidadeOperacionalService } from '../../core/services';
 
 import { UnidadeOperacionalListComponent } from './unidade-operacional-list/unidade-operacional-list.component';
 import { UnidadeOperacionalNewComponent } from './unidade-operacional-new/unidade-operacional-new.component';
@@ -25,7 +25,7 @@ export const routes: Routes = [
     path: 'edit/:id',
     component: UnidadeOperacionalEditComponent,
     resolve: {
-      model: UnidadeOperacionalApiService,
+      model: UnidadeOperacionalService,
     },
   },
   {

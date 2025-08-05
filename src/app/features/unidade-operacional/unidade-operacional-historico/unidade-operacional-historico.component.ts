@@ -4,7 +4,7 @@ import { UnidadeOperacionalHistoricoFilterComponent } from '../shared/unidade-op
 import { HistoricoAcoes, Page, Pageable, PageImpl } from '../../../shared/models';
 import { Subscription } from 'rxjs';
 import { ActivatedRoute, Router } from '@angular/router';
-import { UnidadeOperacionalApiService } from '../../../core/services';
+import { UnidadeOperacionalService } from '../../../core/services';
 import { HttpParams } from '@angular/common/http';
 import { identity, pickBy } from 'lodash-es';
 import { SharedModule } from '../../../shared/shared.module';
@@ -40,7 +40,7 @@ export class UnidadeOperacionalHistoricoComponent implements OnDestroy, OnInit {
 
   constructor(
     private readonly router: Router,
-    private readonly unidadeOperacionalService: UnidadeOperacionalApiService,
+    private readonly unidadeOperacionalService: UnidadeOperacionalService,
     private readonly route: ActivatedRoute,
     private readonly datePipe: DatePipe
   ) { }

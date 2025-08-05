@@ -17,7 +17,7 @@ import { FormUtils } from '../../../shared/utils';
 import {
   UfService,
   MunicipioService,
-  UnidadeOperacionalApiService,
+  UnidadeOperacionalService,
 } from '../../../core/services';
 import {
   ErrorResponseHttp,
@@ -51,7 +51,7 @@ export class UnidadeOperacionalNewComponent implements OnDestroy {
   constructor(
     public municipioService: MunicipioService,
     private readonly router: Router,
-    private readonly unidadeOperacionalService: UnidadeOperacionalApiService,
+    private readonly unidadeOperacionalService: UnidadeOperacionalService,
     private readonly ufService: UfService,
     private readonly messageService: MessageService
   ) {

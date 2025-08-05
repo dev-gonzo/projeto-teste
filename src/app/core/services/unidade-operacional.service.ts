@@ -46,11 +46,11 @@ export class UnidadeOperacionalService {
   }
 
   getAll(): Observable<UnidadeOperacional[]> {
-    return this.http.get<UnidadeOperacional[]>(`${this.endpoint}findall`);
+    return this.http.get<UnidadeOperacional[]>(`${this.endpoint}/findall`);
   }
 
   listByName(nome: string): Observable<UnidadeOperacional[]> {
-    return this.http.get<UnidadeOperacional[]>(`${this.endpoint}nome/${nome}`);
+    return this.http.get<UnidadeOperacional[]>(`${this.endpoint}/nome/${nome}`);
   }
 
   insert(model: UnidadeOperacional): Observable<ResponseSuccessHttp> {

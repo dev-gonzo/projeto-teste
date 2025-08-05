@@ -18,9 +18,9 @@ import { environment } from '../../../environments/environment';
   providedIn: 'root',
 })
 export class UnidadeOperacionalService {
-  private readonly endpoint = `${environment.apiUrl}/cadastros/unidade-operacional/`;
+  private readonly endpoint = `${environment.apiUrl}/cadastros/unidade-operacional`;
   public readonly urlUpload = `${environment.apiUrl}/cadastros/unidade-operacional/upload-file`;
-  private readonly urlLogs = `${environment.apiUrl}/cadastros/unidade-operacional/logs/`;
+  private readonly urlLogs = `${environment.apiUrl}/cadastros/unidade-operacional/logs`;
 
   constructor(private readonly http: HttpClient) { }
 

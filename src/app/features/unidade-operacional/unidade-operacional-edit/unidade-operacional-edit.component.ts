@@ -15,9 +15,9 @@ import { MessageService } from 'primeng/api';
 import { SharedModule } from '../../../shared/shared.module';
 import { UnidadeOperacionalFormComponent } from '../shared/unidade-operacional-form/unidade-operacional-form.component';
 import { ErrorResponseHttp, ResponseSuccessHttp, Uf, UnidadeOperacional } from '../../../shared/models';
-import { MunicipioService, UfApiService, UnidadeOperacionalApiService } from '../../../core/services';
+import { MunicipioService, UfService, UnidadeOperacionalApiService } from '../../../core/services';
 import { FormUtils } from '../../../shared/utils';
-import { transformarTelefones } from '../../../shared/utils/telefone.utils';
+import { Prepare } from '../../../shared/utils/unidade-operacional.util';
 
 
 @Component({
@@ -54,7 +54,7 @@ export class UnidadeOperacionalEditComponent implements OnDestroy {
     private readonly router: Router,
     private readonly activatedRoute: ActivatedRoute,
     private readonly unidadeOperacionalService: UnidadeOperacionalApiService,
-    private readonly ufService: UfApiService,
+    private readonly ufService: UfService,
     private readonly messageService: MessageService
   ) {
     this.idUnidadeOperacional = this.activatedRoute.snapshot.paramMap.get('id');
@@ -79,9 +79,10 @@ export class UnidadeOperacionalEditComponent implements OnDestroy {
     if (!FormUtils.validate(this.unidadeOperacionalForm.form)) {
       return;
     }
+    const prepared = new Prepare(this.unidadeOperacionalForm.form).toUnidadeOperacional();
 
     this.subscription = this.unidadeOperacionalService
-      .update(this.prepare(this.unidadeOperacionalForm.form, Number(this.idUnidadeOperacional)))
+      .update(prepared)
       .subscribe({
         next: (response: ResponseSuccessHttp) => {
           this.messageService.add({
@@ -103,16 +104,6 @@ export class UnidadeOperacionalEditComponent implements OnDestroy {
 
   cancelar(): void {
     this.router.navigate(['../unidade-operacional']);
-  }
-
-  prepare(form: FormGroup | FormArray, id?: number): UnidadeOperacional {
-    let value: UnidadeOperacional = form.getRawValue();
-
-    if (id) {
-      value = { ...value, id };
-    }
-
-    return transformarTelefones(value);
   }
 }
 

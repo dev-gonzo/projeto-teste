@@ -9,7 +9,7 @@ import { environment } from '../../../environments/environment';
 @Injectable({
   providedIn: 'root',
 })
-export class UfApiService {
+export class UfService {
   endpoint: string = `${environment.apiUrl}/cadastros/ufs`;
   constructor(private readonly http: HttpClient) {}
 

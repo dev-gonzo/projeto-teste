@@ -37,7 +37,7 @@ import { UnidadeOperacionalApiService } from '../../../core/services';
     FontAwesomeModule,
     Toast,
     Dialog,
-    UnidadeOperacionalFilterComponent, 
+    UnidadeOperacionalFilterComponent,
     UnidadeOperacionalTableComponent
   ],
   templateUrl: './unidade-operacional-list.component.html',

@@ -15,18 +15,17 @@ import { Observable, Subscription } from 'rxjs';
 import { SharedModule } from '../../../shared/shared.module';
 import { FormUtils } from '../../../shared/utils';
 import {
-  UfApiService,
+  UfService,
   MunicipioService,
   UnidadeOperacionalApiService,
 } from '../../../core/services';
 import {
   ErrorResponseHttp,
   ResponseSuccessHttp,
-  Uf,
-  UnidadeOperacional,
+  Uf
 } from '../../../shared/models';
 import { UnidadeOperacionalFormComponent } from '../shared/unidade-operacional-form/unidade-operacional-form.component';
-import { transformarTelefones } from '../../../shared/utils/telefone.utils';
+import { Prepare } from '../../../shared/utils/unidade-operacional.util';
 
 @Component({
   selector: 'app-unidade-operacional-new',
@@ -53,7 +52,7 @@ export class UnidadeOperacionalNewComponent implements OnDestroy {
     public municipioService: MunicipioService,
     private readonly router: Router,
     private readonly unidadeOperacionalService: UnidadeOperacionalApiService,
-    private readonly ufService: UfApiService,
+    private readonly ufService: UfService,
     private readonly messageService: MessageService
   ) {
     this.ufs$ = ufService.getAll();
@@ -69,9 +68,9 @@ export class UnidadeOperacionalNewComponent implements OnDestroy {
     if (!FormUtils.validate(this.unidadeOperacionalForm.form)) {
       return;
     }
-
+    const prepared = new Prepare(this.unidadeOperacionalForm.form).toUnidadeOperacional();
     this.subscription = this.unidadeOperacionalService
-      .insert(this.prepare(this.unidadeOperacionalForm.form))
+      .insert(prepared)
       .subscribe({
         next: (response: ResponseSuccessHttp) => {
           this.messageService.add({
@@ -93,16 +92,6 @@ export class UnidadeOperacionalNewComponent implements OnDestroy {
 
   cancelar(): void {
     this.router.navigate(['../unidade-operacional']);
-  }
-
-  prepare(form: FormGroup | FormArray, id?: number): UnidadeOperacional {
-    let value: UnidadeOperacional = form.getRawValue();
-
-    if (id) {
-      value = { ...value, id };
-    }
-
-    return transformarTelefones(value);
   }
 
 }

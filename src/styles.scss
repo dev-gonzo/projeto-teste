@@ -1,3 +1,11 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+p-panel .p-panel .p-panel-header {
+  @apply bg-white text-gray-800 rounded-lg;
+}
+
+.breadcrumb-link-color{
+  color: #52a4db;
+}

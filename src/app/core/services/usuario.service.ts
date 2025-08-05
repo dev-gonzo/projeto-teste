@@ -87,10 +87,10 @@ export class UsuarioApiService {
   baixarModelo(): Observable<Blob> {
     return this.http
       .get(`${this.endpoint}arquivo-usuario`, {
-        responseType: 'arraybuffer',
+        responseType: 'blob',
       })
       .pipe(
-        map((data: ArrayBuffer) => {
+        map((data: Blob) => {
           return new Blob([data], {
             type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
           });

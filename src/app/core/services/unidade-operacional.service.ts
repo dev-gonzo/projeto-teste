@@ -50,9 +50,7 @@ export class UnidadeOperacionalApiService {
   }
 
   listByName(nome: string): Observable<UnidadeOperacional[]> {
-    return this.http.get<UnidadeOperacional[]>(`${this.endpoint}nome/${nome}`, {
-      headers: this.jsonHeaders,
-    });
+    return this.http.get<UnidadeOperacional[]>(`${this.endpoint}nome/${nome}`);
   }
 
   insert(model: UnidadeOperacional): Observable<ResponseSuccessHttp> {

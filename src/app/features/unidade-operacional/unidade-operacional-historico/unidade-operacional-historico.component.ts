@@ -41,7 +41,8 @@ export class UnidadeOperacionalHistoricoComponent implements OnDestroy, OnInit {
   constructor(
     private readonly router: Router,
     private readonly unidadeOperacionalService: UnidadeOperacionalApiService,
-    private readonly route: ActivatedRoute
+    private readonly route: ActivatedRoute,
+    private readonly datePipe: DatePipe
   ) { }
   ngOnInit(): void {
     this.route.params.subscribe((params) => {
@@ -88,11 +89,9 @@ export class UnidadeOperacionalHistoricoComponent implements OnDestroy, OnInit {
 
   get searchParams(): { [param: string]: string } {
     const searchParams = this.filterForm ? this.filterForm.form.value : {};
-    const datePipe = new DatePipe('pt-BR');
-
     if (searchParams['dataAcao']) {
       const data = new Date(searchParams['dataAcao']);
-      searchParams['dataAcao'] = datePipe.transform(data, 'yyyy-MM-dd') ?? searchParams['dataAcao'];
+      searchParams['dataAcao'] = this.datePipe.transform(data, 'yyyy-MM-dd') ?? searchParams['dataAcao'];
     }
     return pickBy(searchParams, identity);
   }

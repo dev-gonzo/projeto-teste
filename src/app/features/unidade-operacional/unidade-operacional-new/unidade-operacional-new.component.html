@@ -6,8 +6,7 @@
 
 <div class="w-full px-3 py-3 mx-auto">
   <breadcrumb [items]="breadcrumb"></breadcrumb>
-  <p-panel header="Dados da Unidade Operacional" [toggleable]="false">
-  </p-panel>
+  <p-panel header="Dados da Unidade Operacional" [toggleable]="false"></p-panel>
   <app-unidade-operacional-form
     [ufs]="ufs$ | async" 
     #unidadeOperacionalForm

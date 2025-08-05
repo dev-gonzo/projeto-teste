@@ -8,7 +8,7 @@ import { LogUpload } from '../../models';
   templateUrl: './logs-upload-file.component.html',
 })
 export class LogsUploadFileComponent {
-  @Input() logs: LogUpload | any;
+  @Input() logs!: LogUpload;
 
   viewLogErros = false;
 
@@ -19,4 +19,12 @@ export class LogsUploadFileComponent {
   verifyErros(): boolean {
     return Array.isArray(this.logs.logErros) && this.logs.logErros.length > 0;
   }
+
+  get logErrosArray(): string[] {
+    const erros = this.logs?.logErros;
+    if (Array.isArray(erros)) return erros;
+    if (typeof erros === 'string') return [erros];
+    return [];
+  }
+
 }

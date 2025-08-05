@@ -19,7 +19,7 @@ import { environment } from '../../../environments/environment';
 })
 export class UnidadeOperacionalApiService {
   private readonly endpoint = `${environment.apiUrl}/cadastros/unidade-operacional/`;
-  private readonly urlUpload = `${environment.apiUrl}/cadastros/unidade-operacional/upload-file`;
+  public readonly urlUpload = `${environment.apiUrl}/cadastros/unidade-operacional/upload-file`;
   private readonly urlLogs = `${environment.apiUrl}/cadastros/unidade-operacional/logs/`;
 
   constructor(private readonly http: HttpClient) { }

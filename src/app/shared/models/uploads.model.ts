@@ -1,4 +1,6 @@
-export interface Upload{
+import { Observable } from "rxjs";
+
+export interface Upload {
     id: number,
     status: string,
     nomeUnidadeOperacionalBoInquerito: string,
@@ -13,6 +15,11 @@ export interface Upload{
     situacaoTranscricao: string,
     situacaoProcessamento?: string,
     descricaoMidia: string,
+}
+
+export interface UploadApiService {
+    urlUpload: string;
+    baixarModelo(): Observable<Blob>;
 }
 
 export interface LogsUploadResponse {
@@ -42,4 +49,4 @@ export interface FiltrosUploadLogs {
     acao?: string;
     dataAcao?: string;
     ip?: string;
-  }
+}

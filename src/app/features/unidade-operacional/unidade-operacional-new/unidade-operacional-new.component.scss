@@ -1,3 +1,5 @@
-p-panel .p-panel .p-panel-header {
-  @apply bg-white text-gray-800 rounded-lg;
+:host ::ng-deep {
+  p-panel .p-panel .p-panel-header {
+    @apply bg-white text-gray-800 rounded-lg;
+  }
 }

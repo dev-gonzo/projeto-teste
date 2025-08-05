@@ -1,5 +1,5 @@
 import { Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
-import { Router } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { HttpParams } from '@angular/common/http';
 
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
@@ -57,6 +57,7 @@ export class UnidadeOperacionalListComponent implements OnDestroy, OnInit {
   private subscription!: Subscription;
 
   constructor(
+    private readonly activatedRoute: ActivatedRoute,
     private readonly router: Router,
     private readonly unidadeOperacionalService: UnidadeOperacionalApiService,
     private readonly messageService: MessageService
@@ -96,11 +97,11 @@ export class UnidadeOperacionalListComponent implements OnDestroy, OnInit {
   }
 
   add(): void {
-    this.router.navigate(['unidade-operacional/create']);
+    this.router.navigate(['../create'], { relativeTo: this.activatedRoute });
   }
 
   editar(unidadeOperacional: UnidadeOperacional): void {
-    this.router.navigate(['unidade-operacional/edit/', unidadeOperacional.id]);
+    this.router.navigate(['../edit/', unidadeOperacional.id], { relativeTo: this.activatedRoute });
   }
 
   remover(unidadeOperacional: UnidadeOperacional): void {
@@ -138,11 +139,11 @@ export class UnidadeOperacionalListComponent implements OnDestroy, OnInit {
   }
 
   addXlsx(): void {
-    this.router.navigate(['unidade-operacional/create-xlsx']);
+    this.router.navigate(['../create-xlsx'], { relativeTo: this.activatedRoute });
   }
 
   onHistorico(): void {
-    this.router.navigate(['unidade-operacional/historico-acoes']);
+    this.router.navigate(['../historico-acoes'], { relativeTo: this.activatedRoute });
   }
 
   onPageChanged(pageable: { first: number; rows: number }): void {

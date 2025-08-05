@@ -10,6 +10,7 @@ import {
 import { MessageService } from 'primeng/api';
 import { FileUploadEvent } from 'primeng/fileupload';
 import { Subscription } from 'rxjs';
+import { UploadApiService } from '../../models/uploads.model';
 
 @Component({
   selector: 'upload-file',
@@ -20,9 +21,8 @@ import { Subscription } from 'rxjs';
   providers: [MessageService],
 })
 export class UploadFileComponent implements OnDestroy {
-  @Input() apiService: any;
+  @Input() apiService!: UploadApiService;
   @Input() titleHeader = '';
-  @Input() urlUpload = '/';
   @Output() logs = new EventEmitter();
 
   uploadedFiles: any[] = [];

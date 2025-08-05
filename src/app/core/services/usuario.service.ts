@@ -37,6 +37,7 @@ export class UsuarioApiService {
   }
 
   getLogs(params: HttpParams, id: number): Observable<Page<HistoricoAcoes>> {
+    if (!id) { return throwError(() => new Error('ID é obrigatório')); }
     return this.http
       .get<PageResponse<HistoricoAcoes>>(`${this.urlLogs}${id}`, { params })
       .pipe(
@@ -53,14 +54,17 @@ export class UsuarioApiService {
   }
 
   update(model: Usuario, id: number): Observable<ResponseSuccessHttp> {
+    if (!id) { return throwError(() => new Error('ID é obrigatório')); }
     return this.http.put<ResponseSuccessHttp>(`${this.endpoint}${id}`, model);
   }
 
   delete(id: number | undefined): Observable<ResponseSuccessHttp> {
+    if (!id) { return throwError(() => new Error('ID é obrigatório')); }
     return this.http.delete<ResponseSuccessHttp>(`${this.endpoint}${id}`);
   }
 
   findById(id: number): Observable<Usuario> {
+    if (!id) { return throwError(() => new Error('ID é obrigatório')); }
     return this.http.get<Usuario>(`${this.endpoint}${id}`);
   }
 

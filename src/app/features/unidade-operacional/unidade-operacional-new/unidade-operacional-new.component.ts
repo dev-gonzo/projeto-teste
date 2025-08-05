@@ -1,8 +1,7 @@
 import {
   Component,
   OnDestroy,
-  ViewChild,
-  ViewEncapsulation,
+  ViewChild
 } from '@angular/core';
 import { Router } from '@angular/router';
 import { FormArray, FormGroup } from '@angular/forms';
@@ -35,8 +34,7 @@ import { UnidadeOperacionalFormComponent } from '../shared/unidade-operacional-f
   imports: [Panel, SharedModule, UnidadeOperacionalFormComponent, CommonModule, Toast],
   templateUrl: './unidade-operacional-new.component.html',
   styleUrl: './unidade-operacional-new.component.scss',
-  providers: [MessageService],
-  encapsulation: ViewEncapsulation.None
+  providers: [MessageService]
 })
 
 export class UnidadeOperacionalNewComponent implements OnDestroy {

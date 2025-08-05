@@ -14,7 +14,7 @@ import { HistoricoAcoes, Page } from '../../../../shared/models';
   styleUrl: './unidade-operacional-historico-table.component.scss'
 })
 
-export class UnidadeOperacionalHistoricoTableComponent {
+export class UnidadeOperacionalHistoricoTableComponent { 
   @Input() dataSource!: Page<HistoricoAcoes>;
 
   @Output() pageChanged = new EventEmitter();

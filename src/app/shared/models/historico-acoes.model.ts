@@ -6,8 +6,7 @@ export interface HistoricoAcoes {
   ip: string;
   descricao: string;
   dataHoraLog?: string;
-  dataAcao?: string;
-  horaAcao?: string;
+  dataHoraCompleta?: string;
   operacao?: string;
   usuario?: Usuario;
 }

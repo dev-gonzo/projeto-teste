@@ -1,18 +1,23 @@
-import { EventEmitter, Injectable } from '@angular/core';
+import { Injectable } from '@angular/core';
+import { Subject, Observable } from 'rxjs';
 
 @Injectable({
   providedIn: 'root',
 })
 export class SharedService {
-  loginEvent: EventEmitter<void> = new EventEmitter<void>();
-  registerEvent: EventEmitter<void> = new EventEmitter<void>();
+  private readonly loginSubject = new Subject<void>();
+  private readonly registerSubject = new Subject<void>();
+
+  login$: Observable<void> = this.loginSubject.asObservable();
+  register$: Observable<void> = this.registerSubject.asObservable();
+
   constructor() {}
 
   triggerLoginEvent(): void {
-    this.loginEvent.emit();
+    this.loginSubject.next();
   }
 
   triggerRegisterEvent(): void {
-    this.registerEvent.emit();
+    this.registerSubject.next();
   }
 }

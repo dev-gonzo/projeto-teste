@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { HttpClient, HttpHeaders } from '@angular/common/http';
+import { HttpClient } from '@angular/common/http';
 
 import { Observable } from 'rxjs';
 
@@ -11,15 +11,9 @@ import { environment } from '../../../environments/environment';
 })
 export class UfApiService {
   endpoint: string = `${environment.apiUrl}/cadastros/ufs`;
-  constructor(private http: HttpClient) {}
+  constructor(private readonly http: HttpClient) {}
 
   getAll(): Observable<Uf[]> {
-    const headers = new HttpHeaders({
-      'Content-Type': 'application/json; charset=utf-8',
-    });
-
-    return this.http.get<Uf[]>(`${this.endpoint}`, {
-      headers,
-    });
+    return this.http.get<Uf[]>(`${this.endpoint}`);
   }
 }

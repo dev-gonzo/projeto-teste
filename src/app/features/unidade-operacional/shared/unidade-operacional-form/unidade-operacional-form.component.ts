@@ -32,7 +32,7 @@ import {
 } from 'primeng/autocomplete';
 
 import { UnidadeOperacional, Municipio, Uf } from '../../../../shared/models';
-import { MunicipioApiService } from '../../../../core/services';
+import { MunicipioService } from '../../../../core/services';
 
 @Component({
   selector: 'app-unidade-operacional-form',
@@ -62,7 +62,7 @@ export class UnidadeOperacionalFormComponent implements OnInit, OnChanges, OnDes
   constructor(
     public formBuilder: FormBuilder,
     private readonly cdr: ChangeDetectorRef,
-    private readonly municipioService: MunicipioApiService
+    private readonly municipioService: MunicipioService
   ) {
     this.form = this.formBuilder.group({
       nomeUnidadeOperacional: [null, [Validators.required, Validators.maxLength(100)]],

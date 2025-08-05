@@ -9,7 +9,7 @@ import { environment } from '../../../environments/environment';
 @Injectable({
   providedIn: 'root',
 })
-export class MunicipioApiService {
+export class MunicipioService {
   endpoint: string = `${environment.apiUrl}/cadastros/municipios`;
   constructor(private readonly http: HttpClient) {}
 

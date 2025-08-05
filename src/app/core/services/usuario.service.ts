@@ -1,13 +1,14 @@
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpParams } from '@angular/common/http';
 import { ActivatedRouteSnapshot, RouterStateSnapshot } from '@angular/router';
-import { Observable, filter, take } from 'rxjs';
+import { Observable, filter, take, throwError } from 'rxjs';
 import { map } from 'rxjs/operators';
 
 import {
   HistoricoAcoes,
   Page,
   PageImpl,
+  PageResponse,
   ResponseSuccessHttp,
   Usuario,
 } from '../../shared/models';
@@ -21,13 +22,13 @@ export class UsuarioApiService {
   private readonly urlUpload = `${environment.apiUrl}/cadastros/usuarios/upload-file`;
   private readonly urlLogs = `${environment.apiUrl}/cadastros/usuarios/logs/`;
 
-  constructor(private readonly http: HttpClient) {}
+  constructor(private readonly http: HttpClient) { }
 
   query(params: HttpParams): Observable<Page<Usuario>> {
     return this.http
-      .get<Page<Usuario>>(`${this.endpoint}`, { params })
+      .get<PageResponse<Usuario>>(`${this.endpoint}`, { params })
       .pipe(
-        map((response: any) => {
+        map((response) => {
           const count = response.totalElements;
           const data: Usuario[] = response.content;
           return PageImpl.of(data, count) as Page<Usuario>;
@@ -37,9 +38,9 @@ export class UsuarioApiService {
 
   getLogs(params: HttpParams, id: number): Observable<Page<HistoricoAcoes>> {
     return this.http
-      .get<Page<HistoricoAcoes>>(`${this.urlLogs}${id}`, { params })
+      .get<PageResponse<HistoricoAcoes>>(`${this.urlLogs}${id}`, { params })
       .pipe(
-        map((response: any) => {
+        map((response) => {
           const count = response.totalElements;
           const data: HistoricoAcoes[] = response.content;
           return PageImpl.of(data, count) as Page<HistoricoAcoes>;
@@ -67,10 +68,13 @@ export class UsuarioApiService {
     route: ActivatedRouteSnapshot,
     state: RouterStateSnapshot
   ): Observable<Usuario> {
-    const id = route.paramMap.get('id'); 
-    const numeroId = id ? parseInt(id, 10) : 0;
+    const id = route.paramMap.get('id');
 
-    return this.findById(numeroId).pipe(
+    if (!id) {
+      return throwError(() => new Error('ID do usuário não fornecido na rota'));
+    }
+
+    return this.findById(parseInt(id, 10)).pipe(
       filter((model: Usuario) => !!model),
       take(1)
     );

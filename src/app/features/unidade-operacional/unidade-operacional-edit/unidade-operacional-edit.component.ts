@@ -1,8 +1,7 @@
 import {
   Component,
   OnDestroy,
-  ViewChild,
-  ViewEncapsulation,
+  ViewChild
 } from '@angular/core';
 import { FormArray, FormGroup } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
@@ -16,9 +15,8 @@ import { MessageService } from 'primeng/api';
 import { SharedModule } from '../../../shared/shared.module';
 import { UnidadeOperacionalFormComponent } from '../shared/unidade-operacional-form/unidade-operacional-form.component';
 import { ErrorResponseHttp, ResponseSuccessHttp, Uf, UnidadeOperacional } from '../../../shared/models';
-import { MunicipioApiService, transformarTelefones, UfApiService, UnidadeOperacionalApiService } from '../../../core/services';
+import { MunicipioService, transformarTelefones, UfApiService, UnidadeOperacionalApiService } from '../../../core/services';
 import { FormUtils } from '../../../shared/utils';
-import { separarTelefone } from '../../../shared/utils/telefone.utils';
 
 
 @Component({
@@ -51,7 +49,7 @@ export class UnidadeOperacionalEditComponent implements OnDestroy {
   private subscription: Subscription;
 
   constructor(
-    public municipioService: MunicipioApiService,
+    public municipioService: MunicipioService,
     private readonly router: Router,
     private readonly activatedRoute: ActivatedRoute,
     private readonly unidadeOperacionalService: UnidadeOperacionalApiService,

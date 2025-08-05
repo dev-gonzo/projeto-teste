@@ -142,7 +142,7 @@ export class UnidadeOperacionalListComponent implements OnDestroy, OnInit {
   }
 
   onHistorico(): void {
-    this.router.navigate(['unidade-operacional/historico-acoes/:id']);
+    this.router.navigate(['unidade-operacional/historico-acoes']);
   }
 
   onPageChanged(pageable: { first: number; rows: number }): void {

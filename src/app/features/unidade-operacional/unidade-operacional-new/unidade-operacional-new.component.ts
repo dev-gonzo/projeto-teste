@@ -17,7 +17,7 @@ import { SharedModule } from '../../../shared/shared.module';
 import { FormUtils } from '../../../shared/utils';
 import {
   UfApiService,
-  MunicipioApiService,
+  MunicipioService,
   UnidadeOperacionalApiService,
   transformarTelefones,
 } from '../../../core/services';
@@ -28,7 +28,6 @@ import {
   UnidadeOperacional,
 } from '../../../shared/models';
 import { UnidadeOperacionalFormComponent } from '../shared/unidade-operacional-form/unidade-operacional-form.component';
-import { separarTelefone } from '../../../shared/utils/telefone.utils';
 
 @Component({
   selector: 'app-unidade-operacional-new',
@@ -53,7 +52,7 @@ export class UnidadeOperacionalNewComponent implements OnDestroy {
   private subscription!: Subscription;
 
   constructor(
-    public municipioService: MunicipioApiService,
+    public municipioService: MunicipioService,
     private readonly router: Router,
     private readonly unidadeOperacionalService: UnidadeOperacionalApiService,
     private readonly ufService: UfApiService,

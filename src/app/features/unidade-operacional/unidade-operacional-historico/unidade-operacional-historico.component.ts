@@ -1,8 +1,6 @@
-import { map } from 'rxjs/operators';
 import { Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { UnidadeOperacionalHistoricoFilterComponent } from '../shared/unidade-operacional-historico-filter/unidade-operacional-historico-filter.component';
 import { HistoricoAcoes, Page, Pageable, PageImpl } from '../../../shared/models';
-import { Subscription } from 'rxjs';
 import { ActivatedRoute, Router } from '@angular/router';
 import { UnidadeOperacionalService } from '../../../core/services';
 import { HttpParams } from '@angular/common/http';
@@ -12,6 +10,8 @@ import { ButtonModule } from 'primeng/button';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 import { UnidadeOperacionalHistoricoTableComponent } from '../shared/unidade-operacional-historico-table/unidade-operacional-historico-table.component';
 import { DatePipe } from '@angular/common';
+import { Subject } from 'rxjs';
+import { switchMap, takeUntil } from 'rxjs/operators';
 
 @Component({
   selector: 'app-unidade-operacional-historico',
@@ -36,7 +36,8 @@ export class UnidadeOperacionalHistoricoComponent implements OnDestroy, OnInit {
   ];
   dataSource: Page<HistoricoAcoes> = PageImpl.of([], 0);
 
-  private subscription!: Subscription;
+  private readonly destroy$ = new Subject<void>();
+  private readonly searchTrigger$ = new Subject<Pageable | undefined>();
 
   constructor(
     private readonly router: Router,
@@ -44,18 +45,39 @@ export class UnidadeOperacionalHistoricoComponent implements OnDestroy, OnInit {
     private readonly route: ActivatedRoute,
     private readonly datePipe: DatePipe
   ) { }
+
   ngOnInit(): void {
-    this.route.params.subscribe((params) => {
-      if (params['id']) {
-        this.search();
-      }
-    });
+    this.route.params
+      .pipe(takeUntil(this.destroy$))
+      .subscribe(params => {
+        if (params['id']) {
+          this.search(); 
+        }
+      });
+
+    this.searchTrigger$
+      .pipe(
+        takeUntil(this.destroy$),
+        switchMap((pageable) => {
+          const httpParams = new HttpParams({
+            fromObject: {
+              ...this.searchParams,
+              page: pageable ? pageable.pageNumber.toString() : '0',
+              size: pageable ? pageable.pageSize.toString() : '5',
+            }
+          });
+          return this.unidadeOperacionalService.getLogs(httpParams, this.route.snapshot.params['id']);
+        })
+      )
+      .subscribe(value => {
+        this.dataSource = value;
+      });
   }
 
   ngOnDestroy(): void {
-    if (this.subscription) {
-      this.subscription.unsubscribe();
-    }
+    this.destroy$.next();
+    this.destroy$.complete();
+    this.searchTrigger$.complete();
   }
 
   reset(): void {
@@ -66,20 +88,7 @@ export class UnidadeOperacionalHistoricoComponent implements OnDestroy, OnInit {
   }
 
   search(pageable?: Pageable): void {
-    let httpParams = new HttpParams({
-      fromObject: {
-        ...this.searchParams,
-        page: pageable ? pageable.pageNumber : '0',
-        size: pageable ? pageable.pageSize : '5',
-      },
-    });
-
-    this.subscription = this.unidadeOperacionalService
-      .getLogs(httpParams, this.route.snapshot.params['id'])
-      .pipe().subscribe((value) => {
-        this.dataSource = value;
-      });
-
+    this.searchTrigger$.next(pageable);
   }
 
   onPageChanged(pageable: { first: number; rows: number }): void {

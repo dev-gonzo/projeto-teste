@@ -4,13 +4,13 @@ import {
   ViewChild
 } from '@angular/core';
 import { Router } from '@angular/router';
-import { FormArray, FormGroup } from '@angular/forms';
 import { CommonModule } from '@angular/common';
 
 import { Toast } from 'primeng/toast';
 import { MessageService } from 'primeng/api';
 import { Panel } from 'primeng/panel';
-import { Observable, Subscription } from 'rxjs';
+import { Observable, Subject } from 'rxjs';
+import { takeUntil } from 'rxjs/operators';
 
 import { SharedModule } from '../../../shared/shared.module';
 import { FormUtils } from '../../../shared/utils';
@@ -35,7 +35,6 @@ import { Prepare } from '../../../shared/utils/unidade-operacional.util';
   styleUrl: './unidade-operacional-new.component.scss',
   providers: [MessageService]
 })
-
 export class UnidadeOperacionalNewComponent implements OnDestroy {
   @ViewChild('unidadeOperacionalForm', { static: true })
   unidadeOperacionalForm!: UnidadeOperacionalFormComponent;
@@ -46,7 +45,7 @@ export class UnidadeOperacionalNewComponent implements OnDestroy {
     { label: 'Adicionar', route: '/create' },
   ];
 
-  private subscription!: Subscription;
+  private readonly destroy$ = new Subject<void>();
 
   constructor(
     public municipioService: MunicipioService,
@@ -59,9 +58,8 @@ export class UnidadeOperacionalNewComponent implements OnDestroy {
   }
 
   ngOnDestroy(): void {
-    if (this.subscription) {
-      this.subscription.unsubscribe();
-    }
+    this.destroy$.next();
+    this.destroy$.complete();
   }
 
   salvar(): void {
@@ -69,8 +67,9 @@ export class UnidadeOperacionalNewComponent implements OnDestroy {
       return;
     }
     const prepared = new Prepare(this.unidadeOperacionalForm.form).toUnidadeOperacional();
-    this.subscription = this.unidadeOperacionalService
+    this.unidadeOperacionalService
       .insert(prepared)
+      .pipe(takeUntil(this.destroy$))
       .subscribe({
         next: (response: ResponseSuccessHttp) => {
           this.messageService.add({
@@ -93,5 +92,4 @@ export class UnidadeOperacionalNewComponent implements OnDestroy {
   cancelar(): void {
     this.router.navigate(['../unidade-operacional']);
   }
-
 }

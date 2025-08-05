@@ -3,13 +3,13 @@ import {
   OnDestroy,
   ViewChild
 } from '@angular/core';
-import { FormArray, FormGroup } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import { CommonModule } from '@angular/common';
 
 import { Toast } from 'primeng/toast';
 import { Panel } from 'primeng/panel';
-import { Observable, Subscription, of } from 'rxjs';
+import { Observable, Subject, of } from 'rxjs';
+import { takeUntil } from 'rxjs/operators';
 import { MessageService } from 'primeng/api';
 
 import { SharedModule } from '../../../shared/shared.module';
@@ -18,7 +18,6 @@ import { ErrorResponseHttp, ResponseSuccessHttp, Uf, UnidadeOperacional } from '
 import { MunicipioService, UfService, UnidadeOperacionalService } from '../../../core/services';
 import { FormUtils } from '../../../shared/utils';
 import { Prepare } from '../../../shared/utils/unidade-operacional.util';
-
 
 @Component({
   selector: 'app-unidade-operacional-edit',
@@ -33,10 +32,10 @@ import { Prepare } from '../../../shared/utils/unidade-operacional.util';
   templateUrl: './unidade-operacional-edit.component.html',
   styleUrl: './unidade-operacional-edit.component.scss'
 })
-
 export class UnidadeOperacionalEditComponent implements OnDestroy {
   @ViewChild('unidadeOperacionalForm', { static: true })
   unidadeOperacionalForm!: UnidadeOperacionalFormComponent;
+
   idUnidadeOperacional: string | null;
   model!: UnidadeOperacional;
   model$!: Observable<UnidadeOperacional>;
@@ -47,7 +46,7 @@ export class UnidadeOperacionalEditComponent implements OnDestroy {
     { label: 'Editar', route: '/edit' },
   ];
 
-  private subscription: Subscription;
+  private readonly destroy$ = new Subject<void>();
 
   constructor(
     public municipioService: MunicipioService,
@@ -61,18 +60,19 @@ export class UnidadeOperacionalEditComponent implements OnDestroy {
 
     this.ufs$ = ufService.getAll();
 
-    this.subscription = this.activatedRoute.data.subscribe((response: any) => {
-      if (response && response.model) {
-        this.model = response.model;
-        this.model$ = of(this.model);
-      }
-    });
+    this.activatedRoute.data
+      .pipe(takeUntil(this.destroy$))
+      .subscribe((response: any) => {
+        if (response && response.model) {
+          this.model = response.model;
+          this.model$ = of(this.model);
+        }
+      });
   }
 
   ngOnDestroy(): void {
-    if (this.subscription) {
-      this.subscription.unsubscribe();
-    }
+    this.destroy$.next();
+    this.destroy$.complete();
   }
 
   salvar(): void {
@@ -81,8 +81,9 @@ export class UnidadeOperacionalEditComponent implements OnDestroy {
     }
     const prepared = new Prepare(this.unidadeOperacionalForm.form).toUnidadeOperacional();
 
-    this.subscription = this.unidadeOperacionalService
+    this.unidadeOperacionalService
       .update(prepared)
+      .pipe(takeUntil(this.destroy$))
       .subscribe({
         next: (response: ResponseSuccessHttp) => {
           this.messageService.add({
@@ -106,4 +107,3 @@ export class UnidadeOperacionalEditComponent implements OnDestroy {
     this.router.navigate(['../unidade-operacional']);
   }
 }
-

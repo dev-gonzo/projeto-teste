@@ -1,8 +1,8 @@
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpParams } from '@angular/common/http';
 import { ActivatedRouteSnapshot, RouterStateSnapshot } from '@angular/router';
-import { Observable, filter, take, throwError } from 'rxjs';
-import { map } from 'rxjs/operators';
+import { Observable, of, throwError } from 'rxjs';
+import { map, switchMap, filter, take } from 'rxjs/operators';
 
 import {
   HistoricoAcoes,
@@ -22,7 +22,14 @@ export class UsuarioService {
   private readonly urlUpload = `${environment.apiUrl}/cadastros/usuarios/upload-file`;
   private readonly urlLogs = `${environment.apiUrl}/cadastros/usuarios/logs/`;
 
-  constructor(private readonly http: HttpClient) { }
+  constructor(private readonly http: HttpClient) {}
+
+  private validateId(id: number | undefined): Observable<void> {
+    if (id === undefined || id === null) {
+      return throwError(() => new Error('ID é obrigatório'));
+    }
+    return of(void 0);
+  }
 
   query(params: HttpParams): Observable<Page<Usuario>> {
     return this.http
@@ -36,49 +43,56 @@ export class UsuarioService {
       );
   }
 
-  getLogs(params: HttpParams, id: number): Observable<Page<HistoricoAcoes>> {
-    if (!id) { return throwError(() => new Error('ID é obrigatório')); }
-    return this.http
-      .get<PageResponse<HistoricoAcoes>>(`${this.urlLogs}${id}`, { params })
-      .pipe(
-        map((response) => {
-          const count = response.totalElements;
-          const data: HistoricoAcoes[] = response.content;
-          return PageImpl.of(data, count);
-        })
-      );
+  getLogs(params: HttpParams, id: number | undefined): Observable<Page<HistoricoAcoes>> {
+    return this.validateId(id).pipe(
+      switchMap(() =>
+        this.http
+          .get<PageResponse<HistoricoAcoes>>(`${this.urlLogs}${id}`, { params })
+          .pipe(
+            map((response) => {
+              const count = response.totalElements;
+              const data: HistoricoAcoes[] = response.content;
+              return PageImpl.of(data, count);
+            })
+          )
+      )
+    );
   }
 
   insert(model: Usuario): Observable<ResponseSuccessHttp> {
     return this.http.post<ResponseSuccessHttp>(`${this.endpoint}`, model);
   }
 
-  update(model: Usuario, id: number): Observable<ResponseSuccessHttp> {
-    if (!id) { return throwError(() => new Error('ID é obrigatório')); }
-    return this.http.put<ResponseSuccessHttp>(`${this.endpoint}${id}`, model);
+  update(model: Usuario, id: number | undefined): Observable<ResponseSuccessHttp> {
+    return this.validateId(id).pipe(
+      switchMap(() => this.http.put<ResponseSuccessHttp>(`${this.endpoint}${id}`, model))
+    );
   }
 
   delete(id: number | undefined): Observable<ResponseSuccessHttp> {
-    if (!id) { return throwError(() => new Error('ID é obrigatório')); }
-    return this.http.delete<ResponseSuccessHttp>(`${this.endpoint}${id}`);
+    return this.validateId(id).pipe(
+      switchMap(() => this.http.delete<ResponseSuccessHttp>(`${this.endpoint}${id}`))
+    );
   }
 
-  findById(id: number): Observable<Usuario> {
-    if (!id) { return throwError(() => new Error('ID é obrigatório')); }
-    return this.http.get<Usuario>(`${this.endpoint}${id}`);
+  findById(id: number | undefined): Observable<Usuario> {
+    return this.validateId(id).pipe(
+      switchMap(() => this.http.get<Usuario>(`${this.endpoint}${id}`))
+    );
   }
 
   resolve(
     route: ActivatedRouteSnapshot,
     state: RouterStateSnapshot
   ): Observable<Usuario> {
-    const id = route.paramMap.get('id');
+    const idParam = route.paramMap.get('id');
+    const id = idParam ? parseInt(idParam, 10) : undefined;
 
     if (!id) {
       return throwError(() => new Error('ID do usuário não fornecido na rota'));
     }
 
-    return this.findById(parseInt(id, 10)).pipe(
+    return this.findById(id).pipe(
       filter((model: Usuario) => !!model),
       take(1)
     );

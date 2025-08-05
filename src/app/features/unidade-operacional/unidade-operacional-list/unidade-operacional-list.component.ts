@@ -144,8 +144,9 @@ export class UnidadeOperacionalListComponent implements OnDestroy, OnInit {
   }
 
   onHistorico(): void {
-    this.router.navigate(['../historico-acoes', this.row.id], { relativeTo: this.activatedRoute });
+    this.router.navigate(['../historico-geral'], { relativeTo: this.activatedRoute });
   }
+
 
   onPageChanged(pageable: { first: number; rows: number }): void {
     const pageNumber = pageable.first / pageable.rows + 1;

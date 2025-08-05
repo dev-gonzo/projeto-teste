@@ -24,6 +24,7 @@ export class UploadFileComponent implements OnDestroy {
   @Input() apiService!: UploadApiService;
   @Input() titleHeader = '';
   @Output() logs = new EventEmitter();
+  @Input() downloadFilename = 'usuarios.xlsx';
 
   uploadedFiles: any[] = [];
   invalidFileTypeMessageSummary = 'Tipo de arquivo inválido;';
@@ -33,7 +34,7 @@ export class UploadFileComponent implements OnDestroy {
 
   private subscription!: Subscription;
 
-  constructor(private messageService: MessageService) {}
+  constructor(private readonly messageService: MessageService) { }
 
   ngOnDestroy(): void {
     if (this.subscription) {
@@ -57,7 +58,7 @@ export class UploadFileComponent implements OnDestroy {
         document.body.appendChild(a);
         a.setAttribute('style', 'display: none');
         a.href = url;
-        a.download = 'usuarios.xlsx';
+        a.download = this.downloadFilename;
         a.click();
         window.URL.revokeObjectURL(url);
         a.remove();

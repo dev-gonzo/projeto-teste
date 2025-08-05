@@ -28,7 +28,7 @@
     "html2canvas": "^1.4.1",
     "jszip": "^3.10.1",
     "lodash-es": "^4.17.21",
-    "ngx-cookie-service": "^15.0.0",
+    "ngx-cookie-service": "^18.0.0",
     "ngx-countdown": "^19.0.0",
     "ngx-mask": "^19.0.1",
     "primeicons": "^7.0.0",

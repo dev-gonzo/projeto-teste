@@ -33,6 +33,10 @@ export const routes: Routes = [
     component: UnidadeOperacionalHistoricoComponent
   },
   {
+    path: 'historico-geral',
+    component: UnidadeOperacionalHistoricoComponent
+  },
+  {
     path: '',
     redirectTo: 'list',
     pathMatch: 'full',

@@ -47,7 +47,7 @@ export class UsuarioService {
     return this.validateId(id).pipe(
       switchMap(() =>
         this.http
-          .get<PageResponse<HistoricoAcoes>>(`${this.urlLogs}${id}`, { params })
+          .get<PageResponse<HistoricoAcoes>>(`${this.urlLogs}/${id}`, { params })
           .pipe(
             map((response) => {
               const count = response.totalElements;
@@ -65,19 +65,19 @@ export class UsuarioService {
 
   update(model: Usuario, id: number | undefined): Observable<ResponseSuccessHttp> {
     return this.validateId(id).pipe(
-      switchMap(() => this.http.put<ResponseSuccessHttp>(`${this.endpoint}${id}`, model))
+      switchMap(() => this.http.put<ResponseSuccessHttp>(`${this.endpoint}/${id}`, model))
     );
   }
 
   delete(id: number | undefined): Observable<ResponseSuccessHttp> {
     return this.validateId(id).pipe(
-      switchMap(() => this.http.delete<ResponseSuccessHttp>(`${this.endpoint}${id}`))
+      switchMap(() => this.http.delete<ResponseSuccessHttp>(`${this.endpoint}/${id}`))
     );
   }
 
   findById(id: number | undefined): Observable<Usuario> {
     return this.validateId(id).pipe(
-      switchMap(() => this.http.get<Usuario>(`${this.endpoint}${id}`))
+      switchMap(() => this.http.get<Usuario>(`${this.endpoint}/${id}`))
     );
   }
 
@@ -100,7 +100,7 @@ export class UsuarioService {
 
   baixarModelo(): Observable<Blob> {
     return this.http
-      .get(`${this.endpoint}arquivo-usuario`, {
+      .get(`${this.endpoint}/arquivo-usuario`, {
         responseType: 'blob',
       })
       .pipe(
@@ -113,6 +113,6 @@ export class UsuarioService {
   }
 
   finalizarUpload(): Observable<ResponseSuccessHttp> {
-    return this.http.post<ResponseSuccessHttp>(`${this.endpoint}finalizar`, {});
+    return this.http.post<ResponseSuccessHttp>(`${this.endpoint}/finalizar`, {});
   }
 }

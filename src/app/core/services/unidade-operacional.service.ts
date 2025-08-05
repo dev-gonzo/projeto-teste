@@ -38,7 +38,7 @@ export class UnidadeOperacionalService {
   }
 
   getLogs(params: HttpParams, id: number): Observable<Page<HistoricoAcoes>> {
-    return this.http.get<PageResponse<HistoricoAcoes>>(`${this.urlLogs}${id}`, { params }).pipe(
+    return this.http.get<PageResponse<HistoricoAcoes>>(`${this.urlLogs}/${id}`, { params }).pipe(
       map((response) => {
         return PageImpl.of(response.content, response.totalElements);
       })
@@ -60,7 +60,7 @@ export class UnidadeOperacionalService {
   }
 
   update(model: UnidadeOperacional): Observable<ResponseSuccessHttp> {
-    return this.http.put<ResponseSuccessHttp>(`${this.endpoint}${model.id}`, model, {
+    return this.http.put<ResponseSuccessHttp>(`${this.endpoint}/${model.id}`, model, {
       headers: this.jsonHeaders,
     });
   }
@@ -70,13 +70,13 @@ export class UnidadeOperacionalService {
       return throwError(() => new Error('ID is required'));
     }
 
-    return this.http.delete<ResponseSuccessHttp>(`${this.endpoint}${id}`, {
+    return this.http.delete<ResponseSuccessHttp>(`${this.endpoint}/${id}`, {
       headers: this.jsonHeaders,
     });
   }
 
   findById(id: number): Observable<UnidadeOperacional> {
-    return this.http.get<UnidadeOperacional>(`${this.endpoint}${id}`);
+    return this.http.get<UnidadeOperacional>(`${this.endpoint}/${id}`);
   }
 
   resolve(

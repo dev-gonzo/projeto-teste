@@ -8,7 +8,7 @@ export interface Oitiva {
     codigoBoInquerito: string,
     ano: number,
     nomeDepoente: string,
-    respondavelUnidade: Usuario,
+    responsavelUnidade: Usuario,
     digitador: Usuario,
     flagSigilo: string,
     dataCadastro: string,
@@ -21,7 +21,7 @@ export interface DadosBasicos{
     boInquerito: string,
     unidadeOperacionalBoInquerito: {id: number, nomeUnidadeOperacional: string},
     unidadeOperacionalOitiva: {id: number, nomeUnidadeOperacional: string},
-    respondavelUnidade: {id: number, nome: string, UnidadeOperacionalPrincipal: {id: number}},
+    responsavelUnidade: {id: number, nome: string, unidadeOperacionalPrincipal: {id: number}},
     depoente: {id: number, nome: string, unidadeOperacionalPrincipal: {id: number}},
     digitador: {id: number, nome: string, unidadeOperacionalPrincipal: {id: number}},
     sigilo: {opcao: string, valor: boolean},
@@ -35,7 +35,7 @@ export interface OitivaGeral {
           id: number;
         };
       };
-    respondavelUnidade: {
+    responsavelUnidade: {
         nome: string;
         id: number;
         unidadeOperacionalPrincipal: {

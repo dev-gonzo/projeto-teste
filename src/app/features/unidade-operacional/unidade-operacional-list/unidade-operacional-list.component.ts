@@ -7,8 +7,8 @@ import { ButtonModule } from 'primeng/button';
 import { MessageService } from 'primeng/api';
 import { Tooltip } from 'primeng/tooltip';
 import { Panel } from 'primeng/panel';
-import { Toast } from 'primeng/toast';
-import { Dialog } from 'primeng/dialog';
+import { ToastModule } from 'primeng/toast';
+import { DialogModule } from 'primeng/dialog';
 import { pickBy, identity } from 'lodash-es';
 import { finalize, Subject, takeUntil } from 'rxjs';
 
@@ -34,8 +34,8 @@ import { UnidadeOperacionalService } from '../../../core/services';
     ButtonModule,
     Tooltip,
     FontAwesomeModule,
-    Toast,
-    Dialog,
+    ToastModule,
+    DialogModule,
     UnidadeOperacionalFilterComponent,
     UnidadeOperacionalTableComponent
   ],

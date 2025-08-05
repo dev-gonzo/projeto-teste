@@ -33,6 +33,7 @@ import {
 
 import { UnidadeOperacional, Municipio, Uf } from '../../../../shared/models';
 import { MunicipioService } from '../../../../core/services';
+import { InputTextModule } from 'primeng/inputtext';
 
 @Component({
   selector: 'app-unidade-operacional-form',
@@ -44,6 +45,7 @@ import { MunicipioService } from '../../../../core/services';
     CommonModule,
     AutoComplete,
     Select,
+    InputTextModule
   ],
   templateUrl: './unidade-operacional-form.component.html',
   styleUrl: './unidade-operacional-form.component.scss',

@@ -96,7 +96,7 @@ export class UnidadeOperacionalService {
 
   baixarModelo(): Observable<Blob> {
     return this.http
-      .get(`${this.endpoint}arquivo-UnidadeOperacional`, { responseType: 'blob' })
+      .get(`${this.endpoint}/arquivo-UnidadeOperacional`, { responseType: 'blob' })
       .pipe(
         map((data: Blob) => new Blob([data], {
           type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
@@ -106,7 +106,7 @@ export class UnidadeOperacionalService {
 
   finalizarUpload(): Observable<ResponseSuccessHttp> {
     return this.http.post<ResponseSuccessHttp>(
-      `${this.endpoint}finalizar`,
+      `${this.endpoint}/finalizar`,
       {},
       {
         headers: this.jsonHeaders,

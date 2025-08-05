@@ -6,7 +6,7 @@ import {
 import { ActivatedRoute, Router } from '@angular/router';
 import { CommonModule } from '@angular/common';
 
-import { Toast } from 'primeng/toast';
+import { ToastModule } from 'primeng/toast';
 import { Panel } from 'primeng/panel';
 import { Observable, Subject, of } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
@@ -27,7 +27,7 @@ import { Prepare } from '../../../shared/utils/unidade-operacional.util';
     SharedModule,
     UnidadeOperacionalFormComponent,
     CommonModule,
-    Toast
+    ToastModule
   ],
   templateUrl: './unidade-operacional-edit.component.html',
   styleUrl: './unidade-operacional-edit.component.scss'

@@ -6,7 +6,7 @@ import {
 import { Router } from '@angular/router';
 import { CommonModule } from '@angular/common';
 
-import { Toast } from 'primeng/toast';
+import { ToastModule } from 'primeng/toast';
 import { MessageService } from 'primeng/api';
 import { Panel } from 'primeng/panel';
 import { Observable, Subject } from 'rxjs';
@@ -30,7 +30,7 @@ import { Prepare } from '../../../shared/utils/unidade-operacional.util';
 @Component({
   selector: 'app-unidade-operacional-new',
   standalone: true,
-  imports: [Panel, SharedModule, UnidadeOperacionalFormComponent, CommonModule, Toast],
+  imports: [Panel, SharedModule, UnidadeOperacionalFormComponent, CommonModule, ToastModule],
   templateUrl: './unidade-operacional-new.component.html',
   styleUrl: './unidade-operacional-new.component.scss',
   providers: [MessageService]

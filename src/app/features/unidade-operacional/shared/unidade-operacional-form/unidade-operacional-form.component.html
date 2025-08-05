@@ -75,7 +75,7 @@
 
       <p-autocomplete id="municipio" name="municipio" formControlName="municipio" placeholder="Digite um municipio"
         [suggestions]="municipios" (completeMethod)="buscarMunicipio($event)" (onSelect)="setUf($event)"
-        optionLabel="name" styleClass="w-full" appendTo="body" [showEmptyMessage]="true"
+        optionLabel="nome" styleClass="w-full" appendTo="body" [showEmptyMessage]="true"
         emptyMessage="Nenhum registro encontrado." [minLength]="2" dataKey="codigoIbge" field="nome"
         inputStyleClass="w-full text-sm px-4 py-2 border rounded-lg" />
     </div>

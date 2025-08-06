@@ -1,29 +1,59 @@
 import { NgModule } from '@angular/core';
-import { CommonModule } from '@angular/common';
+import { CommonModule, DatePipe } from '@angular/common';
 import { RouterModule } from '@angular/router';
 
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
-
-import { SidebarComponent } from './components/sidebar/sidebar.component';
-import { NavbarComponent } from './components/navbar/navbar.component';
-
+import { InputTextModule } from 'primeng/inputtext';
+import { InputMask } from 'primeng/inputmask';
+import { Select } from 'primeng/select';
+import { Fieldset } from 'primeng/fieldset';
+import { ButtonModule } from 'primeng/button';
+import { Breadcrumb } from 'primeng/breadcrumb';
+import { FileUpload } from 'primeng/fileupload';
+import { Dialog, DialogModule } from 'primeng/dialog';
+import { TableModule } from 'primeng/table';
 import { MenubarModule } from 'primeng/menubar';
+
+import { NavbarComponent } from './components/navbar/navbar.component';
+import { SidebarComponent } from './components/sidebar/sidebar.component';
+import { BreadcrumbComponent } from './components/breadcrumb/breadcrumb.component';
+import { UploadFileComponent } from './components/upload-file/upload-file.component';
+import { LogsUploadFileComponent } from './components/logs-upload-file/logs-upload-file.component';
+import { ByteToSizePipe } from './pipes';
 
 @NgModule({
   declarations: [
     SidebarComponent,
-    NavbarComponent
+    NavbarComponent,
+    BreadcrumbComponent,
+    UploadFileComponent,
+    LogsUploadFileComponent
   ],
   imports: [
     CommonModule,
     RouterModule,
     FontAwesomeModule,
+    InputTextModule,
+    InputMask,
+    Select,
+    Fieldset,
+    ButtonModule,
+    Breadcrumb,
+    FileUpload,
+    Dialog,
+    TableModule,
+    ByteToSizePipe,
+    DialogModule,
+    ButtonModule,
     MenubarModule
-
   ],
+  providers: [DatePipe],
   exports: [
     SidebarComponent,
-    NavbarComponent
-  ]
+    NavbarComponent,
+    BreadcrumbComponent,
+    UploadFileComponent,
+    LogsUploadFileComponent
+  ],
 })
-export class SharedModule { }
+export class SharedModule {}

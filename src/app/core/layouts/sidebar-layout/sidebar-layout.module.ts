@@ -6,7 +6,6 @@ import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 
 import { SidebarLayoutComponent } from '../../components/sidebar-layout/sidebar-layout.component';
 import { SharedModule } from '../../../shared/shared.module';
-import { ButtonModule } from 'primeng/button';
 
 @NgModule({
   declarations: [
@@ -17,7 +16,6 @@ import { ButtonModule } from 'primeng/button';
     RouterModule,
     SharedModule,
     FontAwesomeModule,
-    ButtonModule
   ]
 })
 export class SidebarLayoutModule { }

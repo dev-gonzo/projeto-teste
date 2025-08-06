@@ -1,4 +1,4 @@
-import { AbstractModel, Cargo, Delegacia, Perfil } from '.';
+import { AbstractModel, Cargo, UnidadeOperacional, Perfil } from '.';
 
 export interface Usuario extends AbstractModel<number> {
   nome: string;
@@ -14,14 +14,14 @@ export interface Usuario extends AbstractModel<number> {
   email: string;
   descricao?: string;
   dataNascimento?: string;
-  delegaciaPrincipal: Delegacia;
-  delegacias?: Delegacia[];
+  unidadeOperacionalPrincipal: UnidadeOperacional;
+  unidadesOperacionais?: UnidadeOperacional[];
   status?: string;
 }
 
 export interface UsuarioBasico extends AbstractModel<number> {
   nome: string;
-  delegaciaPrincipal?: {
+  UnidadeOperacionalPrincipal?: {
     id: number
   }
 }

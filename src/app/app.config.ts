@@ -11,12 +11,15 @@ import { JWT_OPTIONS, JwtHelperService } from '@auth0/angular-jwt';
 import { provideNgxMask } from 'ngx-mask';
 import { providePrimeNG } from 'primeng/config';
 // import Material from '@primeng/themes/material';
-
+import { CookieService } from 'ngx-cookie-service';
 import { routes } from './app.routes';
 import { SharedModule } from './shared/shared.module';
+import { AuthInterceptor } from './core/interceptor/auth.interceptor';
 
 export const appConfig: ApplicationConfig = {
   providers: [
+    CookieService,
+    { provide: HTTP_INTERCEPTORS, useClass: AuthInterceptor, multi: true },
     provideZoneChangeDetection({ eventCoalescing: true }),
     provideRouter(routes),
     provideHttpClient(withInterceptorsFromDi()),
@@ -29,9 +32,9 @@ export const appConfig: ApplicationConfig = {
     importProvidersFrom(SharedModule),
     provideAnimationsAsync(),
     providePrimeNG({
-    //   theme: {
-    //     preset: Material
-    // }
+      //   theme: {
+      //     preset: Material
+      // }
     }),
   ],
 };

@@ -1,6 +1,6 @@
 export * from './abstract.model';
 export * from './cargo.model';
-export * from './delegacia.model';
+export * from './unidade-operacional.model';
 export * from './historico-acoes.model';
 export * from './http-response.model';
 export * from './logs-upload.model';

@@ -1,0 +1,57 @@
+<ng-container
+  *ngIf="dataSource?.count === 0; then loaded; else results"
+></ng-container>
+
+<ng-template #loaded>
+  <div
+    id="alert"
+    class="bg-amber-100 border-l-8 border-solid border-amber-300 px-1 py-2"
+  >
+    <p class="flex justify-center items-center text-lg">
+      <fa-icon
+        class="bg-white flex justify-center items-center w-9 h-9 mr-4 text-red-700 rounded-full"
+        [icon]="['fas', 'exclamation']"
+      ></fa-icon>
+      <span>Não há registros para exibição.</span>
+    </p>
+  </div>
+</ng-template>
+
+<ng-template #results>
+  <p-table
+    [value]="dataSource.data"
+    [paginator]="true"
+    [rows]="5"
+    [tableStyle]="{ 'min-width': '50rem' }"
+    [rowsPerPageOptions]="[5, 10, 20]"
+    [totalRecords]="dataSource.count"
+    [lazy]="true"
+    [pageLinks]="5"
+    (onPage)="onPageChanged($event)"
+    currentPageReportTemplate="{currentPage} de {totalPages}"
+    class="rounded-2xl transition-all"
+  >
+    <ng-template #header class="p-4 bg-sky-500">
+      <tr class="!text-white rounded py-4 bg-sky-500">
+        <th class="text-white p-4 bg-sky-500">Data e hora da ação</th>
+        <th class="text-white p-4">Nome do usuário</th>
+        <th class="text-white p-4">Ação</th>
+        <th class="text-white p-4">IP da Máquina</th>
+      </tr>
+    </ng-template>
+    <ng-template #body let-historico class="rounded-2xl bg-white">
+      <tr class="rounded-2xl bg-white text-gray-800">
+        <td>{{ historico?.dataHoraCompleta | date : "dd/MM/yyyy HH:mm:ss" }}</td>
+        <td>{{ historico?.usuario?.nome }}</td>
+        <td>{{ historico?.acao }}</td>
+        <td>{{ historico?.ip }}</td>
+      </tr>
+    </ng-template>
+    <ng-template pTemplate="paginatorright" let-state>
+      <span
+        >Total de {{ state.totalRecords }}
+        {{ state.totalRecords > 1 ? "registros." : "registro." }}</span
+      >
+    </ng-template>
+  </p-table>
+</ng-template>

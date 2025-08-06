@@ -11,3 +11,8 @@ export class PageImpl<T> implements Page<T> {
     return new PageImpl<T>(data, total);
   }
 }
+
+export interface PageResponse<T> {
+  content: T[];
+  totalElements: number;
+}

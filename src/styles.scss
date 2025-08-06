@@ -1,3 +1,32 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+$cor-fundo: azure;
+$cor-bradcrumb: #52a4db;
+
+p-panel .p-panel .p-panel-header {
+  @apply bg-white text-gray-800 rounded-lg;
+}
+
+.breadcrumb-link-color{
+  color: $cor-bradcrumb;
+}
+
+.custom-menubar {
+  border: none;
+  border-radius: 0;
+  padding: 0.5rem 1rem;
+  height: 5.5rem;
+  display: flex;
+  align-items: center;
+  background-color: $cor-fundo;
+
+  .p-menubar-root-list {
+    width: 100%;
+  }
+}
+
+.p-menubar-end {
+  margin-left: auto;
+}

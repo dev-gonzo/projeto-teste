@@ -5,7 +5,7 @@ export interface MidiasRelacionadas {
     flagSigilo: string;
     codigoBoInquerito: string;
     thumbnailUrl?: string;
-    delegado?: {
+    responsavelUnidade?: {
         id: number;
         nome: string;
     };
@@ -13,9 +13,9 @@ export interface MidiasRelacionadas {
         id: number;
         nome: string;
     };
-    delegaciaOitiva?: {
+    UnidadeOperacionalOitiva?: {
         id: number;
-        nomeDelegacia: string;
+        nomeUnidadeOperacional: string;
     }
 }
 

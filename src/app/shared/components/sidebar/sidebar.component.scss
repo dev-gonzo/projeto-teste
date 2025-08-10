@@ -1,5 +1,5 @@
 $cor-fundo-botao: rgb(18 118 201 / var(--tw-bg-opacity, 1));
-$cor-fundo: azure;
+$cor-fundo: #dbeafe;
 
 .sidenav {
   position: fixed;
@@ -10,8 +10,9 @@ $cor-fundo: azure;
   justify-content: center;
   height: 100dvh;
   width: 16.5rem;
-  padding: 1rem .5rem;
+  padding: 1rem 0.5rem;
   background-color: $cor-fundo;
+  box-shadow: 3px 0 8px -2px rgba(0, 0, 0, 0.1);
   transition: width 0.3s ease;
 
   &.sidenav-collapsed {

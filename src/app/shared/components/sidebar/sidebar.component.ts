@@ -4,6 +4,7 @@ import { Router } from '@angular/router';
 import { faGear, faVideo, faArrowUpFromBracket, faTv, faBuildingShield } from '@fortawesome/free-solid-svg-icons';
 
 import { SidebarLinkModel } from '../../models';
+import { AuthService } from '../../../core/services';
 
 @Component({
   selector: 'app-sidebar',
@@ -16,8 +17,12 @@ export class SidebarComponent {
   isCollapsed = false;
 
   @Output() collapseChange = new EventEmitter<boolean>();
+  @Output() openLogoutModal = new EventEmitter<void>();
 
-  constructor(private readonly router: Router) {
+  constructor(
+    private readonly router: Router,
+    private readonly authService: AuthService
+  ) {
     this.currentRoute = this.router.url;
   }
 
@@ -67,5 +72,14 @@ export class SidebarComponent {
 
       this.collapseChange.emit(false);
     }
+  }
+
+  confirmLogout() {
+    this.openLogoutModal.emit();
+  }
+
+  logout() {
+    this.authService.logout();
+    this.router.navigate(['/auth/login']);
   }
 }

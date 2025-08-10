@@ -82,6 +82,7 @@
           <button
             class="text-white w-full rounded-md py-2.7 text-sm ease-nav-brand my-0 flex items-center px-2 transition-colors"
             [ngClass]="isCollapsed ? 'justify-center' : 'justify-start'"
+            (click)="confirmLogout()"
           >
             <div
               class="flex h-8 w-8 items-center justify-center rounded-full bg-red-500 bg-center stroke-0 text-center xl:p-2.5"

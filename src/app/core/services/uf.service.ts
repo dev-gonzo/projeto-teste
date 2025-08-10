@@ -10,7 +10,7 @@ import { environment } from '../../../environments/environment';
   providedIn: 'root',
 })
 export class UfService {
-  endpoint: string = `${environment.apiUrl}/cadastros/ufs`;
+  endpoint: string = `${environment.apiUrl}/endereco/ufs`;
   constructor(private readonly http: HttpClient) {}
 
   getAll(): Observable<Uf[]> {

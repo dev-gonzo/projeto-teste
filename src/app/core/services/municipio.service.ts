@@ -10,10 +10,10 @@ import { environment } from '../../../environments/environment';
   providedIn: 'root',
 })
 export class MunicipioService {
-  endpoint: string = `${environment.apiUrl}/cadastros/municipios`;
-  constructor(private readonly http: HttpClient) {}
+  endpoint: string = `${environment.apiUrl}/endereco/municipio`;
+  constructor(private readonly http: HttpClient) { }
 
   query(nome: string): Observable<Municipio[]> {
-     return this.http.get<Municipio[]>(this.endpoint, { params: new HttpParams().set('nome', nome) });
+    return this.http.get<Municipio[]>(`${this.endpoint}/${nome}`);
   }
 }

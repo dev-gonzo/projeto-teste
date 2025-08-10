@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, HostListener } from '@angular/core';
 
 import { FaIconLibrary } from '@fortawesome/angular-fontawesome';
 import { fas } from '@fortawesome/free-solid-svg-icons';
@@ -11,12 +11,23 @@ import { Router } from '@angular/router';
 })
 export class SidebarLayoutComponent {
   isSidebarCollapsed = false;
+  isMobile = false;
 
+  
   constructor(
     library: FaIconLibrary,
     private readonly router: Router
   ) {
     library.addIconPacks(fas);
+  }
+  
+  @HostListener('window:resize')
+  onResize() {
+    this.isMobile = window.innerWidth <= 900;
+  }
+
+  ngOnInit() {
+    this.onResize();
   }
 
   onCollapseChange(isCollapsed: boolean): void {

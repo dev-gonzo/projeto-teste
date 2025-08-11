@@ -5,7 +5,7 @@ import * as CryptoJs from 'crypto-js';
   providedIn: 'root'
 })
 export class CryptoService {
-  private readonly secretKey: string = 'Application@secret_key';
+  private readonly secretKey: string = process.env['SECRET_KEY'] || 'default_key';
 
   constructor() { }
 

@@ -91,7 +91,7 @@ describe('PerfilService', () => {
       const req = httpTestingController.expectOne(endpoint);
 
       expect(req.request.method).toBe('GET');
-      expect(req.request.headers.get('Authorization')).toBe('Bearer null');
+      expect(req.request.headers.get('Authorization')).toBe('');
 
       req.flush(mockPerfis);
     });

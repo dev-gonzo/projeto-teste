@@ -2,15 +2,12 @@ import { TestBed } from '@angular/core/testing';
 import * as CryptoJs from 'crypto-js';
 
 import { CryptoService } from './crypto.service';
-import { secretKeyEnvironment } from '../../../environments/environment';
 
 describe('CryptoService', () => {
   let service: CryptoService;
-  const mockSecretKey = 'minha-chave-secreta-de-teste';
+  let mockSecretKey = 'minha-chave-secreta-de-teste';
 
   beforeEach(() => {
-    (secretKeyEnvironment as any).secretKey = mockSecretKey;
-
     TestBed.configureTestingModule({
       providers: [CryptoService],
     });
@@ -53,7 +50,7 @@ describe('CryptoService', () => {
         mockSecretKey
       ).toString();
 
-      (secretKeyEnvironment as any).secretKey = 'chave-errada';
+      mockSecretKey = 'chave-errada';
       const newServiceWithWrongKey = new CryptoService();
       const decryptedValue = newServiceWithWrongKey.decrypt(
         correctEncryptedValue
@@ -68,7 +65,7 @@ describe('CryptoService', () => {
       const key = 'minha_chave';
       const hashedKey = service.hashKey(key);
 
-      const expectedHash = CryptoJs.SHA256(key + mockSecretKey).toString();
+      const expectedHash = CryptoJs.HmacSHA256(key, mockSecretKey).toString();
 
       expect(hashedKey).toBeInstanceOf(String);
       expect(hashedKey).toEqual(expectedHash);

@@ -27,7 +27,7 @@ export class CryptoService {
   }
 
   hashKey(key: string): string {
-    return CryptoJs.SHA256(key + this.secretKey).toString();
+    return CryptoJs.HmacSHA256(key, this.secretKey).toString();
   }
 
 }

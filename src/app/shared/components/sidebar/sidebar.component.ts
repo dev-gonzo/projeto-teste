@@ -5,6 +5,7 @@ import { faGear, faVideo, faArrowUpFromBracket, faTv, faBuildingShield } from '@
 
 import { SidebarLinkModel } from '../../models';
 import { AuthService } from '../../../core/services';
+import { take } from 'rxjs';
 
 @Component({
   selector: 'app-sidebar',
@@ -79,6 +80,6 @@ export class SidebarComponent {
   }
 
   logout() {
-    this.authService.logout().subscribe({ error: (err) => console.error("Falha ao realizar logout.") });
+    this.authService.logout().pipe(take(1)).subscribe({ error: (err) => console.error("Falha ao realizar logout.") });
   }
 }

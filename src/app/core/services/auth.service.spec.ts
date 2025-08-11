@@ -67,7 +67,7 @@ describe('AuthService', () => {
     it('deve fazer uma requisição POST e lidar com o login bem-sucedido', () => {
       const credentials = { cpf: '123', senha: 'abc' };
       const apiResponse = { token: 'mock-token' };
-      const expectedResponse = { success: true, message: 'null' };
+      const expectedResponse = { success: true, message: 'null', token: '' };
 
       let eventFired = false;
       spyOn(service, 'setAppToken').and.callThrough();
@@ -93,7 +93,7 @@ describe('AuthService', () => {
     it('não deve armazenar o token, navegar ou emitir evento se a resposta não tiver um token', () => {
       const credentials = { cpf: '123', senha: 'abc' };
       const apiResponse = { message: 'Invalid credentials' };
-      const expectedResponse = { success: false, message: 'Invalid credentials' };
+      const expectedResponse = { success: false, message: 'Invalid credentials', token: '' };
 
       let eventFired = false;
       spyOn(service, 'setAppToken');

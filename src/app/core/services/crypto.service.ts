@@ -5,7 +5,7 @@ import * as CryptoJs from 'crypto-js';
   providedIn: 'root'
 })
 export class CryptoService {
-  private readonly secretKey: string = process.env['SECRET_KEY'] || 'default_key';
+  private readonly secretKey: string = '__SECRET_KEY_PLACEHOLDER__';
 
   constructor() { }
 
@@ -16,7 +16,11 @@ export class CryptoService {
   decrypt(valueToDecrypt: string): string {
     try {
       const bytes = CryptoJs.AES.decrypt(valueToDecrypt, this.secretKey);
-      return bytes.toString(CryptoJs.enc.Utf8);
+      const decrypted = bytes.toString(CryptoJs.enc.Utf8);
+      if (!decrypted) {
+        throw new Error('Falha na descriptografia: resultado vazio');
+      }
+      return decrypted;
     } catch (error) {
       if (!(error instanceof Error)) {
         throw new Error(String(error));

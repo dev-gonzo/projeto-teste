@@ -56,7 +56,7 @@ describe('CryptoService', () => {
         correctEncryptedValue
       );
 
-      expect(decryptedValue).toBe('');
+      expect(() => service.decrypt(decryptedValue)).toThrow();
     });
   });
 

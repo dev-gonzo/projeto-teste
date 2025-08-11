@@ -8,7 +8,7 @@ import { environment } from '../../../environments/environment';
 export class CryptoService {
   private readonly secretKey: string = environment.secretKey!;
   
-  constructor() { }
+  constructor() { if (!this.secretKey) { throw new Error('A chave secreta para criptografia não foi configurada.'); } }
 
   encrypt(value: string): string {
     return CryptoJs.AES.encrypt(value, this.secretKey).toString();

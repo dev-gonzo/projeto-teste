@@ -12,7 +12,7 @@ import { Router } from '@angular/router';
 export class SidebarLayoutComponent {
   isSidebarCollapsed = false;
   isMobile = false;
-
+  readonly dimensao_tela_mobile = 900;
   
   constructor(
     library: FaIconLibrary,
@@ -23,7 +23,7 @@ export class SidebarLayoutComponent {
   
   @HostListener('window:resize')
   onResize() {
-    this.isMobile = window.innerWidth <= 900;
+    this.isMobile = window.innerWidth <= this.dimensao_tela_mobile;
   }
 
   ngOnInit() {

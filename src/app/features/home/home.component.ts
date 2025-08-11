@@ -1,10 +1,8 @@
 import { Component } from '@angular/core';
-import { ActivatedRoute, Router } from '@angular/router';
 
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 
 import { SharedModule } from '../../shared/shared.module';
-import { AuthService, SharedService } from '../../core/services';
 
 @Component({
   selector: 'home-page',
@@ -14,10 +12,9 @@ import { AuthService, SharedService } from '../../core/services';
   styleUrl: './home.component.scss',
 })
 export class HomePageComponent {
-  constructor(
-    private readonly authService: AuthService,
-    private readonly router: Router,
-    private readonly sharedService: SharedService,
-    private readonly activatedRoute: ActivatedRoute
-  ) {}
+  constructor() { }
+
+  total_usuarios = 400;
+  total_unidades = 899;
+
 }

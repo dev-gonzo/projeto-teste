@@ -79,6 +79,6 @@ export class SidebarComponent {
   }
 
   logout() {
-    this.authService.logout().subscribe();
+    this.authService.logout().subscribe({ error: (err) => console.error("Falha ao realizar logout.") });
   }
 }

@@ -7,6 +7,7 @@ import { CookieService } from 'ngx-cookie-service';
 import { environment } from '../../../environments/environment';
 import { keys } from '../../shared/utils/variables';
 import { CryptoService } from './crypto.service';
+import { LoginResponse } from '../../shared/models';
 
 @Injectable({
   providedIn: 'root',
@@ -22,22 +23,16 @@ export class AuthService {
     private readonly cookieService: CookieService
   ) { }
 
-  public login(credentials: { cpf: string; senha: string }): Observable<{ success: boolean; message?: string }> {
+  public login(credentials: { cpf: string; senha: string }): Observable<LoginResponse> {
     return this.httpClient
-      .post<any>(`${this.API_URL}/cadastros/auth/login`, credentials)
+      .post<LoginResponse>(`${this.API_URL}/cadastros/auth/login`, credentials)
       .pipe(
-        tap((response: any) => {
-          if (response && response.token) {
+        tap(response => {
+          if (response?.token) {
             this.setAppToken(response.token);
             this.router.navigate(['/auth/validate-token']);
             this.emitLoggedInEvent();
           }
-        }),
-        map((response: any) => {
-          return {
-            success: !!response.token,
-            message: response.message || (response.token ? null : 'Falha no login'),
-          };
         })
       );
   }

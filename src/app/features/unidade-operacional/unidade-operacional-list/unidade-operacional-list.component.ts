@@ -6,6 +6,7 @@ import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 import { ButtonModule } from 'primeng/button';
 import { MessageService } from 'primeng/api';
 import { Tooltip } from 'primeng/tooltip';
+import { Panel } from 'primeng/panel';
 import { ToastModule } from 'primeng/toast';
 import { DialogModule } from 'primeng/dialog';
 import { pickBy, identity } from 'lodash-es';

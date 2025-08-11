@@ -18,17 +18,13 @@ export class CryptoService {
     try {
       const bytes = CryptoJs.AES.decrypt(valueToDecrypt, this.secretKey);
       return bytes.toString(CryptoJs.enc.Utf8);
-    } catch (error: unknown) {
-      console.error('Falha na descriptografia');
-      if (error instanceof Error) {
-        throw new Error('Falha ao descriptografar: ' + error.message);
-      } else {
-        throw error;
+    } catch (error) {
+      if (!(error instanceof Error)) {
+        throw new Error(String(error));
       }
+      throw error;
     }
-
   }
-
 
   hashKey(key: string): string {
     return CryptoJs.SHA256(key + this.secretKey).toString();

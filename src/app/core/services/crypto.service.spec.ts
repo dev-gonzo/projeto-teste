@@ -43,9 +43,7 @@ describe('CryptoService', () => {
 
     it('deve retornar uma string vazia ao tentar descriptografar um valor inválido', () => {
       const invalidEncryptedValue = 'valor-invalido-que-nao-foi-criptografado';
-      const decryptedValue = service.decrypt(invalidEncryptedValue);
-
-      expect(decryptedValue).toEqual('');
+      expect(() => service.decrypt(invalidEncryptedValue)).toThrow();
     });
 
     it('deve retornar uma string vazia se a chave secreta estiver errada', () => {

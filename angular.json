@@ -3,7 +3,7 @@
   "version": 1,
   "newProjectRoot": "projects",
   "projects": {
-    "portal-de-midia-front-end": {
+    "avs-portaldemidias": {
       "projectType": "application",
       "schematics": {
         "@schematics/angular:component": {
@@ -17,7 +17,8 @@
         "build": {
           "builder": "@angular-devkit/build-angular:application",
           "options": {
-            "outputPath": "dist/portal-de-midia-front-end",
+            "outputPath": "dist",
+            "baseHref": "/avs-portaldemidias/",
             "index": "src/index.html",
             "browser": "src/main.ts",
             "polyfills": ["zone.js"],
@@ -61,12 +62,15 @@
         },
         "serve": {
           "builder": "@angular-devkit/build-angular:dev-server",
+          "options": {
+            "proxyConfig": "proxy.conf.json"
+          },
           "configurations": {
             "production": {
-              "buildTarget": "portal-de-midia-front-end:build:production"
+              "buildTarget": "avs-portaldemidias:build:production"
             },
             "development": {
-              "buildTarget": "portal-de-midia-front-end:build:development"
+              "buildTarget": "avs-portaldemidias:build:development"
             }
           },
           "defaultConfiguration": "development"

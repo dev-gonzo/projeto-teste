@@ -1,3 +1,4 @@
 export const environment = {
-  apiUrl: 'http://localhost:3028',
+  apiUrl: '__API_URL_PLACEHOLDER__',
+  secretKey: '__SECRET_KEY_PLACEHOLDER__'
 };

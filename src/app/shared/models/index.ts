@@ -12,3 +12,4 @@ export * from './sidebar-link.model';
 export * from './uf.model';
 export * from './usuario.model';
 export * from './oitiva.model';
+export * from './login.model';

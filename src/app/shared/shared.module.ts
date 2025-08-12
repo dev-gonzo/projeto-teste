@@ -13,6 +13,7 @@ import { FileUpload } from 'primeng/fileupload';
 import { Dialog, DialogModule } from 'primeng/dialog';
 import { TableModule } from 'primeng/table';
 import { MenubarModule } from 'primeng/menubar';
+import { AvatarModule } from 'primeng/avatar';
 
 import { NavbarComponent } from './components/navbar/navbar.component';
 import { SidebarComponent } from './components/sidebar/sidebar.component';
@@ -20,6 +21,9 @@ import { BreadcrumbComponent } from './components/breadcrumb/breadcrumb.componen
 import { UploadFileComponent } from './components/upload-file/upload-file.component';
 import { LogsUploadFileComponent } from './components/logs-upload-file/logs-upload-file.component';
 import { ByteToSizePipe } from './pipes';
+
+import { MessageService } from 'primeng/api';
+
 
 @NgModule({
   declarations: [
@@ -45,9 +49,11 @@ import { ByteToSizePipe } from './pipes';
     ByteToSizePipe,
     DialogModule,
     ButtonModule,
-    MenubarModule
+    MenubarModule,
+    AvatarModule,
+    
   ],
-  providers: [DatePipe],
+  providers: [DatePipe, MessageService],
   exports: [
     SidebarComponent,
     NavbarComponent,

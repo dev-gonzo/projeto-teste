@@ -4,6 +4,9 @@ import { Router } from '@angular/router';
 import { faGear, faVideo, faArrowUpFromBracket, faTv, faBuildingShield } from '@fortawesome/free-solid-svg-icons';
 
 import { SidebarLinkModel } from '../../models';
+import { AuthService } from '../../../core/services';
+import { take } from 'rxjs';
+import { MessageService } from 'primeng/api';
 
 @Component({
   selector: 'app-sidebar',
@@ -16,8 +19,13 @@ export class SidebarComponent {
   isCollapsed = false;
 
   @Output() collapseChange = new EventEmitter<boolean>();
+  @Output() openLogoutModal = new EventEmitter<void>();
 
-  constructor(private readonly router: Router) {
+  constructor(
+    private readonly router: Router,
+    private readonly authService: AuthService,
+    private readonly messageService: MessageService
+  ) {
     this.currentRoute = this.router.url;
   }
 
@@ -67,5 +75,31 @@ export class SidebarComponent {
 
       this.collapseChange.emit(false);
     }
+  }
+
+  confirmLogout() {
+    this.openLogoutModal.emit();
+  }
+
+  logout() {
+    this.authService.logout()
+      .pipe(take(1))
+      .subscribe({
+        next: () => {
+          this.messageService.add({
+            severity: 'success',
+            summary: 'Sucesso',
+            detail: 'Logout realizado com sucesso!'
+          });
+        },
+        error: (err) => {
+          console.error('Falha ao realizar logout.', err);
+          this.messageService.add({
+            severity: 'error',
+            summary: 'Erro',
+            detail: 'Falha ao realizar logout. Por favor, tente novamente.'
+          });
+        }
+      });
   }
 }

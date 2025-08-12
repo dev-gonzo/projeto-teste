@@ -3,7 +3,7 @@
   "version": 1,
   "newProjectRoot": "projects",
   "projects": {
-    "avs-portaldemidias": {
+    "avs-portaldemidia": {
       "projectType": "application",
       "schematics": {
         "@schematics/angular:component": {
@@ -18,7 +18,7 @@
           "builder": "@angular-devkit/build-angular:application",
           "options": {
             "outputPath": "dist",
-            "baseHref": "/avs-portaldemidias/",
+            "baseHref": "/avs-portaldemidia/",
             "index": "src/index.html",
             "browser": "src/main.ts",
             "polyfills": ["zone.js"],
@@ -67,10 +67,10 @@
           },
           "configurations": {
             "production": {
-              "buildTarget": "avs-portaldemidias:build:production"
+              "buildTarget": "avs-portaldemidia:build:production"
             },
             "development": {
-              "buildTarget": "avs-portaldemidias:build:development"
+              "buildTarget": "avs-portaldemidia:build:development"
             }
           },
           "defaultConfiguration": "development"

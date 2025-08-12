@@ -18,30 +18,25 @@ import { environment } from '../../../environments/environment';
   providedIn: 'root',
 })
 export class UnidadeOperacionalService {
-  private readonly endpoint = `${environment.apiUrl}/cadastros/unidade-operacional`;
-  public readonly urlUpload = `${environment.apiUrl}/cadastros/unidade-operacional/upload-file`;
-  private readonly urlLogs = `${environment.apiUrl}/cadastros/unidade-operacional/logs`;
-
-  constructor(private readonly http: HttpClient) { }
+  private readonly endpoint = `${environment.apiUrl}/unidades`;
+  public readonly urlUpload = `${environment.apiUrl}/unidades/upload-file`;
+  private readonly urlLogs = `${environment.apiUrl}/unidades/logs`;
 
   private readonly jsonHeaders = new HttpHeaders({
     'Content-Type': 'application/json; charset=utf-8',
   });
 
+  constructor(private readonly http: HttpClient) { }
 
   query(params: HttpParams): Observable<Page<UnidadeOperacional>> {
     return this.http.get<PageResponse<UnidadeOperacional>>(this.endpoint, { params }).pipe(
-      map((response) => {
-        return PageImpl.of(response.content, response.totalElements);
-      })
+      map(response => PageImpl.of(response.content, response.totalElements))
     );
   }
 
   getLogs(params: HttpParams, id: number): Observable<Page<HistoricoAcoes>> {
     return this.http.get<PageResponse<HistoricoAcoes>>(`${this.urlLogs}/${id}`, { params }).pipe(
-      map((response) => {
-        return PageImpl.of(response.content, response.totalElements);
-      })
+      map(response => PageImpl.of(response.content, response.totalElements))
     );
   }
 
@@ -79,17 +74,14 @@ export class UnidadeOperacionalService {
     return this.http.get<UnidadeOperacional>(`${this.endpoint}/${id}`);
   }
 
-  resolve(
-    route: ActivatedRouteSnapshot,
-    state: RouterStateSnapshot
-  ): Observable<UnidadeOperacional> {
+  resolve(route: ActivatedRouteSnapshot, state: RouterStateSnapshot): Observable<UnidadeOperacional> {
     const id = route.paramMap.get('id');
     if (!id) {
       return throwError(() => new Error('ID não encontrado na rota'));
     }
 
     return this.findById(Number(id)).pipe(
-      filter((model) => !!model),
+      filter(model => !!model),
       take(1)
     );
   }
@@ -98,9 +90,7 @@ export class UnidadeOperacionalService {
     return this.http
       .get(`${this.endpoint}/arquivo-UnidadeOperacional`, { responseType: 'blob' })
       .pipe(
-        map((data: Blob) => new Blob([data], {
-          type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
-        }))
+        map(data => new Blob([data], { type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' }))
       );
   }
 

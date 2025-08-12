@@ -2,18 +2,19 @@ import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 
 import { Observable } from 'rxjs';
-
-import { Uf } from '../../shared/models';
+import { Cargo } from '../../shared/models';
 import { environment } from '../../../environments/environment';
 
 @Injectable({
   providedIn: 'root',
 })
-export class UfService {
-  endpoint: string = `${environment.apiUrl}/endereco/ufs`;
+
+export class CargoService {
+  endpoint: string = `${environment.apiUrl}/cargos`;
+
   constructor(private readonly http: HttpClient) {}
 
-  getAll(): Observable<Uf[]> {
-    return this.http.get<Uf[]>(`${this.endpoint}`);
+  getAll(): Observable<Cargo[]> {
+    return this.http.get<Cargo[]>(this.endpoint);
   }
 }

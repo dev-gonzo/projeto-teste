@@ -18,9 +18,9 @@ import { environment } from '../../../environments/environment';
   providedIn: 'root',
 })
 export class UsuarioService {
-  private readonly endpoint = `${environment.apiUrl}/cadastros/usuarios`;
-  private readonly urlUpload = `${environment.apiUrl}/cadastros/usuarios/upload-file`;
-  private readonly urlLogs = `${environment.apiUrl}/cadastros/usuarios/logs`;
+  private readonly endpoint = `${environment.apiUrl}/usuarios`;
+  private readonly urlUpload = `${environment.apiUrl}/usuarios/upload-file`;
+  private readonly urlLogs = `${environment.apiUrl}/usuarios/logs`;
 
   constructor(private readonly http: HttpClient) {}
 

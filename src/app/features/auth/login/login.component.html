@@ -30,7 +30,7 @@
         class="p-6 pb-0 mb-0 bg-transparent border-b-0 rounded-t-2xl text-center align-middle"
       >
         <img
-          src="/assets/img/logoPortal.png"
+          src="assets/img/logoPortal.png"
           class="relative mx-auto mb-0 w-6/12"
           alt="Logo"
         />
@@ -124,15 +124,15 @@
         </form>
         <button
           class="flex items-center justify-center mt-4 bg-sky-500 disabled:opacity-50 disabled:bg-sky-600 text-white w-full px-6 py-3 mb-0 font-bold text-center uppercase align-middle transition-all border-0 rounded-lg shadow-soft-md bg-x-25 bg-150 leading-pro text-xs ease-soft-in disabled:hover:scale-100 hover:scale-102 active:opacity-85"
-          routerLink="cadastro"
+          [routerLink]="['/auth/cadastro']"
         >
           <div>Criar nova conta</div>
         </button>
       </div>
       <div
-        class="p-6 px-1 pt-0 text-center bg-transparent border-t-0 border-t-solid rounded-b-2xl lg:px-2"
+        class="p-1 pt-0 text-center bg-transparent border-t-0 border-t-solid rounded-b-2xl lg:px-2"
       >
-        <p class="mx-auto mb-6 leading-normal text-sm">
+        <p class="mx-auto mb-2 leading-normal text-sm">
           Esqueceu a senha?
           <a
             [routerLink]="['/auth/recuperar-senha']"
@@ -141,6 +141,11 @@
             Clique aqui
           </a>
         </p>
+      </div>
+      <div
+        class="flex  mb-10 items-center justify-center  pointer-events-none"
+      >
+        <img src="assets/img/logo-almaviva.png" class="w-32" alt="Logo" />
       </div>
     </div>
   </div>

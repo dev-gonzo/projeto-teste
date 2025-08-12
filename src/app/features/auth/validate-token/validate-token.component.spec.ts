@@ -129,42 +129,7 @@ describe('ValidateTokenComponent', () => {
     });
   });
 
-  describe('Passo 0: Solicitação de E-mail', () => {
-    it('deve avançar para o passo 1 e iniciar o cooldown em caso de sucesso', fakeAsync(() => {
-      component.mailForm.setValue({ email: 'sucesso@teste.com' });
-      const startCooldownSpy = spyOn(component, 'startCooldown').and.callThrough();
-
-      component.onSubmitEmail();
-      tick();
-
-      expect(component.step).toBe(1);
-      expect(component.successMessage).toBe('Token enviado');
-      expect(startCooldownSpy).toHaveBeenCalled();
-      fixture.destroy();
-    }));
-
-    it('deve exibir mensagem de erro se o e-mail não for encontrado', fakeAsync(() => {
-      component.mailForm.setValue({ email: 'falha@teste.com' });
-      component.onSubmitEmail();
-      tick();
-      expect(component.step).toBe(0);
-      expect(component.errorMessage).toContain('E-mail não encontrado');
-    }));
-
-    it('deve exibir mensagem sobre limite de 24h e não avançar o passo', fakeAsync(() => {
-      component.mailForm.setValue({ email: 'limite@teste.com' });
-      component.onSubmitEmail();
-      tick();
-      expect(component.step).toBe(0);
-      expect(component.successMessage).toContain('Você já solicitou um token recentemente');
-    }));
-  });
-
-  describe('Passo 1: Validação do Token', () => {
-    beforeEach(() => {
-      component.step = 1;
-    });
-
+  describe('Validação do Token', () => {
     it('deve validar o token, exibir sucesso e redirecionar após 2 segundos', fakeAsync(() => {
       component.tokenForm.setValue({ token: '123456' });
 

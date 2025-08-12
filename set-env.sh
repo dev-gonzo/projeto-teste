@@ -9,10 +9,10 @@ echo "---"
 echo "Starting to replace environment variables in JS files."
 echo "Path of the build: $BUILD_DIR"
 
-JS_FILES=$(find "$BUILD_DIR" -maxdepth 1 -type f -name 'main-*.js' -o -name 'chunk-*.js' | sort)
+JS_FILES=$(find "$BUILD_DIR" -maxdepth 1 -type f -name 'main-.js' -o -name 'chunk-.js' | sort)
 
 if [ -z "$JS_FILES" ]; then
-  echo "Error: No file 'main-*.js' or 'chunk-*.js' found in '$BUILD_DIR'. Exiting."
+  echo "Error: No file 'main-.js' or 'chunk-.js' found in '$BUILD_DIR'. Exiting."
   exit 1
 fi
 
@@ -35,9 +35,9 @@ for FILE_TO_MODIFY in $JS_FILES; do
       ENV_VALUE=""
     fi
     
-    sed -i "s;'$PLACEHOLDER';'$ENV_VALUE';g" "$FILE_TO_MODIFY"
+    sed -i "s#'$PLACEHOLDER'#'$ESCAPED_ENV_VALUE'#g" "$FILE_TO_MODIFY"
 
-    sed -i "s;\"$PLACEHOLDER\";\"$ENV_VALUE\";g" "$FILE_TO_MODIFY"
+    sed -i "s#\"$PLACEHOLDER\"#\"$ESCAPED_ENV_VALUE\"#g" "$FILE_TO_MODIFY"
 
     echo "  - Attempt to replace '$PLACEHOLDER' with '$ENV_VALUE'"
 

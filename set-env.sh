@@ -1,4 +1,4 @@
-BUILD_DIR="./admin"
+BUILD_DIR="./dist"
 
 ENV_MAP=(
   "API_URL":"__API_URL_PLACEHOLDER__"

@@ -12,7 +12,7 @@ import { CommonModule } from '@angular/common';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 
 import { PasswordValidators } from '../../../shared/validators';
-import { SenhaService } from '../../../core/services';
+import { RecuperarSenharService } from '../../../core/services';
 import { Subscription } from 'rxjs';
 
 const passwordValidators = [
@@ -44,8 +44,7 @@ export class CreatePasswordComponent implements OnInit, OnDestroy {
   errorMessageMatch: string = '';
   successMessage: string = '';
   sendingRequest: boolean = false;
-  code: string = '';
-  token: string = '';
+  codigo: string = '';
   showPass: boolean = false;
 
   private readonly subscriptions = new Subscription();
@@ -63,15 +62,12 @@ export class CreatePasswordComponent implements OnInit, OnDestroy {
   constructor(
     private readonly router: Router,
     private readonly activatedRoute: ActivatedRoute,
-    private readonly senha: SenhaService
+    private readonly recuperarSenhar: RecuperarSenharService
   ) { }
 
   ngOnInit(): void {
     const queryParamsSub = this.activatedRoute.queryParams.subscribe((params) => {
-      this.code = params['id'];
-
-      this.token = params['q'];
-
+      this.codigo = params['c'];
       this.verifyParams();
     });
 
@@ -92,7 +88,7 @@ export class CreatePasswordComponent implements OnInit, OnDestroy {
   }
 
   verifyParams() {
-    if (!this.code || !this.token) {
+    if (!this.codigo) {
       this.router.navigate(['/auth/login']);
     }
   }
@@ -102,21 +98,28 @@ export class CreatePasswordComponent implements OnInit, OnDestroy {
       return;
     }
 
-    const id = +this.code;
+    const cpf = sessionStorage.getItem('cpfRecuperacao');
+    if (!cpf) {
+      this.errorMessage = 'CPF não encontrado. Solicite a recuperação novamente.';
+      return;
+    }
+
+    const codigo = this.codigo;
     const password = this.passForm.value.password || '';
     this.sendingRequest = true;
 
-    const createPassSub = this.senha.criarSenha(id, password, this.token).subscribe({
-      next: (response: string) => {
-        this.sendingRequest = false;
-        this.successMessage = response || 'Senha cadastrada com sucesso. Você será redirecionado para a área de login.';
-        setTimeout(() => this.back(), 2000);
-      },
-      error: (err) => {
-        this.sendingRequest = false;
-        this.errorMessage = err.error?.message || 'Erro ao cadastrar senha. Tente novamente ou solicite uma nova validação.';
-      },
-    });
+    const createPassSub = this.recuperarSenhar.validarRecuperacaoSenha(cpf, codigo, password)
+      .subscribe({
+        next: (response) => {
+          this.sendingRequest = false;
+          this.successMessage = response.mensagem || 'Senha cadastrada com sucesso. Você será redirecionado para a área de login.';
+          setTimeout(() => this.back(), 2000);
+        },
+        error: (err) => {
+          this.sendingRequest = false;
+          this.errorMessage = err.error?.message || 'Erro ao cadastrar senha. Tente novamente ou solicite uma nova validação.';
+        },
+      });
 
     this.subscriptions.add(createPassSub);
   }

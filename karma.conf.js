@@ -19,7 +19,7 @@ module.exports = function (config) {
     coverageReporter: {
       dir: require("path").join(
         __dirname,
-        "./coverage/avs-portaldemidia"
+        "./coverage/avs-portaldemidias"
       ),
       subdir: ".",
       reporters: [

@@ -1,7 +1,7 @@
 <div
   class="m-0 h-full text-base antialiased font-normal leading-default bg-sky-50 text-slate-500"
 >
-  <app-sidebar (collapseChange)="onCollapseChange($event)"></app-sidebar>
+  <app-sidebar (collapseChange)="onCollapseChange($event)"  (openLogoutModal)="openLogoutModal()"></app-sidebar>
   <div
     class="relative h-full min-h-screen transition-all duration-200 ease-in-out"
     [ngClass]="{
@@ -13,6 +13,11 @@
     <app-navbar></app-navbar>
     <main class="w-full p-2 sm:p-4 lg:p-10 xl:p-16 2xl:p-10">
       <router-outlet></router-outlet>
+      <app-confirm-logout
+        [message]="'Deseja mesmo sair do sistema?'"
+        (confirmLogout)="logout()"
+        (cancelLogout)="cancelLogout()"
+      ></app-confirm-logout>
     </main>
   </div>
 </div>

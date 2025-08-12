@@ -1,3 +1,4 @@
+import { StatusProcessamento } from './../../shared/enums/index';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { EventEmitter, Injectable } from '@angular/core';
 import { Router } from '@angular/router';
@@ -25,12 +26,12 @@ export class AuthService {
 
   public login(credentials: { cpf: string; senha: string }): Observable<LoginResponse> {
     return this.httpClient
-      .post<LoginResponse>(`${this.API_URL}/cadastros/auth/login`, credentials)
+      .post<LoginResponse>(`${this.API_URL}/autenticacao/token`, credentials)
       .pipe(
         tap(response => {
           if (response?.token) {
             this.setAppToken(response.token);
-            this.router.navigate(['/auth/validate-token']);
+            this.router.navigate(['/home']);
             this.emitLoggedInEvent();
           }
         })
@@ -45,12 +46,8 @@ export class AuthService {
       return of({ success: true, message: null });
     }
 
-    const headers = new HttpHeaders({
-      'Authorization': `Bearer ${token}`
-    });
-
     return this.httpClient
-      .delete<any>(`${this.API_URL}/cadastros/auth/logout`, { headers })
+      .delete<any>(`${this.API_URL}/autenticacao/token/${token}`)
       .pipe(
         tap(() => {
           this.removeAppToken();

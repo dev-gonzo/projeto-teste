@@ -21,6 +21,7 @@ import { BreadcrumbComponent } from './components/breadcrumb/breadcrumb.componen
 import { UploadFileComponent } from './components/upload-file/upload-file.component';
 import { LogsUploadFileComponent } from './components/logs-upload-file/logs-upload-file.component';
 import { ByteToSizePipe } from './pipes';
+import { ConfirmLogoutComponent } from './components/confirm-logout/confirm-logout.component';
 
 import { MessageService } from 'primeng/api';
 
@@ -31,7 +32,8 @@ import { MessageService } from 'primeng/api';
     NavbarComponent,
     BreadcrumbComponent,
     UploadFileComponent,
-    LogsUploadFileComponent
+    LogsUploadFileComponent,
+    ConfirmLogoutComponent
   ],
   imports: [
     CommonModule,
@@ -59,7 +61,8 @@ import { MessageService } from 'primeng/api';
     NavbarComponent,
     BreadcrumbComponent,
     UploadFileComponent,
-    LogsUploadFileComponent
+    LogsUploadFileComponent,
+    ConfirmLogoutComponent
   ],
 })
 export class SharedModule {}

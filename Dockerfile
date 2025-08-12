@@ -11,7 +11,10 @@ FROM nginx:stable-alpine AS production
 RUN apk add --no-cache bash
 
 COPY nginx-custom.conf /etc/nginx/conf.d/default.conf
-COPY --from=build /app/dist/portal-de-midia-front-end/browser /usr/share/nginx/html
+COPY --from=build /app/dist/browser /usr/share/nginx/html
+
+COPY set-env.sh /usr/share/nginx/html/
+RUN chmod +x /usr/share/nginx/html/set-env.sh
 
 WORKDIR /usr/share/nginx/html
 

@@ -5,7 +5,7 @@ WORKDIR /app
 COPY package.json package-lock.json ./
 RUN npm install
 COPY . .
-RUN npm run build -- --configuration=production --base-href=/avs-portaldemidia/
+RUN npm run build -- --configuration=production --base-href=/avs-portaldemidias/
 
 FROM nginx:stable-alpine AS production
 RUN apk add --no-cache bash

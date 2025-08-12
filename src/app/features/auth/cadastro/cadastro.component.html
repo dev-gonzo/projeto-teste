@@ -1,3 +1,14 @@
+<div class="absolute top-5 left-4 z-20">
+  <div>
+    <button
+      on-enter="back()"
+      (click)="back($event)"
+      class="flex items-center gap-2 text-sky-600 hover:text-sky-700 font-semibold"
+    >
+      <fa-icon [icon]="['fas', 'angle-left']"></fa-icon> Voltar
+    </button>
+  </div>
+</div>
 <div
   class="flex min-h-screen w-screen flex-col items-center justify-center px-4"
 >
@@ -11,8 +22,8 @@
         class="mb-0 rounded-t-2xl border-b-0 bg-transparent p-2 pb-0 text-center"
       >
         <img
-          src="/assets/img/Portal.png"
-          class="relative mx-auto mb-4 w-3/12"
+          src="assets/img/Portal.png"
+          class="relative mx-auto w-3/12"
           alt="Logo"
         />
         <h2 class="text-2xl font-bold">Auto Cadastro</h2>
@@ -345,7 +356,7 @@
             <button
               type="submit"
               [disabled]="!form.valid"
-              class="flex w-full items-center justify-center rounded-lg bg-sky-600 px-6 py-3 text-center font-bold text-white shadow-md transition-transform hover:scale-105 disabled:opacity-50 md:w-6/12"
+              class="flex items-center justify-center bg-sky-600 disabled:opacity-50 disabled:bg-sky-600 text-white w-full px-6 py-3 mb-0 font-bold text-center uppercase align-middle transition-all border-0 rounded-lg shadow-soft-md bg-x-25 bg-150 leading-pro text-xs ease-soft-in disabled:hover:scale-100 hover:scale-102 active:opacity-85"
             >
               Criar Conta
             </button>
@@ -354,17 +365,21 @@
       </form>
 
       <div
-        class="rounded-b-2xl border-t-0 bg-transparent p-6 px-1 pt-0 text-center lg:px-2"
+        class="p-1 pt-0 text-center bg-transparent border-t-0 border-t-solid rounded-b-2xl lg:px-2"
       >
         <p class="mx-auto my-6 text-sm">
           Já possui conta?
           <button
-            [routerLink]="['login']"
+            on-enter="back()"
+            (click)="back($event)"
             class="bg-gradient-to-tl from-blue-600 to-cyan-400 bg-clip-text font-semibold text-transparent"
           >
             Faça login
           </button>
         </p>
+      </div>
+      <div class="flex mb-4 items-center justify-center pointer-events-none">
+        <img src="assets/img/logo-almaviva.png" class="w-32" alt="Logo" />
       </div>
     </div>
   </div>

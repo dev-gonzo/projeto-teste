@@ -79,8 +79,6 @@ export class ValidateTokenComponent implements OnInit, OnDestroy {
     this.loginSubscription = this.sharedService.login$.subscribe(() => {
       this.errorMessage = '';
     });
-
-    this.step = 0;
   }
 
   ngOnDestroy(): void {
@@ -90,55 +88,6 @@ export class ValidateTokenComponent implements OnInit, OnDestroy {
     if (this.loginSubscription) {
       this.loginSubscription.unsubscribe();
     }
-  }
-
-  onSubmitEmail() {
-    if (this.mailForm.invalid) return;
-
-    this.errorMessage = '';
-    this.successMessage = '';
-    this.sendingRequest = true;
-
-    const email = this.mailForm.value.email ?? '';
-    const body = { email };
-
-    this.tokenService.requestToken(body).subscribe({
-      next: (response) => {
-        this.sendingRequest = false;
-
-        if (response.jwt) {
-          this.tokenService.setToken(response.jwt);
-
-          if (response.mensagem === 'O usuário está dentro do limite de 24hr.') {
-            this.successMessage =
-              'Você já solicitou um token recentemente, você será redirecionado para a página principal.';
-            setTimeout(() => {
-              this.router.navigate(['/']);
-            }, 5000);
-            return;
-          } else {
-            this.successMessage =
-              response.mensagem ||
-              'Token enviado com sucesso, verifique o seu e-mail.';
-            this.errorMessage = '';
-            this.step = 1;
-            this.startCooldown();
-          }
-
-          this.errorMessage = '';
-        } else {
-          this.successMessage = '';
-          this.errorMessage = 'Erro inesperado ao solicitar token.';
-        }
-      },
-      error: (error) => {
-        this.errorMessage =
-          error.erro || 'E-mail não compatível com registros do sistema.';
-        this.successMessage = '';
-        this.sendingRequest = false;
-      },
-    });
-
   }
 
   onSubmitToken() {

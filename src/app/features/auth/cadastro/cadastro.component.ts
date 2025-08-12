@@ -5,6 +5,7 @@ import { FormBuilder, FormGroup, ReactiveFormsModule, Validators, AbstractContro
 import { Router, RouterLink } from '@angular/router';
 import { DropdownModule } from 'primeng/dropdown';
 import { InputTextModule } from 'primeng/inputtext';
+import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 
 @Component({
   selector: 'app-cadastro',
@@ -15,6 +16,7 @@ import { InputTextModule } from 'primeng/inputtext';
     InputTextModule,
     CalendarModule,
     DropdownModule,
+    FontAwesomeModule,
     RouterLink
   ],
   templateUrl: './cadastro.component.html',
@@ -102,5 +104,9 @@ export class CadastroComponent {
 
       console.log('Form inválido');
     }
+  }
+
+  back(_?: any) {
+    this.router.navigate(['/auth/login']);
   }
 }

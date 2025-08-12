@@ -10,7 +10,7 @@ import { interval, Subscription } from 'rxjs';
   styleUrl: './erro.component.scss'
 })
 export class ErroComponent implements OnInit, OnDestroy {
-  cooldownTime = 5;
+  cooldownTime = 10;
   private cooldownSubscription?: Subscription;
 
   constructor(private router: Router, private location: Location) {}

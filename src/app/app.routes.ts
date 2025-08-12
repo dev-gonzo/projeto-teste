@@ -34,9 +34,9 @@ export const routes: Routes = [
             import('./features/auth/auth.routes').then((routes) => routes.routes),
     },
     {
-        path: 'nao-encontrada',
-        loadComponent: () => import(`./shared/components/nao-encontrada/nao-encontrada.component`)
-            .then(mod => mod.NaoEncontradaComponent)
+        path: 'erro',
+        loadComponent: () => import(`./shared/components/erro/erro.component`)
+            .then(mod => mod.ErroComponent)
     },
     {
         path: 'nao-autorizado',
@@ -45,7 +45,7 @@ export const routes: Routes = [
     },
     {
         path: '**',
-        loadComponent: () => import(`./shared/components/erro/erro.component`)
-            .then(mod => mod.ErroComponent)
+        loadComponent: () => import(`./shared/components/nao-encontrada/nao-encontrada.component`)
+            .then(mod => mod.NaoEncontradaComponent)
     },
 ];

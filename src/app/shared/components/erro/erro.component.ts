@@ -10,7 +10,7 @@ import { Location } from '@angular/common';
 })
 export class ErroComponent implements OnInit, OnDestroy {
   cooldownTime = 5;
-  private intervalId?: any;
+  private intervalId?: number;
 
   constructor(private router: Router, private location: Location) {}
 
@@ -23,7 +23,7 @@ export class ErroComponent implements OnInit, OnDestroy {
   }
 
   startCooldown() {
-    this.intervalId = setInterval(() => {
+    this.intervalId = window.setInterval(() => {
       this.cooldownTime--;
 
       if (this.cooldownTime <= 0) {

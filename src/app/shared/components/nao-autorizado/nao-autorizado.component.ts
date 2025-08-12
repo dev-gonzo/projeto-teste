@@ -1,11 +1,11 @@
 import { Component } from '@angular/core';
+import { RouterModule } from '@angular/router';
 
 @Component({
   selector: 'app-nao-autorizado',
   standalone: true,
+  imports: [RouterModule],
   templateUrl: './nao-autorizado.component.html',
-  styleUrl: './nao-autorizado.component.scss'
+  styleUrls: ['./nao-autorizado.component.scss']
 })
-export class NaoAutorizadoComponent {
-
-}
+export class NaoAutorizadoComponent {}

@@ -1,4 +1,4 @@
 export const environment = {
-  apiUrl: '192.168.208.51:8081',
+  apiUrl: '__API_URL_PLACEHOLDER__',
   secretKey: '__SECRET_KEY_PLACEHOLDER__'
 };

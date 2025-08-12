@@ -15,7 +15,7 @@ export class RecuperarSenharService {
         sessionStorage.setItem('cpfRecuperacao', cpf);
         const body = {
             cpf: cpf,
-            urlRedirect: "http://192.168.208.64:4201/avs-portaldemidias/auth/criar-senha"
+            urlRedirect: "http://34.149.63.128/avs-portaldemidias/auth/criar-senha"
         }
         return this.http.post(`${this.baseUrl}/autenticacao/recuperar-senha`, body)
     }

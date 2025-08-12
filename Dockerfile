@@ -5,13 +5,14 @@ WORKDIR /app
 COPY package.json package-lock.json ./
 RUN npm install
 COPY . .
-RUN npm run build -- --configuration=production
+RUN npm run build -- --configuration=production --base-href /avs-portaldemidia/
 
 FROM nginx:stable-alpine AS production
 RUN apk add --no-cache bash
 
 COPY nginx-custom.conf /etc/nginx/conf.d/default.conf
-COPY --from=build /app/dist/browser /usr/share/nginx/html
+
+COPY --from=build /app/dist/browser /usr/share/nginx/html/avs-portaldemidia
 
 COPY set-env.sh /usr/share/nginx/html/
 RUN chmod +x /usr/share/nginx/html/set-env.sh

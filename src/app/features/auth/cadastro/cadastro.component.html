@@ -1,0 +1,371 @@
+<div
+  class="flex min-h-screen w-screen flex-col items-center justify-center px-4"
+>
+  <div
+    class="mx-auto flex w-full max-w-full flex-col items-center px-3 md:w-12/12 lg:w-8/12"
+  >
+    <div
+      class="relative flex min-w-0 flex-col break-words rounded-2xl border-0 bg-transparent bg-clip-border shadow-none"
+    >
+      <div
+        class="mb-0 rounded-t-2xl border-b-0 bg-transparent p-2 pb-0 text-center"
+      >
+        <img
+          src="/assets/img/Portal.png"
+          class="relative mx-auto mb-4 w-3/12"
+          alt="Logo"
+        />
+        <h2 class="text-2xl font-bold">Auto Cadastro</h2>
+        <p class="text-gray-600">
+          Preencha os dados abaixo para criar sua conta
+        </p>
+      </div>
+
+      <div class="flex-auto p-4">
+        <div
+          *ngIf="successMessage"
+          class="mt-1 text-center text-sm text-green-600"
+        >
+          {{ successMessage }}
+        </div>
+        <div
+          *ngIf="errorMessage && !successMessage"
+          class="mt-1 text-center text-sm text-red-600"
+        >
+          {{ errorMessage }}
+        </div>
+      </div>
+
+      <form
+        [formGroup]="form"
+        (ngSubmit)="onSubmit()"
+        class="flex-auto px-4 pb-0"
+        novalidate
+      >
+        <div class="grid grid-cols-4 gap-4">
+          <div class="col-span-4 md:col-span-2">
+            <label for="nome" class="mb-2 block font-semibold">Nome*</label>
+            <input
+              pInputText
+              id="nome"
+              type="text"
+              formControlName="nome"
+              placeholder="Digite seu nome"
+              class="w-full rounded-lg border px-4 py-2 text-sm"
+              [ngClass]="{ 'border-red-500': isInvalid('nome') }"
+            />
+            <small *ngIf="isInvalid('nome')" class="text-red-500"
+              >Nome é obrigatório.</small
+            >
+          </div>
+
+          <div class="col-span-4 md:col-span-1">
+            <label for="dataNascimento" class="mb-2 block font-semibold"
+              >Data de Nascimento</label
+            >
+            <p-calendar
+              id="dataNascimento"
+              formControlName="dataNascimento"
+              class="w-full rounded-lg border px-4 py-2 text-sm"
+              dateFormat="dd/mm/yy"
+              placeholder="DD/MM/AAAA"
+              [maxDate]="hoje"
+              [showButtonBar]="true"
+              [ngClass]="{ 'border-red-500': isInvalid('dataNascimento') }"
+            ></p-calendar>
+            <small *ngIf="isInvalid('dataNascimento')" class="text-red-500"
+              >Data inválida.</small
+            >
+          </div>
+
+          <div class="col-span-4 md:col-span-1">
+            <label for="sexo" class="mb-2 block font-semibold">Gênero</label>
+            <p-dropdown
+              id="sexo"
+              formControlName="sexo"
+              [options]="sexos"
+              optionLabel="descricao"
+              placeholder="Selecione"
+              class="w-full rounded-lg border text-sm"
+              [ngClass]="{ 'border-red-500': isInvalid('sexo') }"
+            ></p-dropdown>
+            <small *ngIf="isInvalid('sexo')" class="text-red-500"
+              >Selecione um gênero.</small
+            >
+          </div>
+
+          <div class="col-span-4 md:col-span-1">
+            <label for="cpf" class="mb-2 block font-semibold">CPF*</label>
+            <input
+              pInputText
+              id="cpf"
+              type="text"
+              formControlName="cpf"
+              placeholder="999.999.999-99"
+              class="w-full rounded-lg border px-4 py-2 text-sm"
+              mask="999.999.999-99"
+              [ngClass]="{ 'border-red-500': isInvalid('cpf') }"
+            />
+            <small *ngIf="isInvalid('cpf')" class="text-red-500">
+              <span *ngIf="form.get('cpf')?.errors?.['required']"
+                >CPF é obrigatório.</span
+              >
+              <span *ngIf="form.get('cpf')?.errors?.['pattern']"
+                >CPF inválido.</span
+              >
+            </small>
+          </div>
+
+          <div class="col-span-4 md:col-span-1">
+            <label for="rg" class="mb-2 block font-semibold">RG*</label>
+            <input
+              pInputText
+              id="rg"
+              type="text"
+              formControlName="rg"
+              placeholder="99.999.999-A"
+              class="w-full rounded-lg border px-4 py-2 text-sm"
+              mask="99.999.999-A"
+              [ngClass]="{ 'border-red-500': isInvalid('rg') }"
+            />
+            <small *ngIf="isInvalid('rg')" class="text-red-500"
+              >RG é obrigatório.</small
+            >
+          </div>
+
+          <div class="col-span-4 md:col-span-1">
+            <label for="telefone" class="mb-2 block font-semibold"
+              >Telefone</label
+            >
+            <input
+              pInputText
+              id="telefone"
+              type="text"
+              formControlName="telefone"
+              placeholder="(XX) XXXXX-XXXX"
+              class="w-full rounded-lg border px-4 py-2 text-sm"
+              mask="(99) 99999-9999"
+            />
+          </div>
+
+          <div class="col-span-4 md:col-span-1">
+            <label for="celular" class="mb-2 block font-semibold"
+              >Celular</label
+            >
+            <input
+              pInputText
+              id="celular"
+              type="text"
+              formControlName="celular"
+              placeholder="(XX) XXXXX-XXXX"
+              class="w-full rounded-lg border px-4 py-2 text-sm"
+              mask="(99) 99999-9999"
+            />
+          </div>
+
+          <div class="col-span-4 md:col-span-2">
+            <label for="email" class="mb-2 block font-semibold">E-mail*</label>
+            <input
+              pInputText
+              id="email"
+              type="email"
+              formControlName="email"
+              placeholder="email@seudominio.com.br"
+              class="w-full rounded-lg border px-4 py-2 text-sm"
+              [ngClass]="{ 'border-red-500': isInvalid('email') }"
+            />
+            <small *ngIf="isInvalid('email')" class="text-red-500">
+              <span *ngIf="form.get('email')?.errors?.['required']"
+                >E-mail é obrigatório.</span
+              >
+              <span *ngIf="form.get('email')?.errors?.['email']"
+                >E-mail inválido.</span
+              >
+            </small>
+          </div>
+
+          <div class="col-span-4 md:col-span-2">
+            <label for="unidade" class="mb-2 block font-semibold"
+              >Unidade Operacional*</label
+            >
+            <p-dropdown
+              id="unidade"
+              formControlName="unidade"
+              [options]="unidades"
+              optionLabel="descricao"
+              placeholder="Selecione"
+              class="w-full rounded-lg border text-sm"
+              [ngClass]="{ 'border-red-500': isInvalid('unidade') }"
+            ></p-dropdown>
+            <small *ngIf="isInvalid('unidade')" class="text-red-500"
+              >Unidade é obrigatória.</small
+            >
+          </div>
+
+          <div class="col-span-4 md:col-span-1">
+            <label for="cep" class="mb-2 block font-semibold">CEP*</label>
+            <input
+              pInputText
+              id="cep"
+              formControlName="cep"
+              placeholder="00000-000"
+              class="w-full rounded-lg border px-4 py-2 text-sm"
+              [ngClass]="{ 'border-red-500': isInvalid('cep') }"
+            />
+            <small *ngIf="isInvalid('cep')" class="text-red-500"
+              >CEP inválido.</small
+            >
+          </div>
+
+          <div class="col-span-4 md:col-span-2">
+            <label for="rua" class="mb-2 block font-semibold">Rua*</label>
+            <input
+              pInputText
+              id="rua"
+              formControlName="rua"
+              placeholder="Rua"
+              class="w-full rounded-lg border px-4 py-2 text-sm"
+              readonly
+            />
+            <small *ngIf="isInvalid('rua')" class="text-red-500"
+              >Rua é obrigatória.</small
+            >
+          </div>
+
+          <div class="col-span-4 md:col-span-1">
+            <label for="numero" class="mb-2 block font-semibold">Número*</label>
+            <input
+              pInputText
+              id="numero"
+              formControlName="numero"
+              placeholder="Número"
+              class="w-full rounded-lg border px-4 py-2 text-sm"
+              [ngClass]="{ 'border-red-500': isInvalid('numero') }"
+            />
+            <small *ngIf="isInvalid('numero')" class="text-red-500"
+              >Número é obrigatório.</small
+            >
+          </div>
+
+          <div class="col-span-4 md:col-span-1">
+            <label for="bairro" class="mb-2 block font-semibold">Bairro*</label>
+            <input
+              pInputText
+              id="bairro"
+              formControlName="bairro"
+              placeholder="Bairro"
+              class="w-full rounded-lg border px-4 py-2 text-sm"
+              readonly
+            />
+            <small *ngIf="isInvalid('bairro')" class="text-red-500"
+              >Bairro é obrigatório.</small
+            >
+          </div>
+          <div class="col-span-4 md:col-span-1">
+            <label for="uf" class="mb-2 block font-semibold">UF*</label>
+            <p-dropdown
+              id="uf"
+              formControlName="uf"
+              [options]="ufs"
+              optionLabel="descricao"
+              placeholder="Selecione"
+              class="w-full rounded-lg border text-sm"
+            ></p-dropdown>
+            <small *ngIf="isInvalid('uf')" class="text-red-500"
+              >UF é obrigatório.</small
+            >
+          </div>
+
+          <div class="col-span-4 md:col-span-2">
+            <label for="complemento" class="mb-2 block font-semibold"
+              >Complemento</label
+            >
+            <input
+              pInputText
+              id="complemento"
+              formControlName="complemento"
+              placeholder="Complemento"
+              class="w-full rounded-lg border px-4 py-2 text-sm"
+            />
+          </div>
+
+          <div class="col-span-4">
+            <label for="descricao" class="mb-2 block font-semibold"
+              >Observações</label
+            >
+            <textarea
+              id="descricao"
+              formControlName="descricao"
+              rows="4"
+              placeholder="Escreva algo..."
+              class="w-full rounded-lg border px-4 py-2 text-sm"
+            ></textarea>
+          </div>
+
+          <div class="col-span-4 md:col-span-2">
+            <label for="senha" class="mb-2 block font-semibold">Senha*</label>
+            <input
+              pInputText
+              id="senha"
+              type="password"
+              formControlName="senha"
+              placeholder="Digite sua senha"
+              class="w-full rounded-lg border px-4 py-2 text-sm"
+              [ngClass]="{ 'border-red-500': isInvalid('senha') }"
+            />
+            <small *ngIf="isInvalid('senha')" class="text-red-500"
+              >Senha é obrigatória.</small
+            >
+          </div>
+
+          <div class="col-span-4 md:col-span-2">
+            <label for="confirmarSenha" class="mb-2 block font-semibold"
+              >Confirmar Senha*</label
+            >
+            <input
+              pInputText
+              id="confirmarSenha"
+              type="password"
+              formControlName="confirmarSenha"
+              placeholder="Repita sua senha"
+              class="w-full rounded-lg border px-4 py-2 text-sm"
+              [ngClass]="{ 'border-red-500': isInvalid('confirmarSenha') }"
+            />
+            <small *ngIf="isInvalid('confirmarSenha')" class="text-red-500">
+              <span *ngIf="form.get('confirmarSenha')?.errors?.['required']"
+                >Confirmação de senha é obrigatória.</span
+              >
+              <span *ngIf="form.errors?.['passwordMismatch']"
+                >As senhas não coincidem.</span
+              >
+            </small>
+          </div>
+
+          <div class="col-span-4 mt-10 flex flex-col items-center text-center">
+            <button
+              type="submit"
+              [disabled]="!form.valid"
+              class="flex w-full items-center justify-center rounded-lg bg-sky-600 px-6 py-3 text-center font-bold text-white shadow-md transition-transform hover:scale-105 disabled:opacity-50 md:w-6/12"
+            >
+              Criar Conta
+            </button>
+          </div>
+        </div>
+      </form>
+
+      <div
+        class="rounded-b-2xl border-t-0 bg-transparent p-6 px-1 pt-0 text-center lg:px-2"
+      >
+        <p class="mx-auto my-6 text-sm">
+          Já possui conta?
+          <button
+            [routerLink]="['login']"
+            class="bg-gradient-to-tl from-blue-600 to-cyan-400 bg-clip-text font-semibold text-transparent"
+          >
+            Faça login
+          </button>
+        </p>
+      </div>
+    </div>
+  </div>
+</div>

@@ -1,0 +1,18 @@
+<p-dialog [(visible)]="display"
+          [modal]="true"
+          [closable]="true"
+          [style]="{width: '400px'}"
+          [contentStyle]="{ 'text-align': 'center'}"
+          [draggable]="false"
+          showHeader="false"
+          [baseZIndex]="10000"
+          [styleClass]="'custom-modal'">
+    <img src="assets/img/warning.png" alt="Atenção" width="80" class="warning-icon"/>
+    <h4 class="mb-4 font-bold text-gray-700">ATENÇÃO</h4>
+    <p class="text-lg text-gray-600">{{ message }}</p>
+
+    <div class="flex justify-center gap-6 pt-4 pb-4">
+        <button pButton type="button" label="Não" class="cancel-button p-button-secondary bg-gray-400 text-white rounded-4xl bg-center shadow-lg text-center w-25 py-2 px-4" (click)="cancel()"></button>
+        <button pButton type="button" label="Sim" class="confirm-button p-button-primary bg-blue-800 text-white rounded-4xl bg-center shadow-lg text-center w-25 py-2 px-4" (click)="confirm()"></button>
+    </div>
+</p-dialog>

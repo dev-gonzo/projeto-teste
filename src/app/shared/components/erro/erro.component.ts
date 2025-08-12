@@ -1,6 +1,7 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { Location } from '@angular/common';
+import { interval, Subscription } from 'rxjs';
 
 @Component({
   selector: 'app-erro',
@@ -10,7 +11,7 @@ import { Location } from '@angular/common';
 })
 export class ErroComponent implements OnInit, OnDestroy {
   cooldownTime = 5;
-  private intervalId?: number;
+  private cooldownSubscription?: Subscription;
 
   constructor(private router: Router, private location: Location) {}
 
@@ -19,18 +20,17 @@ export class ErroComponent implements OnInit, OnDestroy {
   }
 
   ngOnDestroy(): void {
-    clearInterval(this.intervalId);
+    this.cooldownSubscription?.unsubscribe();
   }
 
   startCooldown() {
-    this.intervalId = window.setInterval(() => {
+    this.cooldownSubscription = interval(1000).subscribe(() => {
       this.cooldownTime--;
-
       if (this.cooldownTime <= 0) {
-        clearInterval(this.intervalId);
+        this.cooldownSubscription?.unsubscribe();
         this.router.navigate(['home']);
       }
-    }, 1000);
+    });
   }
 
   goBack() {

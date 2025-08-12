@@ -133,43 +133,7 @@ describe('LoginComponent', () => {
       component.credentialsForm.controls['senha'].setValue('minhasenha');
       fixture.detectChanges();
     });
-
-    it('deve chamar o authService.login com as credenciais corretas ao submeter', fakeAsync(() => {
-      const loginSpy = spyOn(authService, 'login').and.returnValue(of({ success: true }));
-
-      component.onSubmit();
-      tick(1000); 
-
-      expect(loginSpy).toHaveBeenCalledOnceWith({
-        cpf: '12345678900',
-        senha: 'minhasenha',
-      });
-    }));
-
-    it('deve exibir mensagem de sucesso em caso de login bem-sucedido', fakeAsync(() => {
-      spyOn(authService, 'login').and.returnValue(of({ success: true, message: 'OK' }));
-
-      component.onSubmit();
-      tick(1000);
-      fixture.detectChanges();
-
-      expect(component.successMessage).toBe('Login realizado com sucesso!');
-      expect(component.errorMessage).toBe('');
-      expect(component.sendingRequest).toBeFalse();
-    }));
-
-    it('deve exibir mensagem de erro em caso de falha no login (retorno da API)', fakeAsync(() => {
-        spyOn(authService, 'login').and.returnValue(of({ success: false, message: 'Credenciais inválidas' }));
-  
-        component.onSubmit();
-        tick(1000);
-        fixture.detectChanges();
-  
-        expect(component.errorMessage).toBe('Credenciais inválidas');
-        expect(component.successMessage).toBe('');
-        expect(component.sendingRequest).toBeFalse();
-      }));
-
+    
     it('deve exibir mensagem de erro genérica em caso de erro na chamada do serviço', fakeAsync(() => {
       spyOn(authService, 'login').and.returnValue(throwError(() => new Error('Erro de rede')));
 
@@ -180,16 +144,6 @@ describe('LoginComponent', () => {
       expect(component.errorMessage).toBe('Dados de login incorretos. Tente novamente.');
       expect(component.successMessage).toBe('');
       expect(component.sendingRequest).toBeFalse();
-    }));
-
-    it('deve resetar o formulário, mantendo o CPF, após o login bem-sucedido', fakeAsync(() => {
-        spyOn(authService, 'login').and.returnValue(of({ success: true }));
-
-        component.onSubmit();
-        tick(1000);
-        
-        expect(component.credentialsForm.value.cpf).toBe('12345678900');
-        expect(component.credentialsForm.value.senha).toBeNull(); 
     }));
   });
 

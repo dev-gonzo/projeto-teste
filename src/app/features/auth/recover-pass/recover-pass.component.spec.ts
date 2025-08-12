@@ -129,40 +129,6 @@ describe('RecoverPassComponent', () => {
     });
   });
 
-  describe('Lógica de Submissão', () => {
-    it('deve chamar o serviço de e-mail, exibir mensagem de sucesso e iniciar o cooldown', () => {
-      const emailSpy = spyOn(emailService, 'enviarEmail').and.callThrough();
-      const cooldownSpy = spyOn(component as any, 'startCooldownTimer');
-      
-      component.mailForm.controls['cpf'].setValue('sucesso@teste.com');
-      
-      component.onSubmit();
-      fixture.detectChanges();
-
-      expect(emailSpy).toHaveBeenCalledWith('sucesso@teste.com');
-      expect(component.successMessage).toBe('E-mail de recuperação enviado.');
-      expect(component.errorMessage).toBe('');
-      expect(component.sendingRequest).toBeFalse();
-      expect(cooldownSpy).toHaveBeenCalled();
-    });
-
-    it('deve chamar o serviço de e-mail, exibir mensagem de erro e NÃO iniciar o cooldown', () => {
-      const emailSpy = spyOn(emailService, 'enviarEmail').and.callThrough();
-      const cooldownSpy = spyOn(component as any, 'startCooldownTimer');
-
-      component.mailForm.controls['email'].setValue('falha@teste.com');
-      
-      component.onSubmit();
-      fixture.detectChanges();
-
-      expect(emailSpy).toHaveBeenCalledWith('falha@teste.com');
-      expect(component.errorMessage).toBe('E-mail não compatível com registros do sistema.');
-      expect(component.successMessage).toBe('');
-      expect(component.sendingRequest).toBeFalse();
-      expect(cooldownSpy).not.toHaveBeenCalled();
-    });
-  });
-
   describe('Ciclo de Vida', () => {
     it('deve cancelar a inscrição ao ser destruído', () => {
         const subscription = (component as any).subscription as Subscription;

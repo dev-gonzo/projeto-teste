@@ -33,4 +33,19 @@ export const routes: Routes = [
         loadChildren: () =>
             import('./features/auth/auth.routes').then((routes) => routes.routes),
     },
+    {
+        path: 'nao-encontrada',
+        loadComponent: () => import(`./shared/components/nao-encontrada/nao-encontrada.component`)
+            .then(mod => mod.NaoEncontradaComponent)
+    },
+    {
+        path: 'nao-autorizado',
+        loadComponent: () => import(`./shared/components/nao-autorizado/nao-autorizado.component`)
+            .then(mod => mod.NaoAutorizadoComponent)
+    },
+    {
+        path: '**',
+        loadComponent: () => import(`./shared/components/erro/erro.component`)
+            .then(mod => mod.ErroComponent)
+    },
 ];

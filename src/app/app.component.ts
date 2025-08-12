@@ -22,7 +22,7 @@ import { SharedModule } from './shared/shared.module';
   styleUrl: './app.component.scss',
 })
 export class AppComponent {
-  title = 'Oitiva Digital';
+  title = 'Portal de Mídias';
 
   constructor(library: FaIconLibrary, private primeng: PrimeNG) {
     library.addIconPacks(fas);

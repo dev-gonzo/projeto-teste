@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { Router, ActivatedRouteSnapshot, CanActivate } from '@angular/router';
 import { AuthService } from '../services';
-import { isPermissaoPerfil, PermissaoPerfil, RotasPermitidasPorPerfil } from '../../shared/models';
+import { isPermissaoPerfil, RotasPermitidasPorPerfil } from '../../shared/models';
 
 @Injectable({
   providedIn: 'root',
@@ -36,7 +36,6 @@ export class AuthGuardService implements CanActivate {
 
   private perfilTemAcesso(perfil: string | null, rota: string): boolean {
     if (!isPermissaoPerfil(perfil)) {
-      console.warn(`Perfil inválido: ${perfil}`);
       return false;
     }
     const permissoes = RotasPermitidasPorPerfil[perfil] || [];

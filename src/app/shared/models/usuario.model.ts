@@ -6,9 +6,7 @@ export interface Usuario extends AbstractModel<number> {
   perfil: Perfil;
   cargo: Cargo;
   celular?: string;
-  celularDDD?: string;
   telefone?: string;
-  telefoneDDD?: string;
   sexo?: string;
   cpf: string;
   email: string;

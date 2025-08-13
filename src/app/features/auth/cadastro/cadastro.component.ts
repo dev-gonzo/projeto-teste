@@ -10,6 +10,7 @@ import { InputTextModule } from 'primeng/inputtext';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 import { NgxMaskDirective, NgxMaskPipe, provideNgxMask } from 'ngx-mask';
 import { PasswordValidators } from '../../../shared/validators';
+import { UsuarioService } from '../../../core/services';
 
 @Component({
   selector: 'app-cadastro',
@@ -40,7 +41,7 @@ export class CadastroComponent {
     { descricao: 'Feminino', value: 'F' },
     { descricao: 'Outro', value: 'O' },
   ];
-  
+
   estadoCivil = [
     { descricao: 'Casado', value: 'Casado' },
     { descricao: 'Solteiro', value: 'Solteiro' },
@@ -53,7 +54,8 @@ export class CadastroComponent {
     private readonly fb: FormBuilder,
     private readonly router: Router,
     private readonly http: HttpClient,
-    private readonly messageService: MessageService
+    private readonly messageService: MessageService,
+    private readonly usuarioService: UsuarioService
   ) {
     const passwordValidators = [
       Validators.required,
@@ -71,12 +73,15 @@ export class CadastroComponent {
       telefone: [''],
       celular: [''],
       sexo: [null],
-      cpf: ['', Validators.required],
+      cpf: ['', [
+        Validators.required,
+        Validators.pattern(/^\d{3}\.\d{3}\.\d{3}-\d{2}$/)
+      ]],
       email: ['', [Validators.required, Validators.email]],
       unidade: [null, Validators.required],
       descricao: [''],
       cargo: [null, Validators.required],
-      senha: ['', passwordValidators],
+      senha: ['', [passwordValidators]],
       confirmarSenha: ['', Validators.required],
     }, { validators: this.passwordsMatchValidator });
   }
@@ -143,7 +148,8 @@ export class CadastroComponent {
       cargo: formData.cargo ? formData.cargo.value : null,
     };
 
-    console.log('Objeto para enviar para a API:', objetoParaApi);
+    //Complementar
+    this.usuarioService.insert(objetoParaApi)
   }
 
   back(_?: any) {

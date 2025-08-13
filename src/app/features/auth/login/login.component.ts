@@ -85,7 +85,7 @@ export class LoginComponent {
     this.authService.login(credentials).subscribe({
       next: (response) => {
         this.successMessage = response.mensagem;
-        this.loginSuccess.bind(this);
+        this.loginSuccess(response);
       },
       error: (err) => {
         this.loginError(err);

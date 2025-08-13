@@ -2,6 +2,10 @@ import { Component, OnDestroy, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { Location } from '@angular/common';
 import { interval, Subscription } from 'rxjs';
+import { ERROR_MESSAGES } from '../../constants/mensagens';
+
+const ONE_SECOND_IN_MS = 1000;
+const HOME_ROUTE = 'home';
 
 @Component({
   selector: 'app-erro',
@@ -10,6 +14,7 @@ import { interval, Subscription } from 'rxjs';
   styleUrl: './erro.component.scss'
 })
 export class ErroComponent implements OnInit, OnDestroy {
+  messages = ERROR_MESSAGES.INTERNAL_SERVER_ERROR;
   cooldownTime = 10;
   private cooldownSubscription?: Subscription;
 
@@ -24,11 +29,11 @@ export class ErroComponent implements OnInit, OnDestroy {
   }
 
   startCooldown() {
-    this.cooldownSubscription = interval(1000).subscribe(() => {
+    this.cooldownSubscription = interval(ONE_SECOND_IN_MS).subscribe(() => {
       this.cooldownTime--;
       if (this.cooldownTime <= 0) {
         this.cooldownSubscription?.unsubscribe();
-        this.router.navigate(['home']);
+        this.router.navigate([HOME_ROUTE]);
       }
     });
   }

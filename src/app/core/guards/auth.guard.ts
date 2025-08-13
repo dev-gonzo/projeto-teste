@@ -1,24 +1,40 @@
 import { Injectable } from '@angular/core';
-import { Router } from '@angular/router';
-
+import { Router, ActivatedRouteSnapshot, CanActivate } from '@angular/router';
 import { AuthService } from '../services';
+import { PermissaoPerfil, RotasPermitidasPorPerfil } from '../../shared/models';
 
 @Injectable({
   providedIn: 'root',
 })
-export class AuthGuardService {
-  constructor(private readonly authService: AuthService, private readonly router: Router) { }
+export class AuthGuardService implements CanActivate {
+  constructor(
+    private readonly authService: AuthService,
+    private readonly router: Router
+  ) { }
 
-  canActivate(): boolean {
-    return this.checkLoggedIn();
+  canActivate(route: ActivatedRouteSnapshot): boolean {
+    return this.checkAccess(route);
   }
 
-  private checkLoggedIn(): boolean {
+  private checkAccess(route: ActivatedRouteSnapshot): boolean {
     if (!this.authService.isAuthenticatedUser()) {
       this.router.navigate(['auth/login']);
       return false;
     }
+
+    const perfil = this.authService.getPermissaoPerfil();
+    const rotaAtual = route.routeConfig?.path;
+
+    if (!perfil || !rotaAtual || !this.perfilTemAcesso(perfil, rotaAtual)) {
+      this.router.navigate(['/nao-autorizado']);
+      return false;
+    }
+
     return true;
   }
 
+  private perfilTemAcesso(perfil: string, rota: string): boolean {
+    const permissoes = RotasPermitidasPorPerfil[perfil as PermissaoPerfil] || [];
+    return permissoes.includes(rota);
+  }
 }

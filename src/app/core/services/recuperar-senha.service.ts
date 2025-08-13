@@ -7,24 +7,22 @@ import { environment } from '../../../environments/environment';
     providedIn: 'root',
 })
 
-export class RecuperarSenharService {
+export class RecuperarSenhaService {
     private readonly baseUrl = environment.apiUrl;
     constructor(private readonly http: HttpClient) { }
 
     solicitarRecuperacaoSenha(cpf: string): Observable<any> {
-        sessionStorage.setItem('cpfRecuperacao', cpf);
         const body = {
             cpf: cpf,
-            urlRedirect: "http://34.149.63.128/avs-portaldemidias/auth/criar-senha"
+            caminhoRelativo: "/avs-portaldemidias/auth/criar-senha"
         }
         return this.http.post(`${this.baseUrl}/autenticacao/recuperar-senha`, body)
     }
 
-    validarRecuperacaoSenha(cpf: string, codigo: string, senha: string): Observable<any> {
+    validarRecuperacaoSenha(token: string, senha: string): Observable<any> {
         const body = {
-            cpf: cpf,
-            senha: senha,
-            codigo: codigo
+            codigo: token,
+            senha: senha
         }
         return this.http.post(`${this.baseUrl}/autenticacao/recuperar-senha/validar`, body)
     }

@@ -15,6 +15,7 @@ import { LoginResponse } from '../../shared/models';
 export class AuthService {
   private readonly API_URL = environment.apiUrl;
   public loggedInEvent: EventEmitter<void> = new EventEmitter<void>();
+  private mensagemLogin: string | null = null;
 
   constructor(
     private readonly httpClient: HttpClient,
@@ -35,6 +36,7 @@ export class AuthService {
             this.emitLoggedInEvent();
           } else if (response?.token && response.ativado === false) {
             this.setAppToken(response.token);
+            this.setMensagemLogin(response.mensagem)
             this.router.navigate(['/auth/validar-token']);
           }
         })
@@ -54,8 +56,8 @@ export class AuthService {
       .delete<any>(`${this.API_URL}/autenticacao/token/${token}`)
       .pipe(
         tap(() => {
-          this.removePermissaoPerfil();
           this.removeAppToken();
+          this.removePermissaoPerfil();
           this.router.navigate(['/auth/login']);
           this.emitLoggedInEvent();
         }),
@@ -82,9 +84,16 @@ export class AuthService {
     this.loggedInEvent.emit();
   }
 
+  public setMensagemLogin(mensagem: string) {
+    this.mensagemLogin = mensagem;
+  }
+
+  public getMensagemLogin(): string | null {
+    return this.mensagemLogin;
+  }
+
   public getPermissaoPerfil(): string | null {
     const encryptedKey = this.crypto.hashKey(keys.COOKIE_PERMISSAO);
-    this.removePermissaoPerfil();
     if (!this.cookieService.check(encryptedKey)) {
       return null;
     }

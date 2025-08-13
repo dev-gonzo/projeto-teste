@@ -30,7 +30,7 @@ spec:
                 name: avs-portaldemidias-frontend-secrets 
           livenessProbe:
             httpGet:
-              path: /avs-portaldemidias/healthz
+              path: /avs-portaldemidia/healthz
               port: http
             initialDelaySeconds: 120
             periodSeconds: 10
@@ -39,7 +39,7 @@ spec:
             failureThreshold: 5
           readinessProbe:
             httpGet:
-              path: /avs-portaldemidias/healthz
+              path: /avs-portaldemidia/healthz
               port: http
             initialDelaySeconds: 60
             periodSeconds: 10

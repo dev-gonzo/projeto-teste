@@ -1,24 +1,24 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: avs-portaldemidias
+  name: avs-portaldemidia
   labels:
-    app: avs-portaldemidias
+    app: avs-portaldemidia
     tier: frontend
 spec:
   replicas: 1
   selector:
     matchLabels:
-      app: avs-portaldemidias
+      app: avs-portaldemidia
       tier: frontend
   template:
     metadata:
       labels:
-        app: avs-portaldemidias
+        app: avs-portaldemidia
         tier: frontend
     spec:
       containers:
-        - name: avs-portaldemidias
+        - name: avs-portaldemidia
           image: ${IMAGE}
           imagePullPolicy: Always
           ports:
@@ -27,10 +27,10 @@ spec:
               protocol: TCP
           envFrom:
             - secretRef:
-                name: avs-portaldemidias-frontend-secrets
+                name: avs-portaldemidias-frontend-secrets 
           livenessProbe:
             httpGet:
-              path: /avs-portaldemidias/healthz
+              path: /avs-portaldemidia/healthz
               port: http
             initialDelaySeconds: 120
             periodSeconds: 10
@@ -39,7 +39,7 @@ spec:
             failureThreshold: 5
           readinessProbe:
             httpGet:
-              path: /avs-portaldemidias/healthz
+              path: /avs-portaldemidia/healthz
               port: http
             initialDelaySeconds: 60
             periodSeconds: 10
@@ -59,9 +59,9 @@ spec:
 apiVersion: v1
 kind: Service
 metadata:
-  name: avs-portaldemidias
+  name: avs-portaldemidia
   labels:
-    app: avs-portaldemidias
+    app: avs-portaldemidia
     tier: frontend
   annotations:
     networking.gke.io/load-balancer-type: "Internal"
@@ -73,7 +73,7 @@ spec:
       targetPort: 80
       protocol: TCP
   selector:
-    app: avs-portaldemidias
+    app: avs-portaldemidia
     tier: frontend
 
 ---
@@ -81,16 +81,16 @@ spec:
 apiVersion: autoscaling/v2
 kind: HorizontalPodAutoscaler
 metadata:
-  name: avs-portaldemidias
+  name: avs-portaldemidia
   namespace: default
   labels:
-    app: avs-portaldemidias
+    app: avs-portaldemidia
     tier: frontend
 spec:
   scaleTargetRef:
     apiVersion: apps/v1
     kind: Deployment
-    name: avs-portaldemidias
+    name: avs-portaldemidia
   minReplicas: 1
   maxReplicas: 1
   metrics:

@@ -63,16 +63,17 @@ export class ValidateTokenComponent implements OnInit, OnDestroy {
   ) { }
 
   ngOnInit(): void {
+    this.mensagemLogin = this.authService.getMensagemLogin();
     const appToken = this.authService.getAppToken();
     this.token = appToken ?? '';
     this.startCooldown();
     if (appToken) {
-      this.router.navigate(['/validar-token']);
+      this.router.navigate(['/auth/validar-token']);
       return;
     }
     if (this.authService.isAuthenticatedUser()) {
       if (this.authService.isAuthenticatedToken()) {
-        this.router.navigate(['/validar-token']);
+        this.router.navigate(['/auth/validar-token']);
       }
     } else {
       this.router.navigate(['/']);
@@ -107,7 +108,7 @@ export class ValidateTokenComponent implements OnInit, OnDestroy {
     this.tokenService.validateToken(body).subscribe({
       next: (response) => {
         const { ativado, mensagem, perfil, token } = response;
-        this.successMessage = 'Verifique a caixa de entrada do seu e-mail.';
+        this.successMessage = response.mensagem;
         if (ativado) {
           this.authService.setAppToken(token);
           this.authService.setPermissaoPerfil(perfil);

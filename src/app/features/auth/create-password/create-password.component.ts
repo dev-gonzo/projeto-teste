@@ -12,7 +12,7 @@ import { CommonModule } from '@angular/common';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 
 import { PasswordValidators } from '../../../shared/validators';
-import { RecuperarSenharService } from '../../../core/services';
+import { RecuperarSenhaService } from '../../../core/services';
 import { Subscription } from 'rxjs';
 
 const passwordValidators = [
@@ -44,7 +44,7 @@ export class CreatePasswordComponent implements OnInit, OnDestroy {
   errorMessageMatch: string = '';
   successMessage: string = '';
   sendingRequest: boolean = false;
-  codigo: string = '';
+  token: string = '';
   showPass: boolean = false;
 
   private readonly subscriptions = new Subscription();
@@ -62,12 +62,12 @@ export class CreatePasswordComponent implements OnInit, OnDestroy {
   constructor(
     private readonly router: Router,
     private readonly activatedRoute: ActivatedRoute,
-    private readonly recuperarSenhar: RecuperarSenharService
+    private readonly recuperarSenhar: RecuperarSenhaService
   ) { }
 
   ngOnInit(): void {
     const queryParamsSub = this.activatedRoute.queryParams.subscribe((params) => {
-      this.codigo = params['c'];
+      this.token = params['c'];
       this.verifyParams();
     });
 
@@ -88,7 +88,7 @@ export class CreatePasswordComponent implements OnInit, OnDestroy {
   }
 
   verifyParams() {
-    if (!this.codigo) {
+    if (!this.token) {
       this.router.navigate(['/auth/login']);
     }
   }
@@ -98,17 +98,11 @@ export class CreatePasswordComponent implements OnInit, OnDestroy {
       return;
     }
 
-    const cpf = sessionStorage.getItem('cpfRecuperacao');
-    if (!cpf) {
-      this.errorMessage = 'CPF não encontrado. Solicite a recuperação novamente.';
-      return;
-    }
-
-    const codigo = this.codigo;
+    const token = this.token;
     const password = this.passForm.value.password || '';
     this.sendingRequest = true;
 
-    const createPassSub = this.recuperarSenhar.validarRecuperacaoSenha(cpf, codigo, password)
+    const createPassSub = this.recuperarSenhar.validarRecuperacaoSenha(token, password )
       .subscribe({
         next: (response) => {
           this.sendingRequest = false;

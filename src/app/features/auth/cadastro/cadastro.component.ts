@@ -9,16 +9,7 @@ import { DropdownModule } from 'primeng/dropdown';
 import { InputTextModule } from 'primeng/inputtext';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 import { NgxMaskDirective, NgxMaskPipe, provideNgxMask } from 'ngx-mask';
-
-export function patternValidator(regex: RegExp, error: object): ValidatorFn {
-  return (control: AbstractControl): { [key: string]: any } | null => {
-    if (!control.value) {
-      return null;
-    }
-    const valid = regex.test(control.value);
-    return valid ? null : error;
-  };
-}
+import { PasswordValidators } from '../../../shared/validators';
 
 @Component({
   selector: 'app-cadastro',
@@ -49,22 +40,13 @@ export class CadastroComponent {
     { descricao: 'Feminino', value: 'F' },
     { descricao: 'Outro', value: 'O' },
   ];
-
-  unidades = [
-    { descricao: 'Unidade A', value: 'a' },
-    { descricao: 'Unidade B', value: 'b' },
-  ];
-
-  cargos = [
-    { descricao: 'Cargo 1', value: 'cargo1' },
-    { descricao: 'Cargo 2', value: 'cargo2' },
-  ];
-
-  ufs = [
-    { descricao: 'SP', value: 'SP' },
-    { descricao: 'RJ', value: 'RJ' },
-    { descricao: 'MG', value: 'MG' },
-    { descricao: 'ES', value: 'ES' }
+  
+  estadoCivil = [
+    { descricao: 'Casado', value: 'Casado' },
+    { descricao: 'Solteiro', value: 'Solteiro' },
+    { descricao: 'União estável', value: 'União estável' },
+    { descricao: 'Divorciado', value: 'Divorciado' },
+    { descricao: 'Viúvo', value: 'Viúvo' },
   ];
 
   constructor(
@@ -76,10 +58,10 @@ export class CadastroComponent {
     const passwordValidators = [
       Validators.required,
       Validators.minLength(6),
-      patternValidator(/\d/, { requiresDigit: true }),
-      patternValidator(/[A-Z]/, { requiresUppercase: true }),
-      patternValidator(/[a-z]/, { requiresLowercase: true }),
-      patternValidator(/[$@^!%*?&]/, { requiresSpecialChars: true }),
+      PasswordValidators.patternValidator(/\d/, { requiresDigit: true }),
+      PasswordValidators.patternValidator(/[A-Z]/, { requiresUppercase: true }),
+      PasswordValidators.patternValidator(/[a-z]/, { requiresLowercase: true }),
+      PasswordValidators.patternValidator(/[$@^!%*?&]/, { requiresSpecialChars: true }),
     ];
 
     this.form = this.fb.group({
@@ -92,13 +74,6 @@ export class CadastroComponent {
       cpf: ['', Validators.required],
       email: ['', [Validators.required, Validators.email]],
       unidade: [null, Validators.required],
-      cep: ['', Validators.required],
-      rua: [{ value: '', disabled: true }, Validators.required],
-      bairro: [{ value: '', disabled: true }, Validators.required],
-      uf: [{ value: null, disabled: true }, Validators.required],
-      municipio: [{ value: '', disabled: true }, Validators.required],
-      numero: ['', Validators.required],
-      complemento: [''],
       descricao: [''],
       cargo: [null, Validators.required],
       senha: ['', passwordValidators],
@@ -147,33 +122,6 @@ export class CadastroComponent {
     return this.isPasswordRuleValid('requiresSpecialChars');
   }
 
-  buscarEnderecoPorCep(): void {
-    const cep = this.form.get('cep')?.value?.replace(/\D/g, '');
-    if (!cep || cep.length !== 8) {
-      return;
-    }
-
-    this.http.get<any>(`https://viacep.com.br/ws/${cep}/json/`).subscribe({
-      next: (dados) => {
-        if (dados.erro) {
-          this.messageService.add({ severity: 'warn', summary: 'CEP não encontrado' });
-          return;
-        }
-
-        this.form.patchValue({
-          rua: dados.logradouro,
-          complemento: dados.complemento,
-          bairro: dados.bairro,
-          municipio: dados.localidade,
-          uf: dados.uf
-        });
-      },
-      error: () => {
-        this.messageService.add({ severity: 'error', summary: 'Erro ao buscar CEP' });
-      }
-    });
-  }
-
   onSubmit() {
     if (this.form.invalid) {
       this.successMessage = null;
@@ -193,7 +141,6 @@ export class CadastroComponent {
       sexo: formData.sexo ? formData.sexo.value : null,
       unidade: formData.unidade ? formData.unidade.value : null,
       cargo: formData.cargo ? formData.cargo.value : null,
-      uf: formData.uf ? formData.uf.value : null,
     };
 
     console.log('Objeto para enviar para a API:', objetoParaApi);

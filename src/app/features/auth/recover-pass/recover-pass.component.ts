@@ -3,8 +3,8 @@ import { Component, OnDestroy, OnInit } from '@angular/core';
 import { FormControl, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 import { CodeInputModule } from 'angular-code-input';
-import { AuthService, SharedService, RecuperarSenharService } from '../../../core/services';
-import { Router } from '@angular/router';
+import { AuthService, SharedService, RecuperarSenhaService } from '../../../core/services';
+import { ActivatedRoute, Router } from '@angular/router';
 import { Subscription } from 'rxjs';
 import { NgxMaskDirective } from 'ngx-mask';
 
@@ -26,12 +26,13 @@ export class RecoverPassComponent implements OnInit, OnDestroy {
   errorMessage: string = '';
   successMessage: string = '';
   sendingRequest: boolean = false;
-
+  token: string = '';
   canResend: boolean = true;
   cooldownTime: number = 60;
   timerConfig: any;
   private readonly COOLDOWN_KEY = 'recoverPassCooldown';
   private readonly subscription: Subscription = new Subscription();
+
 
   cpfForm = new FormGroup({
     cpf: new FormControl('', [
@@ -43,11 +44,16 @@ export class RecoverPassComponent implements OnInit, OnDestroy {
     private readonly authService: AuthService,
     private readonly router: Router,
     private readonly sharedService: SharedService,
-    private readonly recuperarSenha : RecuperarSenharService
+    private readonly recuperarSenha : RecuperarSenhaService,
+    private readonly activatedRoute: ActivatedRoute
   ) { }
 
   ngOnInit(): void {
+    const queryParamsSub = this.activatedRoute.queryParams.subscribe((params) => {
+      this.token = params['c'];
+    });
     this.checkCooldownState();
+    this.subscription.add(queryParamsSub);
   }
 
   ngOnDestroy(): void {

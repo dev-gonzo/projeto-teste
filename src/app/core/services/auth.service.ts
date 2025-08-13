@@ -1,5 +1,4 @@
-import { StatusProcessamento } from './../../shared/enums/index';
-import { HttpClient, HttpHeaders } from '@angular/common/http';
+import { HttpClient } from '@angular/common/http';
 import { EventEmitter, Injectable } from '@angular/core';
 import { Router } from '@angular/router';
 import { Observable, tap, map, of, catchError } from 'rxjs';
@@ -29,10 +28,14 @@ export class AuthService {
       .post<LoginResponse>(`${this.API_URL}/autenticacao/token`, credentials)
       .pipe(
         tap(response => {
-          if (response?.token) {
+          if (response?.token && response.ativado === true) {
             this.setAppToken(response.token);
+            this.setPermissaoPerfil(response.perfil);
             this.router.navigate(['/home']);
             this.emitLoggedInEvent();
+          } else if (response?.token && response.ativado === false) {
+            this.setAppToken(response.token);
+            this.router.navigate(['/auth/validar-token']);
           }
         })
       );
@@ -42,6 +45,7 @@ export class AuthService {
     const token = this.getAppToken();
 
     if (!token) {
+      this.removePermissaoPerfil();
       this.router.navigate(['/auth/login']);
       return of({ success: true, message: null });
     }
@@ -50,6 +54,7 @@ export class AuthService {
       .delete<any>(`${this.API_URL}/autenticacao/token/${token}`)
       .pipe(
         tap(() => {
+          this.removePermissaoPerfil();
           this.removeAppToken();
           this.router.navigate(['/auth/login']);
           this.emitLoggedInEvent();
@@ -75,6 +80,32 @@ export class AuthService {
 
   private emitLoggedInEvent(): void {
     this.loggedInEvent.emit();
+  }
+
+  public getPermissaoPerfil(): string | null {
+    const encryptedKey = this.crypto.hashKey(keys.COOKIE_PERMISSAO);
+    this.removePermissaoPerfil();
+    if (!this.cookieService.check(encryptedKey)) {
+      return null;
+    }
+
+    const encryptedPermissao = this.cookieService.get(encryptedKey);
+    return this.crypto.decrypt(encryptedPermissao);
+  }
+
+  public setPermissaoPerfil(permissao: string): void {
+    const encryptedPermissao = this.crypto.encrypt(permissao);
+    const encryptedKey = this.crypto.hashKey(keys.COOKIE_PERMISSAO);
+
+    const expires = new Date();
+    expires.setDate(expires.getDate() + 1);
+
+    this.cookieService.set(encryptedKey, encryptedPermissao, { expires, path: '/' });
+  }
+
+  public removePermissaoPerfil(): void {
+    const encryptedKey = this.crypto.hashKey(keys.COOKIE_PERMISSAO);
+    this.cookieService.delete(encryptedKey, '/');
   }
 
   public getToken(): string | null {

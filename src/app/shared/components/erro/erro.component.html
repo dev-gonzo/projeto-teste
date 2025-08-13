@@ -1,0 +1,24 @@
+<div class="flex items-center justify-center h-screen w-screen bg-white">
+  <div class="flex flex-col items-center text-center">
+    <img
+      src="assets/img/pagina-erro-500.jpg"
+      alt="Ilustração de um computador com erro e um homem com uma ferramente para concertar indicando erro interno no sistema."
+      class="w-96 h-auto object-cover"
+    />
+    <p class="text-2xl font-normal text-gray-800 mb-5">
+      {{ messages.TITLE }}
+    </p>
+    <p class="text-md font-normal text-gray-800">
+      {{ messages.DESCRIPTION }}
+    </p>
+    <p class="text-sm text-gray-600 mt-4">
+      {{ messages.REDIRECT_INFO }}
+    </p>
+    <button
+      (click)="goBack()"
+      class="mt-6 px-6 py-2 bg-blue-600 text-white rounded-lg shadow hover:bg-blue-700 transition"
+    >
+      {{ messages.BUTTON }}
+    </button>
+  </div>
+</div>

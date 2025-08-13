@@ -59,10 +59,10 @@ export class LoginComponent {
   }
 
   loginError(error: any): void {
-    this.errorMessage = error?.error?.message || 'Dados de login incorretos. Tente novamente.';
+    this.errorMessage = error?.error?.status === 500 ? 'Erro no servidor, tente novamente mais tarde' : 'Dados de login incorretos. Tente novamente.';
     this.sendingRequest = false;
   }
-
+ 
   loginSuccess(response: any): void {
     if (response.success) {
       this.successMessage = 'Login realizado com sucesso!';

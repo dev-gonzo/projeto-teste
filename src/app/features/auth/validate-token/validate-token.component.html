@@ -17,7 +17,7 @@
         />
         <p class="mb-0">
           <strong class="text-xl"
-            >Insira o token recebido em seu e-mail abaixo</strong
+            >Insira o código recebido em seu e-mail abaixo</strong
           >
           <br />
           <br />
@@ -25,7 +25,7 @@
           <span class="text-center text-xl text-red-500 mt-3">
             {{ formattedCooldownTime }}
           </span>
-          minutos antes que seu token expire. <br />
+          minutos antes que seu código expire. <br />
           Caso a utilização não seja feita neste período, será necessário
           solicitar outro.
         </p>
@@ -48,8 +48,8 @@
         </div>
       </div>
       <form
-        [formGroup]="tokenForm"
-        (ngSubmit)="onSubmitToken()"
+        [formGroup]="codigoForm"
+        (ngSubmit)="onSubmitCodigo()"
         class="flex-auto pb-0"
       >
         <div
@@ -74,7 +74,7 @@
         </code-input>
         <div class="text-center mt-10 flex flex-col items-center">
           <button
-            [disabled]="!tokenForm.valid"
+            [disabled]="!codigoForm.valid"
             class="flex items-center justify-center bg-sky-600 disabled:opacity-50 disabled:bg-sky-600 text-white w-12/12 xs:w-12/12 sm:w-8/12 md:w-6/12 lg:w-6/12 px-6 py-3 mb-0 font-bold text-center align-middle transition-all border-0 rounded-lg shadow-soft-md bg-x-25 bg-150 leading-pro text-xs ease-soft-in disabled:hover:scale-100 hover:scale-102 active:opacity-85"
           >
             <div *ngIf="sendingRequest; else sendingRequestElse">
@@ -99,7 +99,7 @@
               </div>
             </div>
             <ng-template #sendingRequestElse="">
-              <div>Validar token recebido</div>
+              <div>Validar código recebido</div>
             </ng-template>
           </button>
         </div>

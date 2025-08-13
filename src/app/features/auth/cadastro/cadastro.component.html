@@ -55,7 +55,7 @@
       >
         <div class="grid grid-cols-4 gap-4">
           <div class="col-span-4 md:col-span-2">
-            <label for="nome" class="mb-2 block font-semibold">Nome*</label>
+            <label for="nome" class="mb-2 block font-semibold">Nome *</label>
             <input
               pInputText
               id="nome"
@@ -77,7 +77,7 @@
             <p-calendar
               id="dataNascimento"
               formControlName="dataNascimento"
-              class="w-full rounded-lg border px-4 py-2 text-sm"
+              styleClass="w-full"
               dateFormat="dd/mm/yy"
               placeholder="DD/MM/AAAA"
               [maxDate]="hoje"
@@ -97,7 +97,7 @@
               [options]="sexos"
               optionLabel="descricao"
               placeholder="Selecione"
-              class="w-full rounded-lg border text-sm"
+              styleClass="w-full"
               [ngClass]="{ 'border-red-500': isInvalid('sexo') }"
             ></p-dropdown>
             <small *ngIf="isInvalid('sexo')" class="text-red-500"
@@ -106,37 +106,34 @@
           </div>
 
           <div class="col-span-4 md:col-span-1">
-            <label for="cpf" class="mb-2 block font-semibold">CPF*</label>
+            <label for="cpf" class="mb-2 block font-semibold">CPF *</label>
             <input
               pInputText
               id="cpf"
               type="text"
               formControlName="cpf"
-              placeholder="999.999.999-99"
+              placeholder="000.000.000-00"
               class="w-full rounded-lg border px-4 py-2 text-sm"
-              mask="999.999.999-99"
+              mask="000.000.000-00"
               [ngClass]="{ 'border-red-500': isInvalid('cpf') }"
             />
             <small *ngIf="isInvalid('cpf')" class="text-red-500">
               <span *ngIf="form.get('cpf')?.errors?.['required']"
                 >CPF é obrigatório.</span
               >
-              <span *ngIf="form.get('cpf')?.errors?.['pattern']"
-                >CPF inválido.</span
-              >
             </small>
           </div>
 
           <div class="col-span-4 md:col-span-1">
-            <label for="rg" class="mb-2 block font-semibold">RG*</label>
+            <label for="rg" class="mb-2 block font-semibold">RG *</label>
             <input
               pInputText
               id="rg"
               type="text"
               formControlName="rg"
-              placeholder="99.999.999-A"
+              placeholder="00.000.000-0"
               class="w-full rounded-lg border px-4 py-2 text-sm"
-              mask="99.999.999-A"
+              mask="00.000.000-A"
               [ngClass]="{ 'border-red-500': isInvalid('rg') }"
             />
             <small *ngIf="isInvalid('rg')" class="text-red-500"
@@ -153,9 +150,9 @@
               id="telefone"
               type="text"
               formControlName="telefone"
-              placeholder="(XX) XXXXX-XXXX"
+              placeholder="(00) 0000-0000"
               class="w-full rounded-lg border px-4 py-2 text-sm"
-              mask="(99) 99999-9999"
+              mask="(00) 0000-0000"
             />
           </div>
 
@@ -168,14 +165,14 @@
               id="celular"
               type="text"
               formControlName="celular"
-              placeholder="(XX) XXXXX-XXXX"
+              placeholder="(00) 00000-0000"
               class="w-full rounded-lg border px-4 py-2 text-sm"
-              mask="(99) 99999-9999"
+              mask="(00) 00000-0000"
             />
           </div>
 
           <div class="col-span-4 md:col-span-2">
-            <label for="email" class="mb-2 block font-semibold">E-mail*</label>
+            <label for="email" class="mb-2 block font-semibold">E-mail *</label>
             <input
               pInputText
               id="email"
@@ -197,7 +194,7 @@
 
           <div class="col-span-4 md:col-span-2">
             <label for="unidade" class="mb-2 block font-semibold"
-              >Unidade Operacional*</label
+              >Unidade Operacional *</label
             >
             <p-dropdown
               id="unidade"
@@ -205,7 +202,7 @@
               [options]="unidades"
               optionLabel="descricao"
               placeholder="Selecione"
-              class="w-full rounded-lg border text-sm"
+              styleClass="w-full"
               [ngClass]="{ 'border-red-500': isInvalid('unidade') }"
             ></p-dropdown>
             <small *ngIf="isInvalid('unidade')" class="text-red-500"
@@ -214,29 +211,30 @@
           </div>
 
           <div class="col-span-4 md:col-span-1">
-            <label for="cep" class="mb-2 block font-semibold">CEP*</label>
+            <label for="cep" class="mb-2 block font-semibold">CEP *</label>
             <input
               pInputText
               id="cep"
               formControlName="cep"
               placeholder="00000-000"
               class="w-full rounded-lg border px-4 py-2 text-sm"
+              mask="00000-000"
+              (blur)="buscarEnderecoPorCep()"
               [ngClass]="{ 'border-red-500': isInvalid('cep') }"
             />
             <small *ngIf="isInvalid('cep')" class="text-red-500"
-              >CEP inválido.</small
+              >CEP é obrigatório.</small
             >
           </div>
 
-          <div class="col-span-4 md:col-span-2">
-            <label for="rua" class="mb-2 block font-semibold">Rua*</label>
+          <div class="col-span-4 md:col-span-3">
+            <label for="rua" class="mb-2 block font-semibold">Rua *</label>
             <input
               pInputText
               id="rua"
               formControlName="rua"
               placeholder="Rua"
               class="w-full rounded-lg border px-4 py-2 text-sm"
-              readonly
             />
             <small *ngIf="isInvalid('rua')" class="text-red-500"
               >Rua é obrigatória.</small
@@ -244,7 +242,7 @@
           </div>
 
           <div class="col-span-4 md:col-span-1">
-            <label for="numero" class="mb-2 block font-semibold">Número*</label>
+            <label for="numero" class="mb-2 block font-semibold">Número *</label>
             <input
               pInputText
               id="numero"
@@ -258,36 +256,51 @@
             >
           </div>
 
-          <div class="col-span-4 md:col-span-1">
-            <label for="bairro" class="mb-2 block font-semibold">Bairro*</label>
+          <div class="col-span-4 md:col-span-2">
+            <label for="bairro" class="mb-2 block font-semibold">Bairro *</label>
             <input
               pInputText
               id="bairro"
               formControlName="bairro"
               placeholder="Bairro"
               class="w-full rounded-lg border px-4 py-2 text-sm"
-              readonly
             />
             <small *ngIf="isInvalid('bairro')" class="text-red-500"
               >Bairro é obrigatório.</small
             >
           </div>
           <div class="col-span-4 md:col-span-1">
-            <label for="uf" class="mb-2 block font-semibold">UF*</label>
+            <label for="municipio" class="mb-2 block font-semibold"
+              >Município *</label
+            >
+            <input
+              pInputText
+              id="municipio"
+              formControlName="municipio"
+              placeholder="Município"
+              class="w-full rounded-lg border px-4 py-2 text-sm"
+            />
+            <small *ngIf="isInvalid('municipio')" class="text-red-500"
+              >Município é obrigatório.</small
+            >
+          </div>
+          <div class="col-span-4 md:col-span-1">
+            <label for="uf" class="mb-2 block font-semibold">UF *</label>
             <p-dropdown
               id="uf"
               formControlName="uf"
               [options]="ufs"
-              optionLabel="descricao"
-              placeholder="Selecione"
-              class="w-full rounded-lg border text-sm"
+              optionLabel="value"
+              optionValue="value"
+              placeholder="UF"
+              styleClass="w-full"
             ></p-dropdown>
             <small *ngIf="isInvalid('uf')" class="text-red-500"
               >UF é obrigatório.</small
             >
           </div>
 
-          <div class="col-span-4 md:col-span-2">
+          <div class="col-span-4 md:col-span-3">
             <label for="complemento" class="mb-2 block font-semibold"
               >Complemento</label
             >
@@ -308,13 +321,14 @@
               id="descricao"
               formControlName="descricao"
               rows="4"
+              pInputTextarea
               placeholder="Escreva algo..."
               class="w-full rounded-lg border px-4 py-2 text-sm"
             ></textarea>
           </div>
 
           <div class="col-span-4 md:col-span-2">
-            <label for="senha" class="mb-2 block font-semibold">Senha*</label>
+            <label for="senha" class="mb-2 block font-semibold">Senha *</label>
             <input
               pInputText
               id="senha"
@@ -324,14 +338,61 @@
               class="w-full rounded-lg border px-4 py-2 text-sm"
               [ngClass]="{ 'border-red-500': isInvalid('senha') }"
             />
-            <small *ngIf="isInvalid('senha')" class="text-red-500"
-              >Senha é obrigatória.</small
+            <div
+              class="mt-2 text-sm"
+              *ngIf="showPasswordValidation"
             >
+              <div
+                [ngClass]="{
+                  'text-green-600': isMinLengthValid,
+                  'text-red-600': !isMinLengthValid
+                }"
+              >
+                <fa-icon [icon]="isMinLengthValid ? ['fas', 'circle-check'] : ['fas', 'circle-xmark']" class="mr-2"></fa-icon>
+                A senha deve conter no mínimo 6 caracteres.
+              </div>
+              <div
+                [ngClass]="{
+                  'text-green-600': isRequiresSpecialCharsValid,
+                  'text-red-600': !isRequiresSpecialCharsValid
+                }"
+              >
+                <fa-icon [icon]="isRequiresSpecialCharsValid ? ['fas', 'circle-check'] : ['fas', 'circle-xmark']" class="mr-2"></fa-icon>
+                Ter pelo menos 1 caracter especial (ex: $!%*?&).
+              </div>
+              <div
+                [ngClass]="{
+                  'text-green-600': isRequiresLowercaseValid,
+                  'text-red-600': !isRequiresLowercaseValid
+                }"
+              >
+                <fa-icon [icon]="isRequiresLowercaseValid ? ['fas', 'circle-check'] : ['fas', 'circle-xmark']" class="mr-2"></fa-icon>
+                Ter pelo menos 1 letra minúscula.
+              </div>
+              <div
+                [ngClass]="{
+                  'text-green-600': isRequiresDigitValid,
+                  'text-red-600': !isRequiresDigitValid
+                }"
+              >
+                <fa-icon [icon]="isRequiresDigitValid ? ['fas', 'circle-check'] : ['fas', 'circle-xmark']" class="mr-2"></fa-icon>
+                Ter pelo menos 1 número.
+              </div>
+              <div
+                [ngClass]="{
+                  'text-green-600': isRequiresUppercaseValid,
+                  'text-red-600': !isRequiresUppercaseValid
+                }"
+              >
+                <fa-icon [icon]="isRequiresUppercaseValid ? ['fas', 'circle-check'] : ['fas', 'circle-xmark']" class="mr-2"></fa-icon>
+                Ter pelo menos 1 letra maiúscula.
+              </div>
+            </div>
           </div>
 
           <div class="col-span-4 md:col-span-2">
             <label for="confirmarSenha" class="mb-2 block font-semibold"
-              >Confirmar Senha*</label
+              >Confirmar Senha *</label
             >
             <input
               pInputText
@@ -340,9 +401,9 @@
               formControlName="confirmarSenha"
               placeholder="Repita sua senha"
               class="w-full rounded-lg border px-4 py-2 text-sm"
-              [ngClass]="{ 'border-red-500': isInvalid('confirmarSenha') }"
+              [ngClass]="{ 'border-red-500': isInvalid('confirmarSenha') || (form.errors?.['passwordMismatch'] && form.get('confirmarSenha')?.touched) }"
             />
-            <small *ngIf="isInvalid('confirmarSenha')" class="text-red-500">
+            <small *ngIf="isInvalid('confirmarSenha') || (form.errors?.['passwordMismatch'] && form.get('confirmarSenha')?.touched)" class="text-red-500">
               <span *ngIf="form.get('confirmarSenha')?.errors?.['required']"
                 >Confirmação de senha é obrigatória.</span
               >

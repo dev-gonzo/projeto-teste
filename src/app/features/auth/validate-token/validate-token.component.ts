@@ -67,10 +67,6 @@ export class ValidateTokenComponent implements OnInit, OnDestroy {
     const appToken = this.authService.getAppToken();
     this.token = appToken ?? '';
     this.startCooldown();
-    if (appToken) {
-      this.router.navigate(['/auth/validar-token']);
-      return;
-    }
     if (this.authService.isAuthenticatedUser()) {
       if (this.authService.isAuthenticatedToken()) {
         this.router.navigate(['/auth/validar-token']);

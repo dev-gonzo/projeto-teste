@@ -31,6 +31,11 @@ export const routes: Routes = [
                 loadComponent: () => import(`./recover-pass/recover-pass.component`)
                     .then(mod => mod.RecoverPassComponent)
             },
+            {
+                path: '**',
+                loadComponent: () => import(`./login/login.component`)
+                    .then(mod => mod.LoginComponent)
+            }
         ]
     },
 ];

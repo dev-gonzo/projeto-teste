@@ -1,16 +1,18 @@
-import { Component } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { AbstractControl, FormBuilder, FormGroup, ReactiveFormsModule, ValidatorFn, Validators } from '@angular/forms';
-import { Router, RouterLink } from '@angular/router';
-import { HttpClient, HttpClientModule } from '@angular/common/http';
+import { Router } from '@angular/router';
+import { HttpClient } from '@angular/common/http';
 import { MessageService } from 'primeng/api';
 import { CalendarModule } from 'primeng/calendar';
 import { DropdownModule } from 'primeng/dropdown';
 import { InputTextModule } from 'primeng/inputtext';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 import { NgxMaskDirective, NgxMaskPipe, provideNgxMask } from 'ngx-mask';
+
 import { PasswordValidators } from '../../../shared/validators';
 import { UsuarioService } from '../../../core/services';
+
 
 @Component({
   selector: 'app-cadastro',
@@ -22,7 +24,6 @@ import { UsuarioService } from '../../../core/services';
     CalendarModule,
     DropdownModule,
     FontAwesomeModule,
-    HttpClientModule,
     NgxMaskDirective,
     NgxMaskPipe
   ],
@@ -33,8 +34,8 @@ import { UsuarioService } from '../../../core/services';
 export class CadastroComponent {
   form: FormGroup;
   hoje = new Date();
-  successMessage: string | null = null;
-  errorMessage: string | null = null;
+  successMessage: string = '';
+  errorMessage: string = '';
 
   sexos = [
     { descricao: 'Masculino', value: 'M' },
@@ -129,14 +130,14 @@ export class CadastroComponent {
 
   onSubmit() {
     if (this.form.invalid) {
-      this.successMessage = null;
+      this.successMessage = '';
       this.errorMessage = 'Por favor, corrija os erros no formulário.';
       this.form.markAllAsTouched();
       return;
     }
 
     this.successMessage = 'Cadastro realizado com sucesso!';
-    this.errorMessage = null;
+    this.errorMessage = '';
 
     const formData = this.form.getRawValue();
     delete formData.confirmarSenha;
@@ -148,8 +149,16 @@ export class CadastroComponent {
       cargo: formData.cargo ? formData.cargo.value : null,
     };
 
-    //Complementar
-    this.usuarioService.insert(objetoParaApi)
+    this.usuarioService.insert(objetoParaApi).subscribe({
+      next: (response) => {
+        this.successMessage = response.mensagem || 'Cadastro realizado com sucesso!';
+        setTimeout(() => this.back(), 2000);
+      },
+      error: () => {
+        this.errorMessage = 'Erro ao cadastrar usuário. Solicite um novo para continuar.';
+      },
+    });
+
   }
 
   back(_?: any) {

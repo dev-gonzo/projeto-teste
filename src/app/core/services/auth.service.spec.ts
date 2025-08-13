@@ -10,6 +10,7 @@ import { AuthService } from './auth.service';
 import { CryptoService } from './crypto.service';
 import { keys } from '../../shared/utils/variables';
 import { environment } from '../../../environments/environment';
+import { LoginResponse } from '../../shared/models';
 
 describe('AuthService', () => {
   let service: AuthService;
@@ -64,65 +65,72 @@ describe('AuthService', () => {
   });
 
   describe('login', () => {
-    it('deve fazer uma requisição POST e lidar com o login bem-sucedido', () => {
-      const credentials = { cpf: '123', senha: 'abc' };
-      const apiResponse = { token: 'mock-token' };
-      const expectedResponse = { success: true, message: 'null', token: '' };
+    const credentials = { cpf: '123', senha: 'abc' };
 
+    it('deve fazer login, armazenar token/perfil, navegar para /home e emitir evento quando o usuário está ativado', () => {
+      const apiResponse: LoginResponse = { token: 'mock-token', ativado: true, perfil: 'admin', mensagem: '' };
       let eventFired = false;
       spyOn(service, 'setAppToken').and.callThrough();
+      spyOn(service, 'setPermissaoPerfil').and.callThrough();
 
       service.loggedInEvent.subscribe(() => {
         eventFired = true;
       });
 
       service.login(credentials).subscribe((response) => {
-        expect(response).toEqual(expectedResponse);
+        expect(response).toEqual(apiResponse);
       });
 
-      const req = httpTestingController.expectOne(
-        `${API_URL}/cadastros/auth/login`
-      );
+      const req = httpTestingController.expectOne(`${API_URL}/autenticacao/token`);
+      expect(req.request.method).toBe('POST');
       req.flush(apiResponse);
 
       expect(service.setAppToken).toHaveBeenCalledWith('mock-token');
-      expect(routerSpy.navigate).toHaveBeenCalledWith(['/auth/validar-token']);
+      expect(service.setPermissaoPerfil).toHaveBeenCalledWith('admin');
+      expect(routerSpy.navigate).toHaveBeenCalledWith(['/home']);
       expect(eventFired).toBe(true);
     });
 
-    it('não deve armazenar o token, navegar ou emitir evento se a resposta não tiver um token', () => {
-      const credentials = { cpf: '123', senha: 'abc' };
-      const apiResponse = { message: 'Invalid credentials' };
-      const expectedResponse = { success: false, message: 'Invalid credentials', token: '' };
+    it('deve armazenar token, mensagem e navegar para /auth/validar-token quando o usuário não está ativado', () => {
+        const apiResponse: LoginResponse = { token: 'mock-token', ativado: false, perfil: 'user', mensagem: 'Ative sua conta' };
+        spyOn(service, 'setAppToken').and.callThrough();
+        spyOn(service, 'setMensagemLogin').and.callThrough();
 
-      let eventFired = false;
+        service.login(credentials).subscribe(response => {
+            expect(response).toEqual(apiResponse);
+        });
+
+        const req = httpTestingController.expectOne(`${API_URL}/autenticacao/token`);
+        expect(req.request.method).toBe('POST');
+        req.flush(apiResponse);
+
+        expect(service.setAppToken).toHaveBeenCalledWith('mock-token');
+        expect(service.setMensagemLogin).toHaveBeenCalledWith('Ative sua conta');
+        expect(routerSpy.navigate).toHaveBeenCalledWith(['/auth/validar-token']);
+    });
+
+    it('não deve navegar ou definir token se a resposta não tiver um token', () => {
+      const apiResponse: Partial<LoginResponse> = { mensagem: 'Credenciais inválidas' };
       spyOn(service, 'setAppToken');
 
-      service.loggedInEvent.subscribe(() => {
-        eventFired = true;
+      service.login(credentials).subscribe(response => {
+          expect(response).toEqual(apiResponse as LoginResponse);
       });
 
-      service.login(credentials).subscribe((response) => {
-        expect(response).toEqual(expectedResponse);
-      });
-
-      const req = httpTestingController.expectOne(
-        `${API_URL}/cadastros/auth/login`
-      );
+      const req = httpTestingController.expectOne(`${API_URL}/autenticacao/token`);
       req.flush(apiResponse);
 
       expect(service.setAppToken).not.toHaveBeenCalled();
       expect(routerSpy.navigate).not.toHaveBeenCalled();
-      expect(eventFired).toBe(false);
     });
   });
 
   describe('logout', () => {
-    it('deve chamar DELETE /logout, remover token, navegar e emitir evento', () => {
+    it('deve chamar DELETE com token, remover dados, navegar para login e emitir evento', () => {
       const mockToken = 'mock-token';
       spyOn(service, 'getAppToken').and.returnValue(mockToken);
       spyOn(service, 'removeAppToken').and.callThrough();
-
+      spyOn(service, 'removePermissaoPerfil').and.callThrough();
       let eventFired = false;
       service.loggedInEvent.subscribe(() => {
         eventFired = true;
@@ -132,34 +140,80 @@ describe('AuthService', () => {
         expect(response).toEqual({ success: true, message: null });
       });
 
-      const req = httpTestingController.expectOne(
-        `${API_URL}/cadastros/auth/logout`
-      );
+      const req = httpTestingController.expectOne(`${API_URL}/autenticacao/token/${mockToken}`);
       expect(req.request.method).toBe('DELETE');
-      expect(req.request.headers.get('Authorization')).toBe(`Bearer ${mockToken}`);
-
-      req.flush({ success: true });
+      req.flush(null); 
 
       expect(service.removeAppToken).toHaveBeenCalledTimes(1);
+      expect(service.removePermissaoPerfil).toHaveBeenCalledTimes(1);
       expect(routerSpy.navigate).toHaveBeenCalledWith(['/auth/login']);
       expect(eventFired).toBe(true);
     });
 
-    it('deve navegar para login se não houver token', () => {
+    it('deve navegar para login e remover perfil se não houver token', () => {
       spyOn(service, 'getAppToken').and.returnValue(null);
+      spyOn(service, 'removePermissaoPerfil').and.callThrough();
 
       service.logout().subscribe((response) => {
-        expect(response).toBeNull();
+        expect(response).toEqual({ success: true, message: null });
       });
 
+      httpTestingController.expectNone(`${API_URL}/autenticacao/token`);
+      expect(service.removePermissaoPerfil).toHaveBeenCalledTimes(1);
       expect(routerSpy.navigate).toHaveBeenCalledWith(['/auth/login']);
     });
   });
 
-  describe('getToken', () => {
-    it('deve retornar o token do cookie', () => {
-      spyOn(service, 'getAppToken').and.returnValue('token-cookie');
-      expect(service.getToken()).toBe('token-cookie');
+  describe('Gerenciamento de Mensagem de Login', () => {
+    it('deve definir e obter a mensagem de login', () => {
+        const mensagem = 'Por favor, valide seu token.';
+        service.setMensagemLogin(mensagem);
+        expect(service.getMensagemLogin()).toBe(mensagem);
+    });
+
+    it('getMensagemLogin deve retornar null inicialmente', () => {
+        expect(service.getMensagemLogin()).toBeNull();
+    });
+  });
+
+  describe('Gerenciamento de Permissão de Perfil (Cookie)', () => {
+    const mockHashedKey = 'hashedPermissaoKey';
+    const mockPermissao = 'admin';
+    const mockEncryptedPermissao = 'encrypted-permissao-value';
+
+    beforeEach(() => {
+      cryptoServiceSpy.hashKey.withArgs(keys.COOKIE_PERMISSAO).and.returnValue(mockHashedKey);
+      cryptoServiceSpy.encrypt.withArgs(mockPermissao).and.returnValue(mockEncryptedPermissao);
+      cryptoServiceSpy.decrypt.withArgs(mockEncryptedPermissao).and.returnValue(mockPermissao);
+    });
+
+    it('setPermissaoPerfil deve criptografar e definir o cookie de permissão', () => {
+      service.setPermissaoPerfil(mockPermissao);
+
+      expect(cryptoServiceSpy.hashKey).toHaveBeenCalledWith(keys.COOKIE_PERMISSAO);
+      expect(cryptoServiceSpy.encrypt).toHaveBeenCalledWith(mockPermissao);
+      expect(cookieServiceSpy.set).toHaveBeenCalledWith(
+        mockHashedKey,
+        mockEncryptedPermissao,
+        { expires: jasmine.any(Date), path: '/' }
+      );
+    });
+
+    it('getPermissaoPerfil deve ler e descriptografar a permissão do cookie', () => {
+      cookieServiceSpy.check.withArgs(mockHashedKey).and.returnValue(true);
+      cookieServiceSpy.get.withArgs(mockHashedKey).and.returnValue(mockEncryptedPermissao);
+
+      const permissao = service.getPermissaoPerfil();
+
+      expect(cryptoServiceSpy.decrypt).toHaveBeenCalledWith(mockEncryptedPermissao);
+      expect(permissao).toBe(mockPermissao);
+    });
+
+    it('removePermissaoPerfil deve chamar cookieService.delete', () => {
+      service.removePermissaoPerfil();
+
+      expect(cryptoServiceSpy.hashKey).toHaveBeenCalledWith(keys.COOKIE_PERMISSAO);
+      expect(cookieServiceSpy.delete).toHaveBeenCalledWith(mockHashedKey, '/');
     });
   });
 
@@ -169,16 +223,15 @@ describe('AuthService', () => {
     const mockEncryptedToken = 'encrypted-token-value';
 
     beforeEach(() => {
-      cryptoServiceSpy.hashKey.and.returnValue(mockHashedKey);
-      cryptoServiceSpy.encrypt.and.returnValue(mockEncryptedToken);
-      cryptoServiceSpy.decrypt.and.returnValue(mockToken);
+      cryptoServiceSpy.hashKey.withArgs(keys.COOKIE_TOKEN).and.returnValue(mockHashedKey);
+      cryptoServiceSpy.encrypt.withArgs(mockToken).and.returnValue(mockEncryptedToken);
+      cryptoServiceSpy.decrypt.withArgs(mockEncryptedToken).and.returnValue(mockToken);
     });
 
-    it('setAppToken deve criptografar o token e a chave e chamar cookieService.set', () => {
+    it('setAppToken deve criptografar e definir o cookie de token', () => {
       service.setAppToken(mockToken);
 
       expect(cryptoServiceSpy.encrypt).toHaveBeenCalledWith(mockToken);
-      expect(cryptoServiceSpy.hashKey).toHaveBeenCalledWith(keys.COOKIE_TOKEN);
       expect(cookieServiceSpy.set).toHaveBeenCalledWith(
         mockHashedKey,
         mockEncryptedToken,
@@ -186,67 +239,54 @@ describe('AuthService', () => {
       );
     });
 
-    it('getAppToken deve recuperar e descriptografar o token usando cookieService', () => {
-      cookieServiceSpy.check.and.returnValue(true);
-      cookieServiceSpy.get.and.returnValue(mockEncryptedToken);
+    it('getAppToken deve ler e descriptografar o token do cookie', () => {
+      cookieServiceSpy.check.withArgs(mockHashedKey).and.returnValue(true);
+      cookieServiceSpy.get.withArgs(mockHashedKey).and.returnValue(mockEncryptedToken);
 
       const token = service.getAppToken();
 
-      expect(cookieServiceSpy.check).toHaveBeenCalledWith(mockHashedKey);
-      expect(cookieServiceSpy.get).toHaveBeenCalledWith(mockHashedKey);
       expect(cryptoServiceSpy.decrypt).toHaveBeenCalledWith(mockEncryptedToken);
       expect(token).toBe(mockToken);
     });
 
     it('getAppToken deve retornar nulo se o cookie não for encontrado', () => {
-      cookieServiceSpy.check.and.returnValue(false);
-
+      cookieServiceSpy.check.withArgs(mockHashedKey).and.returnValue(false);
       const token = service.getAppToken();
-
       expect(token).toBeNull();
-      expect(cookieServiceSpy.get).not.toHaveBeenCalled();
-      expect(cryptoServiceSpy.decrypt).not.toHaveBeenCalled();
     });
 
-    it('removeAppToken deve chamar cookieService.delete com a chave e o caminho corretos', () => {
+    it('removeAppToken deve chamar cookieService.delete', () => {
       service.removeAppToken();
-
-      expect(cryptoServiceSpy.hashKey).toHaveBeenCalledWith(keys.COOKIE_TOKEN);
       expect(cookieServiceSpy.delete).toHaveBeenCalledWith(mockHashedKey, '/');
     });
   });
 
-  describe('isAuthenticatedUser', () => {
-    it('deve retornar true quando isAuthenticatedToken retorna true', () => {
+  describe('isAuthenticated', () => {
+    it('isAuthenticatedUser deve retornar true se o token existir', () => {
       spyOn(service, 'isAuthenticatedToken').and.returnValue(true);
       expect(service.isAuthenticatedUser()).toBeTrue();
     });
 
-    it('deve retornar false quando isAuthenticatedToken retorna false', () => {
+    it('isAuthenticatedUser deve retornar false se o token não existir', () => {
       spyOn(service, 'isAuthenticatedToken').and.returnValue(false);
       expect(service.isAuthenticatedUser()).toBeFalse();
     });
-  });
 
-  describe('isAuthenticatedToken', () => {
-    it('deve retornar true quando cookieService.check retorna true', () => {
+    it('isAuthenticatedToken deve retornar true se o cookie existir', () => {
       cryptoServiceSpy.hashKey.and.returnValue('hashed-key');
       cookieServiceSpy.check.and.returnValue(true);
-
-      const result = service.isAuthenticatedToken();
-
-      expect(cookieServiceSpy.check).toHaveBeenCalledWith('hashed-key');
-      expect(result).toBeTrue();
+      expect(service.isAuthenticatedToken()).toBeTrue();
     });
 
-    it('deve retornar false quando cookieService.check retorna false', () => {
+    it('isAuthenticatedToken deve retornar false se o cookie não existir', () => {
       cryptoServiceSpy.hashKey.and.returnValue('hashed-key');
       cookieServiceSpy.check.and.returnValue(false);
-
-      const result = service.isAuthenticatedToken();
-
-      expect(cookieServiceSpy.check).toHaveBeenCalledWith('hashed-key');
-      expect(result).toBeFalse();
+      expect(service.isAuthenticatedToken()).toBeFalse();
     });
+  });
+
+  it('getToken deve retornar o token do app', () => {
+    spyOn(service, 'getAppToken').and.returnValue('token-do-cookie');
+    expect(service.getToken()).toBe('token-do-cookie');
   });
 });

@@ -75,39 +75,39 @@ describe('RecoverPassComponent', () => {
     expect(navigateSpy).toHaveBeenCalledWith(['/auth/login']);
   });
 
-  describe('Formulário (mailForm)', () => {
+  describe('Formulário (cpfForm)', () => {
     it('deve iniciar inválido', () => {
-      expect(component.mailForm.valid).toBeFalsy();
+      expect(component.cpfForm.valid).toBeFalsy();
     });
 
     it('deve ser inválido com um cpf de formato incorreto', () => {
-      component.mailForm.controls['cpf'].setValue('345');
-      expect(component.mailForm.valid).toBeFalsy();
+      component.cpfForm.controls['cpf'].setValue('345');
+      expect(component.cpfForm.valid).toBeFalsy();
     });
 
     it('deve ser válido com um cpf de formato correto', () => {
-      component.mailForm.controls['cpf'].setValue('12345678904');
-      expect(component.mailForm.valid).toBeTruthy();
+      component.cpfForm.controls['cpf'].setValue('12345678904');
+      expect(component.cpfForm.valid).toBeTruthy();
     });
   });
 
   describe('Interação com a UI', () => {
     it('deve desabilitar o botão de envio se o formulário for inválido', () => {
-      component.mailForm.controls['cpf'].setValue(null);
+      component.cpfForm.controls['cpf'].setValue(null);
       fixture.detectChanges();
       const button = fixture.nativeElement.querySelector('button[type="submit"]');
       expect(button.disabled).toBeTrue();
     });
 
     it('deve desabilitar o botão de envio se o cooldown estiver ativo (canResend = false)', () => {
-      component.mailForm.controls['cpf'].setValue('teste@valido.com');
+      component.cpfForm.controls['cpf'].setValue('teste@valido.com');
       fixture.detectChanges();
       const button = fixture.nativeElement.querySelector('button[type="submit"]');
       expect(button.disabled).toBeTrue();
     });
 
     it('deve habilitar o botão de envio se o formulário for válido e o cooldown não estiver ativo (canResend = true)', () => {
-      component.mailForm.controls['cpf'].setValue('teste@valido.com');
+      component.cpfForm.controls['cpf'].setValue('teste@valido.com');
       component.canResend = true;
       fixture.detectChanges();
       const button = fixture.nativeElement.querySelector('button[type="submit"]');

@@ -6,6 +6,7 @@ import {
 
 import { TokenService } from './token.service';
 import { environment } from '../../../environments/environment';
+import { ValidateTokenResponse } from '../../shared/models';
 
 describe('TokenService', () => {
   let service: TokenService;
@@ -30,22 +31,20 @@ describe('TokenService', () => {
   });
 
   describe('validateToken', () => {
-    it('deve fazer uma requisição POST com o corpo correto e emitir a resposta via Observable', (done) => {
+    it('deve fazer uma requisição POST para a URL correta com o corpo e retornar a resposta', () => {
       const mockBody = { token: '123456', codigo: '123' };
-      const mockResponse = { sessionToken: 'token-validado-123' };
+      const mockResponse: ValidateTokenResponse = { token: '123456', ativado: true, perfil: 'admin', mensagem: 'ok' };
 
       service.validateToken(mockBody).subscribe((result) => {
         expect(result).toEqual(mockResponse);
-        done();
       });
 
       const req = httpTestingController.expectOne(
-        `${API_URL}/cadastros/auth/validar-token`
+        `${API_URL}/autenticacao/token/validar`
       );
       expect(req.request.method).toBe('POST');
       expect(req.request.body).toEqual(mockBody);
       req.flush(mockResponse);
     });
   });
-
 });

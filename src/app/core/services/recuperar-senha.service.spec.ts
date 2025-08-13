@@ -43,8 +43,7 @@ describe('RecuperarSenhaService', () => {
       );
       expect(req.request.method).toBe('POST');
       expect(req.request.body).toEqual({
-        cpf: mockCpf,
-        caminhoRelativo: '/avs-portaldemidias/auth/criar-senha',
+        cpf: mockCpf
       });
 
       req.flush(mockResponse);

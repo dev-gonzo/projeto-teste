@@ -16,3 +16,8 @@ export interface UnidadeOperacional extends AbstractModel<number> {
   nomeResponsavelUnidade?: string;
   status?: string;
 }
+
+export interface ListaUnidadeOperacional extends AbstractModel<number> {
+  nomeUnidadeOperacional: string;
+}
+

@@ -13,8 +13,7 @@ export class RecuperarSenhaService {
 
     solicitarRecuperacaoSenha(cpf: string): Observable<any> {
         const body = {
-            cpf: cpf,
-            caminhoRelativo: "/avs-portaldemidias/auth/criar-senha"
+            cpf: cpf
         }
         return this.http.post(`${this.baseUrl}/autenticacao/recuperar-senha`, body)
     }

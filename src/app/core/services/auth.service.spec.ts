@@ -86,7 +86,7 @@ describe('AuthService', () => {
       req.flush(apiResponse);
 
       expect(service.setAppToken).toHaveBeenCalledWith('mock-token');
-      expect(routerSpy.navigate).toHaveBeenCalledWith(['/auth/validate-token']);
+      expect(routerSpy.navigate).toHaveBeenCalledWith(['/auth/validar-token']);
       expect(eventFired).toBe(true);
     });
 

@@ -195,4 +195,5 @@ export class CadastroComponent implements OnInit {
   back(_?: any) {
     this.router.navigate(['/auth/login']);
   }
+  
 }

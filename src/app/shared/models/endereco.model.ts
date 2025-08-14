@@ -38,7 +38,7 @@ export function mapApiCepToEndereco(apiData: ApiCepResponse): Endereco {
   return {
     id: 0,
     cep: apiData.cep,
-    logradouro: apiData.logradouro,
+    logradouro:  apiData.logradouro,
     bairro: apiData.bairro,
     complemento: apiData.complemento,
     municipio: {

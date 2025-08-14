@@ -1,10 +1,8 @@
-import { Injectable, NgModule } from '@angular/core';
-import { HttpClient, HttpHeaders, HttpParams } from '@angular/common/http';
+import { Injectable } from '@angular/core';
+import { HttpClient, HttpParams } from '@angular/common/http';
 import { ActivatedRouteSnapshot, RouterStateSnapshot } from '@angular/router';
-import { Observable, filter, take, throwError } from 'rxjs';
-import { map } from 'rxjs/operators';
+import { Observable, filter, take, throwError, map } from 'rxjs';
 import { CookieService } from 'ngx-cookie-service';
-import { keys } from '../../shared/utils/variables';
 import {
   UnidadeOperacional,
   HistoricoAcoes,
@@ -15,68 +13,59 @@ import {
   ListaUnidadeOperacional,
   UnidadeOperacionalPageResponse,
   Municipio,
-  Endereco,
+  Endereco
 } from '../../shared/models';
 import { environment } from '../../../environments/environment';
+import { ApiService } from './api.service';
 import { AuthService } from './auth.service';
 
 @Injectable({
   providedIn: 'root',
 })
-export class UnidadeOperacionalService {
+export class UnidadeOperacionalService extends ApiService {
   private readonly endpoint = `${environment.apiUrl}/unidade-operacional`;
   public readonly urlUpload = `${environment.apiUrl}/unidades/upload-file`;
   private readonly urlLogs = `${environment.apiUrl}/unidades/logs`;
 
-  private readonly jsonHeaders = new HttpHeaders({ 'Content-Type': 'application/json; charset=utf-8' });
-
   constructor(
+    protected override authService: AuthService,
     private readonly http: HttpClient,
-    private readonly cookieService: CookieService,
-    private readonly authService: AuthService
-  ) { }
-
-  private getAuthHeaders(): HttpHeaders {
-    const token = this.authService.getToken();
-    return token ? this.jsonHeaders.set('Authorization', `Bearer ${token}`) : this.jsonHeaders;
+    private readonly cookieService: CookieService
+  ) {
+    super(authService);
   }
 
   query(params: HttpParams): Observable<Page<UnidadeOperacional>> {
-    const token = this.authService.getToken();
-    const headers = token
-      ? this.jsonHeaders.set('Authorization', `Bearer ${token}`)
-      : this.jsonHeaders;
+    return this.http
+      .get<UnidadeOperacionalPageResponse>(this.endpoint, { params, headers: this.getAuthHeaders() })
+      .pipe(
+        map(response => {
+          const content: UnidadeOperacional[] =
+            (response._embedded?.unidadeOperacionalDTOList || []).map(unidadeOperacionalDTO => ({
+              id: unidadeOperacionalDTO.id,
+              nomeUnidadeOperacional: unidadeOperacionalDTO.nomeUnidadeOperacional,
+              responsavelUnidadeOperacional: unidadeOperacionalDTO.responsavelUnidadeOperacional,
+              status: unidadeOperacionalDTO.status,
+              numeroTelefonePrincipal: unidadeOperacionalDTO.numeroTelefonePrincipal,
+              numeroTelefoneSecundario: unidadeOperacionalDTO.numeroTelefoneSecundario,
+              telefoneCompleto: [
+                unidadeOperacionalDTO.numeroTelefonePrincipal,
+                unidadeOperacionalDTO.numeroTelefoneSecundario
+              ].filter(Boolean).join(' / '),
+              endereco: {
+                municipioNome: unidadeOperacionalDTO.endereco?.municipioNome,
+                bairro: unidadeOperacionalDTO.endereco?.bairro,
+                logradouro: unidadeOperacionalDTO.endereco?.logradouro,
+                numero: unidadeOperacionalDTO.endereco?.numero,
+                cep: unidadeOperacionalDTO.endereco?.cep,
+                estadoSigla: unidadeOperacionalDTO.endereco?.estadoSigla,
+              } as Endereco
+            }));
 
-    return this.http.get<any>(this.endpoint, { params, headers }).pipe(
-      map(response => {
-        const content: UnidadeOperacional[] = (response._embedded?.unidadeOperacionalDTOList || []).map(
-          (unidadeDTO: any) => ({
-            id: unidadeDTO.id,
-            nomeUnidadeOperacional: unidadeDTO.nomeUnidadeOperacional,
-            responsavelUnidadeOperacional: unidadeDTO.responsavelUnidadeOperacional,
-            status: unidadeDTO.status,
-            numeroTelefonePrincipal: unidadeDTO.numeroTelefonePrincipal,
-            numeroTelefoneSecundario: unidadeDTO.numeroTelefoneSecundario,
-            telefoneCompleto: [unidadeDTO.numeroTelefonePrincipal, unidadeDTO.numeroTelefoneSecundario]
-              .filter(Boolean)
-              .join(' / '),
-
-            endereco: {
-              municipioNome: unidadeDTO.endereco?.municipioNome,
-              bairro: unidadeDTO.endereco?.bairro,
-              logradouro: unidadeDTO.endereco?.logradouro,
-              numero: unidadeDTO.endereco?.numero,
-              cep: unidadeDTO.endereco?.cep,
-              estadoSigla: unidadeDTO.endereco?.estadoSigla,
-            } as Endereco
-          })
-        );
-
-        const totalElements = response.page?.totalElements || content.length;
-
-        return PageImpl.of(content, totalElements);
-      })
-    );
+          const totalElements = response.page?.totalElements || content.length;
+          return PageImpl.of(content, totalElements);
+        })
+      );
   }
 
 

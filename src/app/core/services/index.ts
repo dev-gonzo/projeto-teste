@@ -8,4 +8,5 @@ export * from './shared.service';
 export * from './usuario.service';
 export * from './email.service'
 export * from './senha.service';
+export * from './api.service';
 export * from './recuperar-senha.service';

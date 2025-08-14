@@ -171,9 +171,9 @@ export class CadastroComponent implements OnInit {
         ? formData.dataNascimento.toISOString().split('T')[0]
         : null,
       celular: formData.celular,
-      genero: formData.sexo?.nome || formData.sexo || '', 
-      estadoCivil: formData.estadoCivil?.id || formData.estadoCivil || '',
-      cargoId: formData.cargo, 
+      genero: formData.sexo?.nome || '',
+      estadoCivil: formData.estadoCivil?.id || '',
+      cargoId: formData.cargo,
       unidadeOperacionalId: formData.unidade,
       observacao: formData.descricao || '',
       senha: formData.senha
@@ -195,5 +195,5 @@ export class CadastroComponent implements OnInit {
   back(_?: any) {
     this.router.navigate(['/auth/login']);
   }
-  
+
 }

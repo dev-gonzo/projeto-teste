@@ -105,7 +105,7 @@ export class CadastroComponent implements OnInit {
   }
 
   loadDropdownData(): void {
-    this.unidadeService.getAll().subscribe(data => this.unidades = data);
+    this.unidadeService.listaTodasUnidadesOperacioanais().subscribe(data => this.unidades = data);
     this.cargoService.getAll().subscribe(data => this.cargos = data);
   }
 

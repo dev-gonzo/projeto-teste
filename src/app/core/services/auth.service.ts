@@ -1,7 +1,7 @@
 import { HttpClient } from '@angular/common/http';
 import { EventEmitter, Injectable } from '@angular/core';
 import { Router } from '@angular/router';
-import { Observable, tap, map, of, catchError } from 'rxjs';
+import { Observable, tap, map, of, catchError, throwError } from 'rxjs';
 import { CookieService } from 'ngx-cookie-service';
 
 import { environment } from '../../../environments/environment';
@@ -36,13 +36,18 @@ export class AuthService {
             this.emitLoggedInEvent();
           } else if (response?.token && response.ativado === false) {
             this.setAppToken(response.token);
-            this.setMensagemLogin(response.mensagem)
+            this.setMensagemLogin(response.mensagem);
             this.router.navigate(['/auth/validar-token']);
           } else {
-            this.setMensagemLogin('Erro ao realizar login, tente novamente mais tarde!')
+            throw new Error('Resposta de login inválida do servidor.');
           }
+        }),
+        catchError(err => {
+          this.setMensagemLogin('Erro ao realizar login, tente novamente mais tarde!');
+          return throwError(() => err); 
         })
       );
+
   }
 
   public logout(): Observable<{ success: boolean; message: string | null }> {

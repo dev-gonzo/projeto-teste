@@ -46,7 +46,7 @@ export class UnidadeOperacionalService {
     return this.http.get<UnidadeOperacional[]>(`${this.endpoint}/findall`);
   }
 
-  listaTodasUnidadesOperacioanais(): Observable<ListaUnidadeOperacional[]> {
+  listaTodasUnidadesOperacionais(): Observable<ListaUnidadeOperacional[]> {
     return this.http.get<ListaUnidadeOperacional[]>(`${this.endpointAutocadastro}/list-all`);
   }
 

@@ -4,7 +4,6 @@ import { AbstractControl, FormBuilder, FormGroup, ReactiveFormsModule, Validator
 import { Router } from '@angular/router';
 import { MessageService } from 'primeng/api';
 import { finalize } from 'rxjs';
-
 import { InputTextModule } from 'primeng/inputtext';
 import { CalendarModule } from 'primeng/calendar';
 import { DropdownModule } from 'primeng/dropdown';
@@ -106,7 +105,7 @@ export class CadastroComponent implements OnInit {
   }
 
   loadDropdownData(): void {
-    this.unidadeService.listaTodasUnidadesOperacioanais().subscribe((data: ListaUnidadeOperacional[]) => this.unidades = data);
+    this.unidadeService.listaTodasUnidadesOperacionais().subscribe((data: ListaUnidadeOperacional[]) => this.unidades = data);
     this.cargoService.getAll().subscribe((data: Cargo[]) => this.cargos = data);
   }
 
@@ -168,11 +167,11 @@ export class CadastroComponent implements OnInit {
       cpf: formData.cpf,
       telefone: formData.telefone,
       dataNascimento: formData.dataNascimento
-        ? formData.dataNascimento.toISOString().split('T')[0]
-        : null,
+        ? `${formData.dataNascimento.getFullYear()}-${(formData.dataNascimento.getMonth() + 1).toString().padStart(2, '0')}-${formData.dataNascimento.getDate().toString().padStart(2, '0')}`
+        : undefined,
       celular: formData.celular,
-      genero: formData.sexo?.nome || '',
-      estadoCivil: formData.estadoCivil?.id || '',
+      genero: formData.sexo?.nome || null,
+      estadoCivil: formData.estadoCivil?.id || null,
       cargoId: formData.cargo,
       unidadeOperacionalId: formData.unidade,
       observacao: formData.descricao || '',

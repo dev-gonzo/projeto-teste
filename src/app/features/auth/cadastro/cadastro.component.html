@@ -109,18 +109,16 @@
               mask="000.000.000-00"
               [ngClass]="{ 'ng-invalid ng-dirty': isInvalid('cpf') }"
             />
-            <small *ngIf="isInvalid('cpf')" class="text-red-500">
-              <small
-                class="p-error"
-                *ngIf="form.get('cpf')?.hasError('required')"
-                >CPF é obrigatório.</small
-              >
-              <small
-                class="p-error"
-                *ngIf="form.get('cpf')?.hasError('cpfInvalido')"
-                >CPF inválido.</small
-              >
-            </small>
+            <small
+              class="text-red-500"
+              *ngIf="form.get('cpf')?.hasError('required')"
+              >CPF é obrigatório.</small
+            >
+            <small
+              class="text-red-500"
+              *ngIf="form.get('cpf')?.hasError('cpfInvalido')"
+              >CPF inválido.</small
+            >
           </div>
 
           <div class="col-span-4 md:col-span-1">

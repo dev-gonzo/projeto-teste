@@ -13,7 +13,7 @@ import { TextareaModule } from 'primeng/textarea';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 import { NgxMaskDirective, NgxMaskPipe, provideNgxMask } from 'ngx-mask';
 
-import { PasswordValidators } from '../../../shared/validators'; 
+import { PasswordValidators } from '../../../shared/validators';
 import { UsuarioService, CargoService, UnidadeOperacionalService } from '../../../core/services';
 import { Cargo, ListaUnidadeOperacional } from '../../../shared/models';
 
@@ -36,7 +36,7 @@ import { Cargo, ListaUnidadeOperacional } from '../../../shared/models';
   styleUrls: ['./cadastro.component.scss'],
   providers: [
     MessageService,
-    provideNgxMask(), 
+    provideNgxMask(),
     UsuarioService,
     UnidadeOperacionalService,
     CargoService
@@ -92,8 +92,8 @@ export class CadastroComponent implements OnInit {
       cpf: ['', [Validators.required, Validators.pattern(/^\d{3}\.\d{3}\.\d{3}-\d{2}$/)]],
       email: ['', [Validators.required, Validators.email]],
       estadoCivil: [null, Validators.required],
-      unidade: [null, Validators.required], 
-      cargo: [null, Validators.required], 
+      unidade: [null, Validators.required],
+      cargo: [null, Validators.required],
       descricao: [''],
       senha: ['', passwordValidators],
       confirmarSenha: ['', Validators.required],
@@ -106,7 +106,7 @@ export class CadastroComponent implements OnInit {
 
   loadDropdownData(): void {
     this.unidadeService.listaTodasUnidadesOperacioanais().subscribe(data => this.unidades = data);
-    this.cargoService.getAll().subscribe(data => this.cargos = data);
+    this.cargoService.getAll().subscribe((data: Cargo[]) => this.cargos = data);
   }
 
   passwordsMatchValidator: ValidatorFn = (control: AbstractControl) => {
@@ -159,13 +159,11 @@ export class CadastroComponent implements OnInit {
 
     const payload = {
       ...formData,
-      sexo: formData.sexo ? formData.sexo.id : null,
-      estadoCivil: formData.estadoCivil ? formData.estadoCivil.id : null,
-      unidadeId: formData.unidade ? formData.unidade.id : null,
-      cargoId: formData.cargo ? formData.cargo.id : null,
+      sexo: formData.sexo?.id || null,
+      estadoCivil: formData.estadoCivil?.id || null,
+      unidadeId: formData.unidade, 
+      cargoId: formData.cargo, 
     };
-    delete payload.unidade;
-    delete payload.cargo;
     delete payload.confirmarSenha;
 
 

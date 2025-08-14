@@ -25,7 +25,6 @@ import { ConfirmLogoutComponent } from './components/confirm-logout/confirm-logo
 
 import { MessageService } from 'primeng/api';
 
-
 @NgModule({
   declarations: [
     SidebarComponent,

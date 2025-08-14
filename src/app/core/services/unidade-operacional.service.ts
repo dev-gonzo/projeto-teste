@@ -11,6 +11,7 @@ import {
   PageImpl,
   ResponseSuccessHttp,
   PageResponse,
+  ListaUnidadeOperacional,
 } from '../../shared/models';
 import { environment } from '../../../environments/environment';
 
@@ -45,8 +46,8 @@ export class UnidadeOperacionalService {
     return this.http.get<UnidadeOperacional[]>(`${this.endpoint}/findall`);
   }
 
-  listaTodasUnidadesOperacioanais(): Observable<UnidadeOperacional[]> {
-    return this.http.get<UnidadeOperacional[]>(`${this.endpointAutocadastro}`);
+  listaTodasUnidadesOperacionais(): Observable<ListaUnidadeOperacional[]> {
+    return this.http.get<ListaUnidadeOperacional[]>(`${this.endpointAutocadastro}/list-all`);
   }
 
   listByName(nome: string): Observable<UnidadeOperacional[]> {

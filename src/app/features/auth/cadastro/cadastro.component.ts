@@ -173,7 +173,7 @@ export class CadastroComponent implements OnInit {
       finalize(() => this.isLoading = false)
     ).subscribe({
       next: (response) => {
-        this.successMessage = response.mensagem || 'Cadastro realizado com sucesso! Redirecionando...';
+        this.successMessage = response.mensagem || 'Cadastro realizado com sucesso! Redirecionando para tela de Login.';
         setTimeout(() => this.back(), 2500);
       },
       error: (err) => {

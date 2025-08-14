@@ -4,4 +4,5 @@ export const keys = {
     EMAIL_STORAGE: "Application@KEY_Email",
     TIMER_EXPIRATION: 'Application@KEY_Timer_Expiration',
     COOKIE_TOKEN: 'Application@KEY_Cookie_Token',
-};
+    COOKIE_PERMISSAO: 'Application@KEY_Permissao'
+}

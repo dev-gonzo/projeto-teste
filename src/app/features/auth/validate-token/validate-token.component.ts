@@ -35,6 +35,8 @@ export class ValidateTokenComponent implements OnInit, OnDestroy {
   step: number = 0;
   sendingRequest: boolean = false;
   mensagemLogin: string | null = '';
+  token: string = '';
+  codigo: string = '';
 
   mailForm = new FormGroup({
     email: new FormControl('', [Validators.required, Validators.email]),
@@ -45,8 +47,8 @@ export class ValidateTokenComponent implements OnInit, OnDestroy {
   private intervalId: any;
   private loginSubscription: Subscription | undefined;
 
-  tokenForm = new FormGroup({
-    token: new FormControl('', [
+  codigoForm = new FormGroup({
+    codigo: new FormControl('', [
       Validators.required,
       Validators.minLength(6),
       Validators.maxLength(6),
@@ -57,20 +59,19 @@ export class ValidateTokenComponent implements OnInit, OnDestroy {
     private readonly authService: AuthService,
     private readonly router: Router,
     private readonly sharedService: SharedService,
-    private readonly tokenService: TokenService
+    private readonly tokenService: TokenService,
   ) { }
 
-  ngOnInit(): void {
-    const appToken = this.authService.getAppToken();
 
+  ngOnInit(): void {
+    this.mensagemLogin = this.authService.getMensagemLogin();
+    const appToken = this.authService.getAppToken();
+    this.token = appToken ?? '';
     this.startCooldown();
-    if (appToken) {
-      this.router.navigate(['/valida-token']);
-      return;
-    }
+
     if (this.authService.isAuthenticatedUser()) {
-      if (this.authService.isAuthenticatedToken()) {
-        this.router.navigate(['/valida-token']);
+      if (this.authService.isAuthenticatedToken() && this.router.url !== '/auth/validar-token') {
+        this.router.navigate(['/auth/validar-token']);
       }
     } else {
       this.router.navigate(['/']);
@@ -90,37 +91,45 @@ export class ValidateTokenComponent implements OnInit, OnDestroy {
     }
   }
 
-  onSubmitToken() {
-    if (this.tokenForm.invalid) return;
+  onSubmitCodigo() {
+    if (this.codigoForm.invalid) return;
 
-    this.errorMessage = '';
-    this.successMessage = '';
+    this.resetMessages();
+    this.sendingRequest = true;
 
+    const { codigo } = this.codigoForm.value;
     const body = {
-      jwt: this.tokenService.getToken(),
-      token: this.tokenForm.value.token?.trim() ?? '',
+      codigo: codigo?.trim() ?? '',
+      token: this.token,
     };
 
     this.tokenService.validateToken(body).subscribe({
       next: (response) => {
-        if (response?.sessionToken) {
-          this.successMessage = 'Token validado com sucesso. Você será redirecionado...';
-          this.errorMessage = '';
-          setTimeout(() => {
-            this.authService.setAppToken(response.sessionToken);
-            this.router.navigate(['/home']);
-          }, 5000);
-        } else {
-          this.errorMessage = 'Resposta inválida do servidor.';
+        const { ativado, mensagem, perfil, token } = response;
+        this.successMessage = response.mensagem;
+        if (ativado) {
+          this.authService.setAppToken(token);
+          this.authService.setPermissaoPerfil(perfil);
+
+          this.successMessage = mensagem;
+          this.router.navigate(['/home']);
+          return;
         }
+
+        this.errorMessage = 'Token inválido ou não ativado.';
+        this.sendingRequest = false;
       },
       error: () => {
-        this.successMessage = '';
-        this.errorMessage = 'Token inválido ou expirado. Solicite um novo para continuar.';
+        this.errorMessage = 'Erro ao validar o token. Solicite um novo para continuar.';
+        this.sendingRequest = false;
       },
     });
   }
 
+  private resetMessages(): void {
+    this.errorMessage = '';
+    this.successMessage = '';
+  }
 
   startCooldown() {
     this.cooldownTime = 300;
@@ -145,14 +154,14 @@ export class ValidateTokenComponent implements OnInit, OnDestroy {
   resetToken() {
     if (this.intervalId) clearInterval(this.intervalId);
     this.mailForm.reset();
-    this.tokenForm.reset();
+    this.codigoForm.reset();
     this.successMessage = '';
     this.errorMessage = '';
     this.step = 0;
   }
 
   onCodeChanged(code: string) {
-    this.tokenForm.setValue({ token: code });
+    this.codigoForm.setValue({ codigo: code });
   }
 
   onCodeCompleted(code: string) { }

@@ -58,9 +58,9 @@ export class UsuarioService {
       )
     );
   }
-
+  
   insert(model: Usuario): Observable<ResponseSuccessHttp> {
-    return this.http.post<ResponseSuccessHttp>(`${this.endpoint}`, model);
+    return this.http.post<ResponseSuccessHttp>(`${this.endpoint}/autocadastro`, model);
   }
 
   update(model: Usuario, id: number | undefined): Observable<ResponseSuccessHttp> {

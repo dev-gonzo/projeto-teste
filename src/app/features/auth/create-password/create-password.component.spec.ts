@@ -3,16 +3,18 @@ import { Router, ActivatedRoute } from '@angular/router';
 import { of, throwError, Subscription } from 'rxjs';
 import { FontAwesomeModule, FaIconLibrary } from '@fortawesome/angular-fontawesome';
 import { fas } from '@fortawesome/free-solid-svg-icons';
+import { ReactiveFormsModule } from '@angular/forms';
+import { CommonModule } from '@angular/common';
 
 import { CreatePasswordComponent } from './create-password.component';
-import { SenhaService } from '../../../core/services';
+import { RecuperarSenhaService } from '../../../core/services';
 
-class MockSenhaService {
-  criarSenha(id: number, password: string, token: string) {
+class MockRecuperarSenhaService {
+  validarRecuperacaoSenha(token: string, password: string) {
     if (password === 'ValidPass123!') {
-      return of('Senha cadastrada com sucesso.');
+      return of({ mensagem: 'Senha cadastrada com sucesso.' });
     }
-    return throwError(() => ({ error: { message: 'Erro simulado' } }));
+    return throwError(() => ({ error: { message: 'Token inválido ou expirado.' } }));
   }
 }
 
@@ -24,17 +26,22 @@ describe('CreatePasswordComponent', () => {
   let component: CreatePasswordComponent;
   let fixture: ComponentFixture<CreatePasswordComponent>;
   let router: Router;
-  let senhaService: SenhaService;
+  let recuperarSenhaService: RecuperarSenhaService;
 
   const mockActivatedRoute = {
-    queryParams: of({ id: '12345', q: 'um-token-jwt-mock' }),
+    queryParams: of({ c: 'um-token-jwt-mock' }),
   };
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [CreatePasswordComponent],
+      imports: [
+        CreatePasswordComponent,
+        CommonModule,
+        ReactiveFormsModule,
+        FontAwesomeModule,
+      ],
       providers: [
-        { provide: SenhaService, useClass: MockSenhaService },
+        { provide: RecuperarSenhaService, useClass: MockRecuperarSenhaService },
         { provide: Router, useClass: MockRouter },
         { provide: ActivatedRoute, useValue: mockActivatedRoute },
       ],
@@ -46,7 +53,7 @@ describe('CreatePasswordComponent', () => {
     fixture = TestBed.createComponent(CreatePasswordComponent);
     component = fixture.componentInstance;
     router = TestBed.inject(Router);
-    senhaService = TestBed.inject(SenhaService);
+    recuperarSenhaService = TestBed.inject(RecuperarSenhaService);
 
     fixture.detectChanges();
   });
@@ -59,8 +66,7 @@ describe('CreatePasswordComponent', () => {
     expect(component).toBeTruthy();
   });
 
-  it('deve obter o ID e o TOKEN da URL na inicialização do componente', () => {
-    expect(component.code).toBe('12345');
+  it('deve obter o TOKEN da URL na inicialização do componente', () => {
     expect(component.token).toBe('um-token-jwt-mock');
   });
 
@@ -70,13 +76,21 @@ describe('CreatePasswordComponent', () => {
     expect(navigateSpy).toHaveBeenCalledWith(['/auth/login']);
   });
 
-  it('deve chamar verifyParams na inicialização e não deve redirecionar com parâmetros válidos', () => {
+  it('deve chamar verifyParams na inicialização e não deve redirecionar com token válido', () => {
     const navigateSpy = spyOn(router, 'navigate');
-    const verifySpy = spyOn(component, 'verifyParams').and.callThrough();
+    spyOn(component, 'verifyParams').and.callThrough();
     component.ngOnInit();
-    expect(verifySpy).toHaveBeenCalled();
+    expect(component.verifyParams).toHaveBeenCalled();
     expect(navigateSpy).not.toHaveBeenCalled();
   });
+
+  it('deve redirecionar para /auth/login se o token não existir nos parâmetros', () => {
+    const navigateSpy = spyOn(router, 'navigate');
+    (component as any).token = '';
+    component.verifyParams();
+    expect(navigateSpy).toHaveBeenCalledWith(['/auth/login']);
+  });
+
 
   describe('Validação do Formulário (passForm)', () => {
     it('deve iniciar com o formulário inválido', () => {
@@ -162,13 +176,13 @@ describe('CreatePasswordComponent', () => {
   });
 
   describe('Lógica de Submissão', () => {
-    it('deve chamar o SenhaService.criarSenha ao submeter o formulário', () => {
-      const criarSenhaSpy = spyOn(senhaService, 'criarSenha').and.callThrough();
+    it('deve chamar RecuperarSenhaService.validarRecuperacaoSenha ao submeter', () => {
+      const criarSenhaSpy = spyOn(recuperarSenhaService, 'validarRecuperacaoSenha').and.callThrough();
       const validPassword = 'ValidPass123!';
       component.password.setValue(validPassword);
       component.password_confirm.setValue(validPassword);
       component.onSubmit();
-      expect(criarSenhaSpy).toHaveBeenCalledWith(12345, validPassword, 'um-token-jwt-mock');
+      expect(criarSenhaSpy).toHaveBeenCalledWith('um-token-jwt-mock', validPassword);
     });
 
     it('deve exibir mensagem de sucesso e redirecionar após 2 segundos', fakeAsync(() => {
@@ -178,9 +192,13 @@ describe('CreatePasswordComponent', () => {
       component.password_confirm.setValue(validPassword);
       component.onSubmit();
       fixture.detectChanges();
-      expect(component.successMessage).toContain('Senha cadastrada com sucesso');
+
+      expect(component.successMessage).toContain('Senha cadastrada com sucesso.');
+      expect(component.sendingRequest).toBe(false);
+
       tick(1999);
       expect(navigateSpy).not.toHaveBeenCalled();
+
       tick(1);
       expect(navigateSpy).toHaveBeenCalledWith(['/auth/login']);
     }));
@@ -191,8 +209,10 @@ describe('CreatePasswordComponent', () => {
       component.password_confirm.setValue(password);
       component.onSubmit();
       fixture.detectChanges();
-      expect(component.errorMessage).toContain('Erro simulado');
+
+      expect(component.errorMessage).toContain('Token inválido ou expirado.');
       expect(component.successMessage).toBe('');
+      expect(component.sendingRequest).toBe(false);
     });
   });
 
@@ -200,7 +220,7 @@ describe('CreatePasswordComponent', () => {
     it('deve desinscrever todas as subscrições', () => {
       const subscriptions = (component as any).subscriptions as Subscription;
       const unsubscribeSpy = spyOn(subscriptions, 'unsubscribe');
-      fixture.destroy();
+      component.ngOnDestroy();
       expect(unsubscribeSpy).toHaveBeenCalled();
     });
   });

@@ -1,22 +1,19 @@
-import { AbstractModel, Cargo, UnidadeOperacional, Perfil } from '.';
+import { AbstractModel } from '.';
 
 export interface Usuario extends AbstractModel<number> {
   nome: string;
   rg?: string;
-  perfil: Perfil;
-  cargo: Cargo;
   celular?: string;
-  celularDDD?: string;
   telefone?: string;
-  telefoneDDD?: string;
-  sexo?: string;
+  genero: string;
   cpf: string;
+  estadoCivil: string;
   email: string;
   descricao?: string;
   dataNascimento?: string;
-  unidadeOperacionalPrincipal: UnidadeOperacional;
-  unidadesOperacionais?: UnidadeOperacional[];
-  status?: string;
+  unidadeOperacionalId?: number;
+  cargoId: number;
+  observacao?: string;
 }
 
 export interface UsuarioBasico extends AbstractModel<number> {

@@ -33,7 +33,6 @@ export class LoginComponent {
   successMessage: string = '';
   errorMessage: string = '';
   sendingRequest: boolean = false;
-
   private loginEventSubscription!: Subscription;
 
   credentialsForm = new FormGroup({
@@ -59,7 +58,7 @@ export class LoginComponent {
   }
 
   loginError(error: any): void {
-    this.errorMessage = error?.error?.message || 'Dados de login incorretos. Tente novamente.';
+    this.errorMessage = error?.error?.status === 500 ? 'Erro no servidor, tente novamente mais tarde' : 'Dados de login incorretos. Tente novamente.';
     this.sendingRequest = false;
   }
 
@@ -84,7 +83,10 @@ export class LoginComponent {
     };
     this.sendingRequest = true;
     this.authService.login(credentials).subscribe({
-      next: this.loginSuccess.bind(this),
+      next: (response) => {
+        this.successMessage = response.mensagem;
+        this.loginSuccess(response);
+      },
       error: (err) => {
         this.loginError(err);
       }

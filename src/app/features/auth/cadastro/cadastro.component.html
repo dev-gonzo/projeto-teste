@@ -1,7 +1,6 @@
 <div class="absolute top-5 left-4 z-20">
   <div>
     <button
-      on-enter="back()"
       (click)="back($event)"
       class="flex items-center gap-2 text-sky-600 hover:text-sky-700 font-semibold"
     >
@@ -9,8 +8,9 @@
     </button>
   </div>
 </div>
+
 <div
-  class="flex min-h-screen w-screen flex-col items-center justify-center px-4"
+  class="flex min-h-screen w-screen flex-col items-center justify-center px-4 page-background"
 >
   <div
     class="mx-auto flex w-full max-w-full flex-col items-center px-3 md:w-12/12 lg:w-8/12"
@@ -32,16 +32,13 @@
         </p>
       </div>
 
-      <div class="flex-auto p-4">
-        <div
-          *ngIf="successMessage"
-          class="mt-1 text-center text-sm text-green-600"
-        >
+      <div class="flex-auto p-4 text-center">
+        <div *ngIf="successMessage" class="mt-1 text-sm text-green-600">
           {{ successMessage }}
         </div>
         <div
           *ngIf="errorMessage && !successMessage"
-          class="mt-1 text-center text-sm text-red-600"
+          class="mt-1 text-sm text-red-600"
         >
           {{ errorMessage }}
         </div>
@@ -55,15 +52,15 @@
       >
         <div class="grid grid-cols-4 gap-4">
           <div class="col-span-4 md:col-span-2">
-            <label for="nome" class="mb-2 block font-semibold">Nome*</label>
+            <label for="nome" class="mb-2 block font-semibold">Nome *</label>
             <input
               pInputText
               id="nome"
               type="text"
               formControlName="nome"
-              placeholder="Digite seu nome"
-              class="w-full rounded-lg border px-4 py-2 text-sm"
-              [ngClass]="{ 'border-red-500': isInvalid('nome') }"
+              placeholder="Digite seu nome completo"
+              class="w-full"
+              [ngClass]="{ 'ng-invalid ng-dirty': isInvalid('nome') }"
             />
             <small *ngIf="isInvalid('nome')" class="text-red-500"
               >Nome é obrigatório.</small
@@ -77,16 +74,13 @@
             <p-calendar
               id="dataNascimento"
               formControlName="dataNascimento"
-              class="w-full rounded-lg border px-4 py-2 text-sm"
+              styleClass="w-full"
               dateFormat="dd/mm/yy"
               placeholder="DD/MM/AAAA"
               [maxDate]="hoje"
               [showButtonBar]="true"
-              [ngClass]="{ 'border-red-500': isInvalid('dataNascimento') }"
+              [ngClass]="{ 'ng-invalid ng-dirty': isInvalid('dataNascimento') }"
             ></p-calendar>
-            <small *ngIf="isInvalid('dataNascimento')" class="text-red-500"
-              >Data inválida.</small
-            >
           </div>
 
           <div class="col-span-4 md:col-span-1">
@@ -95,49 +89,46 @@
               id="sexo"
               formControlName="sexo"
               [options]="sexos"
-              optionLabel="descricao"
+              optionLabel="nome"
               placeholder="Selecione"
-              class="w-full rounded-lg border text-sm"
-              [ngClass]="{ 'border-red-500': isInvalid('sexo') }"
+              styleClass="w-full"
+              [ngClass]="{ 'ng-invalid ng-dirty': isInvalid('sexo') }"
             ></p-dropdown>
-            <small *ngIf="isInvalid('sexo')" class="text-red-500"
-              >Selecione um gênero.</small
-            >
           </div>
 
           <div class="col-span-4 md:col-span-1">
-            <label for="cpf" class="mb-2 block font-semibold">CPF*</label>
+            <label for="cpf" class="mb-2 block font-semibold">CPF *</label>
             <input
               pInputText
               id="cpf"
               type="text"
               formControlName="cpf"
-              placeholder="999.999.999-99"
-              class="w-full rounded-lg border px-4 py-2 text-sm"
-              mask="999.999.999-99"
-              [ngClass]="{ 'border-red-500': isInvalid('cpf') }"
+              placeholder="000.000.000-00"
+              class="w-full"
+              mask="000.000.000-00"
+              [ngClass]="{ 'ng-invalid ng-dirty': isInvalid('cpf') }"
             />
             <small *ngIf="isInvalid('cpf')" class="text-red-500">
               <span *ngIf="form.get('cpf')?.errors?.['required']"
                 >CPF é obrigatório.</span
               >
               <span *ngIf="form.get('cpf')?.errors?.['pattern']"
-                >CPF inválido.</span
+                >Formato de CPF inválido.</span
               >
             </small>
           </div>
 
           <div class="col-span-4 md:col-span-1">
-            <label for="rg" class="mb-2 block font-semibold">RG*</label>
+            <label for="rg" class="mb-2 block font-semibold">RG *</label>
             <input
               pInputText
               id="rg"
               type="text"
               formControlName="rg"
-              placeholder="99.999.999-A"
-              class="w-full rounded-lg border px-4 py-2 text-sm"
-              mask="99.999.999-A"
-              [ngClass]="{ 'border-red-500': isInvalid('rg') }"
+              placeholder="00.000.000-0"
+              mask="00.000.000-0"
+              class="w-full"
+              [ngClass]="{ 'ng-invalid ng-dirty': isInvalid('rg') }"
             />
             <small *ngIf="isInvalid('rg')" class="text-red-500"
               >RG é obrigatório.</small
@@ -153,9 +144,9 @@
               id="telefone"
               type="text"
               formControlName="telefone"
-              placeholder="(XX) XXXXX-XXXX"
-              class="w-full rounded-lg border px-4 py-2 text-sm"
-              mask="(99) 99999-9999"
+              placeholder="(00) 00000-0000"
+              class="w-full"
+              mask="(00) 0000-0000"
             />
           </div>
 
@@ -168,22 +159,22 @@
               id="celular"
               type="text"
               formControlName="celular"
-              placeholder="(XX) XXXXX-XXXX"
-              class="w-full rounded-lg border px-4 py-2 text-sm"
-              mask="(99) 99999-9999"
+              placeholder="(00) 00000-0000"
+              class="w-full"
+              mask="(00) 00000-0000"
             />
           </div>
 
           <div class="col-span-4 md:col-span-2">
-            <label for="email" class="mb-2 block font-semibold">E-mail*</label>
+            <label for="email" class="mb-2 block font-semibold">E-mail *</label>
             <input
               pInputText
               id="email"
               type="email"
               formControlName="email"
               placeholder="email@seudominio.com.br"
-              class="w-full rounded-lg border px-4 py-2 text-sm"
-              [ngClass]="{ 'border-red-500': isInvalid('email') }"
+              class="w-full"
+              [ngClass]="{ 'ng-invalid ng-dirty': isInvalid('email') }"
             />
             <small *ngIf="isInvalid('email')" class="text-red-500">
               <span *ngIf="form.get('email')?.errors?.['required']"
@@ -196,108 +187,59 @@
           </div>
 
           <div class="col-span-4 md:col-span-2">
+            <label for="estadoCivil" class="mb-2 block font-semibold"
+              >Estado Civil *</label
+            >
+            <p-dropdown
+              id="estadoCivil"
+              formControlName="estadoCivil"
+              [options]="estadoCivil"
+              optionLabel="nome"
+              placeholder="Selecione"
+              styleClass="w-full"
+              [ngClass]="{ 'ng-invalid ng-dirty': isInvalid('estadoCivil') }"
+            ></p-dropdown>
+            <small *ngIf="isInvalid('estadoCivil')" class="text-red-500"
+              >Estado civil é obrigatório.</small
+            >
+          </div>
+
+          <div class="col-span-4 md:col-span-2">
             <label for="unidade" class="mb-2 block font-semibold"
-              >Unidade Operacional*</label
+              >Unidade Operacional *</label
             >
             <p-dropdown
               id="unidade"
               formControlName="unidade"
               [options]="unidades"
               optionLabel="descricao"
-              placeholder="Selecione"
-              class="w-full rounded-lg border text-sm"
-              [ngClass]="{ 'border-red-500': isInvalid('unidade') }"
-            ></p-dropdown>
+              optionValue="id"
+              placeholder="Selecione a unidade"
+              styleClass="w-full"
+              [ngClass]="{ 'ng-invalid ng-dirty': isInvalid('unidade') }"
+            >
+            </p-dropdown>
             <small *ngIf="isInvalid('unidade')" class="text-red-500"
               >Unidade é obrigatória.</small
             >
           </div>
 
-          <div class="col-span-4 md:col-span-1">
-            <label for="cep" class="mb-2 block font-semibold">CEP*</label>
-            <input
-              pInputText
-              id="cep"
-              formControlName="cep"
-              placeholder="00000-000"
-              class="w-full rounded-lg border px-4 py-2 text-sm"
-              [ngClass]="{ 'border-red-500': isInvalid('cep') }"
-            />
-            <small *ngIf="isInvalid('cep')" class="text-red-500"
-              >CEP inválido.</small
-            >
-          </div>
-
           <div class="col-span-4 md:col-span-2">
-            <label for="rua" class="mb-2 block font-semibold">Rua*</label>
-            <input
-              pInputText
-              id="rua"
-              formControlName="rua"
-              placeholder="Rua"
-              class="w-full rounded-lg border px-4 py-2 text-sm"
-              readonly
-            />
-            <small *ngIf="isInvalid('rua')" class="text-red-500"
-              >Rua é obrigatória.</small
-            >
-          </div>
-
-          <div class="col-span-4 md:col-span-1">
-            <label for="numero" class="mb-2 block font-semibold">Número*</label>
-            <input
-              pInputText
-              id="numero"
-              formControlName="numero"
-              placeholder="Número"
-              class="w-full rounded-lg border px-4 py-2 text-sm"
-              [ngClass]="{ 'border-red-500': isInvalid('numero') }"
-            />
-            <small *ngIf="isInvalid('numero')" class="text-red-500"
-              >Número é obrigatório.</small
-            >
-          </div>
-
-          <div class="col-span-4 md:col-span-1">
-            <label for="bairro" class="mb-2 block font-semibold">Bairro*</label>
-            <input
-              pInputText
-              id="bairro"
-              formControlName="bairro"
-              placeholder="Bairro"
-              class="w-full rounded-lg border px-4 py-2 text-sm"
-              readonly
-            />
-            <small *ngIf="isInvalid('bairro')" class="text-red-500"
-              >Bairro é obrigatório.</small
-            >
-          </div>
-          <div class="col-span-4 md:col-span-1">
-            <label for="uf" class="mb-2 block font-semibold">UF*</label>
+            <label for="cargo" class="mb-2 block font-semibold">Cargo *</label>
             <p-dropdown
-              id="uf"
-              formControlName="uf"
-              [options]="ufs"
+              id="cargo"
+              formControlName="cargo"
+              [options]="cargos"
               optionLabel="descricao"
-              placeholder="Selecione"
-              class="w-full rounded-lg border text-sm"
-            ></p-dropdown>
-            <small *ngIf="isInvalid('uf')" class="text-red-500"
-              >UF é obrigatório.</small
+              optionValue="id"
+              placeholder="Selecione o cargo"
+              styleClass="w-full"
+              [ngClass]="{ 'ng-invalid ng-dirty': isInvalid('cargo') }"
             >
-          </div>
-
-          <div class="col-span-4 md:col-span-2">
-            <label for="complemento" class="mb-2 block font-semibold"
-              >Complemento</label
+            </p-dropdown>
+            <small *ngIf="isInvalid('cargo')" class="text-red-500"
+              >Cargo é obrigatório.</small
             >
-            <input
-              pInputText
-              id="complemento"
-              formControlName="complemento"
-              placeholder="Complemento"
-              class="w-full rounded-lg border px-4 py-2 text-sm"
-            />
           </div>
 
           <div class="col-span-4">
@@ -307,31 +249,111 @@
             <textarea
               id="descricao"
               formControlName="descricao"
-              rows="4"
+              rows="3"
+              pInputTextarea
               placeholder="Escreva algo..."
-              class="w-full rounded-lg border px-4 py-2 text-sm"
+              class="w-full"
             ></textarea>
           </div>
 
           <div class="col-span-4 md:col-span-2">
-            <label for="senha" class="mb-2 block font-semibold">Senha*</label>
+            <label for="senha" class="mb-2 block font-semibold">Senha *</label>
             <input
               pInputText
               id="senha"
               type="password"
               formControlName="senha"
               placeholder="Digite sua senha"
-              class="w-full rounded-lg border px-4 py-2 text-sm"
-              [ngClass]="{ 'border-red-500': isInvalid('senha') }"
+              class="w-full"
+              [ngClass]="{ 'ng-invalid ng-dirty': isInvalid('senha') }"
             />
-            <small *ngIf="isInvalid('senha')" class="text-red-500"
-              >Senha é obrigatória.</small
-            >
+            <div class="mt-2 text-sm" *ngIf="showPasswordValidation">
+              <div
+                [ngClass]="{
+                  'text-green-600': isMinLengthValid,
+                  'text-red-600': !isMinLengthValid
+                }"
+              >
+                <fa-icon
+                  [icon]="
+                    isMinLengthValid
+                      ? ['fas', 'circle-check']
+                      : ['fas', 'circle-xmark']
+                  "
+                  class="mr-2"
+                ></fa-icon
+                >Mínimo de 6 caracteres.
+              </div>
+              <div
+                [ngClass]="{
+                  'text-green-600': isRequiresSpecialCharsValid,
+                  'text-red-600': !isRequiresSpecialCharsValid
+                }"
+              >
+                <fa-icon
+                  [icon]="
+                    isRequiresSpecialCharsValid
+                      ? ['fas', 'circle-check']
+                      : ['fas', 'circle-xmark']
+                  "
+                  class="mr-2"
+                ></fa-icon
+                >Pelo menos 1 caractere especial (ex: $!%*?&).
+              </div>
+              <div
+                [ngClass]="{
+                  'text-green-600': isRequiresLowercaseValid,
+                  'text-red-600': !isRequiresLowercaseValid
+                }"
+              >
+                <fa-icon
+                  [icon]="
+                    isRequiresLowercaseValid
+                      ? ['fas', 'circle-check']
+                      : ['fas', 'circle-xmark']
+                  "
+                  class="mr-2"
+                ></fa-icon
+                >Pelo menos 1 letra minúscula.
+              </div>
+              <div
+                [ngClass]="{
+                  'text-green-600': isRequiresDigitValid,
+                  'text-red-600': !isRequiresDigitValid
+                }"
+              >
+                <fa-icon
+                  [icon]="
+                    isRequiresDigitValid
+                      ? ['fas', 'circle-check']
+                      : ['fas', 'circle-xmark']
+                  "
+                  class="mr-2"
+                ></fa-icon
+                >Pelo menos 1 número.
+              </div>
+              <div
+                [ngClass]="{
+                  'text-green-600': isRequiresUppercaseValid,
+                  'text-red-600': !isRequiresUppercaseValid
+                }"
+              >
+                <fa-icon
+                  [icon]="
+                    isRequiresUppercaseValid
+                      ? ['fas', 'circle-check']
+                      : ['fas', 'circle-xmark']
+                  "
+                  class="mr-2"
+                ></fa-icon
+                >Pelo menos 1 letra maiúscula.
+              </div>
+            </div>
           </div>
 
           <div class="col-span-4 md:col-span-2">
             <label for="confirmarSenha" class="mb-2 block font-semibold"
-              >Confirmar Senha*</label
+              >Confirmar Senha *</label
             >
             <input
               pInputText
@@ -339,10 +361,13 @@
               type="password"
               formControlName="confirmarSenha"
               placeholder="Repita sua senha"
-              class="w-full rounded-lg border px-4 py-2 text-sm"
-              [ngClass]="{ 'border-red-500': isInvalid('confirmarSenha') }"
+              class="w-full"
+              [ngClass]="{ 'ng-invalid ng-dirty': isInvalid('confirmarSenha') || (form.errors?.['passwordMismatch'] && form.get('confirmarSenha')?.touched) }"
             />
-            <small *ngIf="isInvalid('confirmarSenha')" class="text-red-500">
+            <small
+              *ngIf="isInvalid('confirmarSenha') || (form.errors?.['passwordMismatch'] && form.get('confirmarSenha')?.touched)"
+              class="text-red-500"
+            >
               <span *ngIf="form.get('confirmarSenha')?.errors?.['required']"
                 >Confirmação de senha é obrigatória.</span
               >
@@ -352,13 +377,18 @@
             </small>
           </div>
 
-          <div class="col-span-4 mt-10 flex flex-col items-center text-center">
+          <div class="col-span-4 mt-6 flex flex-col items-center text-center">
             <button
+              pButton
               type="submit"
-              [disabled]="!form.valid"
-              class="flex items-center justify-center bg-sky-600 disabled:opacity-50 disabled:bg-sky-600 text-white w-full px-6 py-3 mb-0 font-bold text-center uppercase align-middle transition-all border-0 rounded-lg shadow-soft-md bg-x-25 bg-150 leading-pro text-xs ease-soft-in disabled:hover:scale-100 hover:scale-102 active:opacity-85"
+              [disabled]="!form.valid || isLoading"
+              class="flex items-center justify-center mt-4 bg-sky-500 disabled:opacity-50 disabled:bg-sky-600 text-white w-full px-6 py-3 mb-0 font-bold text-center uppercase align-middle transition-all border-0 rounded-lg shadow-soft-md bg-x-25 bg-150 leading-pro text-xs ease-soft-in disabled:hover:scale-100 hover:scale-102 active:opacity-85"
             >
-              Criar Conta
+              <span *ngIf="!isLoading">Criar Conta</span>
+              <span *ngIf="isLoading">
+                <i class="pi pi-spin pi-spinner" style="font-size: 1.2rem"></i>
+                Criando...
+              </span>
             </button>
           </div>
         </div>
@@ -369,13 +399,11 @@
       >
         <p class="mx-auto my-6 text-sm">
           Já possui conta?
-          <button
-            on-enter="back()"
-            (click)="back($event)"
-            class="bg-gradient-to-tl from-blue-600 to-cyan-400 bg-clip-text font-semibold text-transparent"
+          <a
+            (click)="back()"
+            class="bg-gradient-to-tl from-blue-600 to-cyan-400 bg-clip-text font-semibold text-transparent cursor-pointer"
+            >Faça login</a
           >
-            Faça login
-          </button>
         </p>
       </div>
       <div class="flex mb-4 items-center justify-center pointer-events-none">

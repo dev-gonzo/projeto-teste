@@ -6,76 +6,57 @@ import {
 } from '@angular/core/testing';
 import { ReactiveFormsModule } from '@angular/forms';
 import { Router } from '@angular/router';
-import { FaIconLibrary, FontAwesomeModule } from '@fortawesome/angular-fontawesome';
+import {
+  FaIconLibrary,
+  FontAwesomeModule,
+} from '@fortawesome/angular-fontawesome';
 import { fas } from '@fortawesome/free-solid-svg-icons';
 import { CodeInputModule } from 'angular-code-input';
-import { Subject } from 'rxjs';
+import { of, throwError, Subscription } from 'rxjs';
 
 import { AuthService, SharedService } from '../../../core/services';
-import { TokenService } from '../../../core/services/token.service';
 import { ValidateTokenComponent } from './validate-token.component';
+import { CommonModule } from '@angular/common';
+import { TokenService } from '../../../core/services/token.service';
 
 describe('ValidateTokenComponent', () => {
   let component: ValidateTokenComponent;
   let fixture: ComponentFixture<ValidateTokenComponent>;
-  let authService: AuthService;
-  let tokenService: TokenService;
-  let router: Router;
+  let authService: jasmine.SpyObj<AuthService>;
+  let tokenService: jasmine.SpyObj<TokenService>;
+  let router: jasmine.SpyObj<Router>;
   let sharedService: SharedService;
 
-  let mockAuthService: any;
-  let mockTokenService: any;
-  let mockRouter: any;
-  let mockSharedService: any;
-
   beforeEach(async () => {
-    mockAuthService = {
-      getAppToken: jasmine.createSpy('getAppToken').and.returnValue(null),
-      isAuthenticatedUser: jasmine.createSpy('isAuthenticatedUser').and.returnValue(true),
-      isAuthenticatedToken: jasmine.createSpy('isAuthenticatedToken').and.returnValue(false),
-      setAppToken: jasmine.createSpy('setAppToken'),
-    };
-
-    mockRouter = {
-      navigate: jasmine.createSpy('navigate'),
-    };
-
-    mockSharedService = {
-      login$: new Subject<void>(),
-    };
-
-    mockTokenService = {
-      requestToken: jasmine.createSpy('requestToken').and.callFake((body: { email: string }) => {
-        if (body.email === 'sucesso@teste.com') {
-          return Promise.resolve({ jwt: 'fake-jwt', mensagem: 'Token enviado' });
-        }
-        if (body.email === 'limite@teste.com') {
-          return Promise.resolve({ jwt: 'fake-jwt-limite', mensagem: 'O usuário está dentro do limite de 24hr.' });
-        }
-        return Promise.reject({ erro: 'E-mail não encontrado' });
-      }),
-      validateToken: jasmine.createSpy('validateToken').and.callFake((body: { jwt: string; token: string }) => {
-        if (body.token === '123456') {
-          return Promise.resolve('Token validado com sucesso');
-        }
-        return Promise.reject('Token inválido');
-      }),
-      setToken: jasmine.createSpy('setToken'),
-      getToken: jasmine.createSpy('getToken').and.returnValue('fake-jwt'),
-    };
+    const authServiceSpy = jasmine.createSpyObj('AuthService', [
+      'getMensagemLogin',
+      'getAppToken',
+      'setAppToken',
+      'setPermissaoPerfil',
+      'isAuthenticatedUser',
+      'isAuthenticatedToken',
+    ]);
+    const tokenServiceSpy = jasmine.createSpyObj('TokenService', ['validateToken']);
+    const routerSpy = jasmine.createSpyObj('Router', ['navigate']);
 
     await TestBed.configureTestingModule({
       imports: [
         ValidateTokenComponent,
+        CommonModule,
         ReactiveFormsModule,
         FontAwesomeModule,
         CodeInputModule,
       ],
       providers: [
-        { provide: AuthService, useValue: mockAuthService },
-        { provide: Router, useValue: mockRouter },
-        { provide: SharedService, useValue: mockSharedService },
-        { provide: TokenService, useValue: mockTokenService },
+        { provide: AuthService, useValue: authServiceSpy },
+        { provide: TokenService, useValue: tokenServiceSpy },
+        { provide: Router, useValue: routerSpy },
+        {
+          provide: SharedService,
+          useValue: {
+            login$: of(),
+          },
+        },
       ],
     }).compileComponents();
 
@@ -84,12 +65,10 @@ describe('ValidateTokenComponent', () => {
 
     fixture = TestBed.createComponent(ValidateTokenComponent);
     component = fixture.componentInstance;
-    authService = TestBed.inject(AuthService);
-    tokenService = TestBed.inject(TokenService);
-    router = TestBed.inject(Router);
+    authService = TestBed.inject(AuthService) as jasmine.SpyObj<AuthService>;
+    tokenService = TestBed.inject(TokenService) as jasmine.SpyObj<TokenService>;
+    router = TestBed.inject(Router) as jasmine.SpyObj<Router>;
     sharedService = TestBed.inject(SharedService);
-
-    fixture.detectChanges();
   });
 
   it('deve criar o componente', () => {
@@ -97,105 +76,141 @@ describe('ValidateTokenComponent', () => {
   });
 
   describe('ngOnInit', () => {
-    it('deve navegar para /home se getAppToken retornar um token', () => {
-      mockAuthService.getAppToken.and.returnValue('some-app-token');
-      component.ngOnInit();
-      expect(router.navigate).toHaveBeenCalledWith(['/home']);
+    it('deve obter a mensagem de login e o token do authService', () => {
+      authService.getMensagemLogin.and.returnValue('Bem-vindo!');
+      authService.getAppToken.and.returnValue('fake-app-token');
+
+      fixture.detectChanges();
+
+      expect(authService.getMensagemLogin).toHaveBeenCalled();
+      expect(component.mensagemLogin).toBe('Bem-vindo!');
+      expect(authService.getAppToken).toHaveBeenCalled();
+      expect(component.token).toBe('fake-app-token');
+    });
+
+    it('deve iniciar o cooldown na inicialização', () => {
+      spyOn(component, 'startCooldown');
+      fixture.detectChanges();
+      expect(component.startCooldown).toHaveBeenCalled();
     });
 
     it('deve navegar para / se o usuário não estiver autenticado', () => {
-      mockAuthService.isAuthenticatedUser.and.returnValue(false);
-      component.ngOnInit();
+      authService.getAppToken.and.returnValue(null);
+      authService.isAuthenticatedUser.and.returnValue(false);
+      fixture.detectChanges();
       expect(router.navigate).toHaveBeenCalledWith(['/']);
     });
 
-    it('deve limpar a mensagem de erro quando login$ emitir um evento', () => {
-      component.errorMessage = 'Erro antigo';
-      (sharedService.login$ as Subject<void>).next();
-      expect(component.errorMessage).toBe('');
+    it('não deve navegar se um token existir', () => {
+      authService.getAppToken.and.returnValue('existing-token');
+      fixture.detectChanges();
+      expect(router.navigate).not.toHaveBeenCalledWith(['/auth/validar-token']);
     });
   });
 
   describe('ngOnDestroy', () => {
     it('deve limpar o intervalo do cooldown e a subscrição ao ser destruído', () => {
       const clearIntervalSpy = spyOn(window, 'clearInterval');
+      component.ngOnInit();
       const unsubscribeSpy = spyOn((component as any).loginSubscription, 'unsubscribe');
-
+      
       component.startCooldown();
-      fixture.destroy();
+      component.ngOnDestroy();
 
       expect(clearIntervalSpy).toHaveBeenCalledWith((component as any).intervalId);
       expect(unsubscribeSpy).toHaveBeenCalled();
     });
   });
 
-  describe('Validação do Token', () => {
-    it('deve validar o token, exibir sucesso e redirecionar após 2 segundos', fakeAsync(() => {
-      component.tokenForm.setValue({ token: '123456' });
+  describe('onSubmitCodigo', () => {
+    beforeEach(() => {
+      authService.getAppToken.and.returnValue('initial-token');
+      fixture.detectChanges();
+    });
 
-      component.onSubmitToken();
-      tick();
+    it('não deve fazer nada se o formulário for inválido', () => {
+      component.codigoForm.setValue({ codigo: '' });
+      component.onSubmitCodigo();
+      expect(tokenService.validateToken).not.toHaveBeenCalled();
+    });
 
-      expect(component.successMessage).toBe('Token validado com sucesso');
-      tick(2000);
-      expect(authService.setAppToken).toHaveBeenCalledWith('token_validated');
+    it('deve validar o token, definir sessão, e navegar para /home em caso de sucesso', () => {
+      const mockResponse = {
+        ativado: true,
+        mensagem: 'Sucesso!',
+        perfil: 'admin',
+        token: 'new-session-token',
+      };
+      tokenService.validateToken.and.returnValue(of(mockResponse));
+      component.codigoForm.setValue({ codigo: '123456' });
+      
+      component.onSubmitCodigo();
+
+      expect(tokenService.validateToken).toHaveBeenCalledWith({ codigo: '123456', token: 'initial-token' });
+      expect(authService.setAppToken).toHaveBeenCalledWith('new-session-token');
+      expect(authService.setPermissaoPerfil).toHaveBeenCalledWith('admin');
+      expect(component.successMessage).toBe('Sucesso!');
       expect(router.navigate).toHaveBeenCalledWith(['/home']);
-    }));
+    });
 
-    it('deve exibir mensagem de erro para um token inválido', fakeAsync(() => {
-      component.tokenForm.setValue({ token: '654321' });
-      component.onSubmitToken();
-      tick();
-      expect(component.errorMessage).toContain('Token inválido ou expirado');
-    }));
-  });
+    it('deve exibir mensagem de erro se a resposta não indicar ativação', () => {
+      const mockResponse = {
+        ativado: false,
+        mensagem: 'Falha',
+        perfil: '',
+        token: '',
+      };
+      tokenService.validateToken.and.returnValue(of(mockResponse));
+      component.codigoForm.setValue({ codigo: '123456' });
 
-  describe('Lógica do Cooldown e Reset', () => {
-    it('deve iniciar o cooldown e formatar o tempo corretamente', fakeAsync(() => {
-      component.startCooldown();
-      expect(component.cooldownTime).toBe(120);
-      expect(component.formattedCooldownTime).toBe('2:00');
+      component.onSubmitCodigo();
 
-      tick(1000);
-      expect(component.cooldownTime).toBe(119);
-      expect(component.formattedCooldownTime).toBe('1:59');
+      expect(component.errorMessage).toBe('Token inválido ou não ativado.');
+      expect(authService.setAppToken).not.toHaveBeenCalled();
+      expect(router.navigate).not.toHaveBeenCalled();
+      expect(component.sendingRequest).toBe(false);
+    });
 
-      tick(59000);
-      expect(component.cooldownTime).toBe(60);
-      expect(component.formattedCooldownTime).toBe('1:00');
+    it('deve exibir mensagem de erro em caso de falha na API', () => {
+      tokenService.validateToken.and.returnValue(throwError(() => new Error('API Error')));
+      component.codigoForm.setValue({ codigo: '123456' });
 
-      fixture.destroy();
-    }));
+      component.onSubmitCodigo();
 
-    it('deve habilitar a solicitação de novo token (cooldown=true) quando o tempo acabar', fakeAsync(() => {
-      component.startCooldown();
-      tick(120000);
-      expect(component.cooldown).toBeTrue();
-    }));
-
-    it('deve resetar o estado ao clicar em "Solicitar novo token"', () => {
-      component.step = 1;
-      component.startCooldown();
-      const clearIntervalSpy = spyOn(window, 'clearInterval');
-
-      component.resetToken();
-
-      expect(component.step).toBe(0);
-      expect(component.successMessage).toBe('');
-      expect(component.errorMessage).toBe('');
-      expect(clearIntervalSpy).toHaveBeenCalledWith((component as any).intervalId);
+      expect(component.errorMessage).toBe('Erro ao validar o token. Solicite um novo para continuar.');
+      expect(authService.setAppToken).not.toHaveBeenCalled();
+      expect(router.navigate).not.toHaveBeenCalled();
+      expect(component.sendingRequest).toBe(false);
     });
   });
 
+  describe('Lógica do Cooldown', () => {
+    it('deve iniciar o cooldown com 300 segundos e formatar o tempo', fakeAsync(() => {
+      component.startCooldown();
+      expect(component.cooldownTime).toBe(300);
+      expect(component.formattedCooldownTime).toBe('5:00');
+
+      tick(1000);
+      expect(component.cooldownTime).toBe(299);
+      expect(component.formattedCooldownTime).toBe('4:59');
+
+      tick(299000);
+      expect(component.cooldownTime).toBe(0);
+      expect(component.cooldown).toBeTrue();
+
+      clearInterval((component as any).intervalId);
+    }));
+  });
+
   describe('Interações e Navegação', () => {
-    it('deve navegar para login ao chamar reset()', () => {
+    it('deve navegar para /auth/login ao chamar reset()', () => {
       component.reset();
       expect(router.navigate).toHaveBeenCalledWith(['/auth/login']);
     });
 
-    it('deve atualizar o formulário de token quando onCodeChanged é chamado', () => {
-      component.onCodeChanged('123');
-      expect(component.tokenForm.value.token).toBe('123');
+    it('deve atualizar o formulário de código quando onCodeChanged é chamado', () => {
+      component.onCodeChanged('987');
+      expect(component.codigoForm.value.codigo).toBe('987');
     });
   });
 });

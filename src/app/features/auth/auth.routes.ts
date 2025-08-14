@@ -17,7 +17,7 @@ export const routes: Routes = [
                     .then(mod => mod.CadastroComponent)
             },
             {
-                path: 'create-password',
+                path: 'criar-senha',
                 loadComponent: () => import(`./create-password/create-password.component`)
                     .then(mod => mod.CreatePasswordComponent)
             },
@@ -31,6 +31,11 @@ export const routes: Routes = [
                 loadComponent: () => import(`./recover-pass/recover-pass.component`)
                     .then(mod => mod.RecoverPassComponent)
             },
+            {
+                path: '**',
+                loadComponent: () => import(`./login/login.component`)
+                    .then(mod => mod.LoginComponent)
+            }
         ]
     },
 ];

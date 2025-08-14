@@ -1,11 +1,21 @@
-import { CalendarModule } from 'primeng/calendar';
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { FormBuilder, FormGroup, ReactiveFormsModule, Validators, AbstractControl, ValidatorFn } from '@angular/forms';
-import { Router, RouterLink } from '@angular/router';
-import { DropdownModule } from 'primeng/dropdown';
+import { AbstractControl, FormBuilder, FormGroup, ReactiveFormsModule, ValidatorFn, Validators } from '@angular/forms';
+import { Router } from '@angular/router';
+import { MessageService } from 'primeng/api';
+import { finalize } from 'rxjs';
+
 import { InputTextModule } from 'primeng/inputtext';
+import { CalendarModule } from 'primeng/calendar';
+import { DropdownModule } from 'primeng/dropdown';
+import { ButtonModule } from 'primeng/button';
+import { TextareaModule } from 'primeng/textarea';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
+import { NgxMaskDirective, NgxMaskPipe, provideNgxMask } from 'ngx-mask';
+
+import { PasswordValidators } from '../../../shared/validators';
+import { UsuarioService, CargoService, UnidadeOperacionalService } from '../../../core/services';
+import { Cargo, ListaUnidadeOperacional } from '../../../shared/models';
 
 @Component({
   selector: 'app-cadastro',
@@ -14,42 +24,64 @@ import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
     CommonModule,
     ReactiveFormsModule,
     InputTextModule,
+    TextareaModule,
     CalendarModule,
     DropdownModule,
+    ButtonModule,
     FontAwesomeModule,
-    RouterLink
+    NgxMaskDirective,
+    NgxMaskPipe,
   ],
   templateUrl: './cadastro.component.html',
-  styleUrls: ['./cadastro.component.scss']
+  styleUrls: ['./cadastro.component.scss'],
+  providers: [
+    MessageService,
+    provideNgxMask(),
+    UsuarioService,
+    UnidadeOperacionalService,
+    CargoService
+  ]
 })
-export class CadastroComponent {
+export class CadastroComponent implements OnInit {
   form: FormGroup;
   hoje = new Date();
-  successMessage: string | null = null;
-  errorMessage: string | null = null;
+  isLoading = false;
+  successMessage: string = '';
+  errorMessage: string = '';
+
+  unidades: ListaUnidadeOperacional[] = [];
+  cargos: Cargo[] = [];
 
   sexos = [
-    { descricao: 'Masculino', value: 'M' },
-    { descricao: 'Feminino', value: 'F' },
-    { descricao: 'Outro', value: 'O' },
+    { nome: 'Masculino', id: 'M' },
+    { nome: 'Feminino', id: 'F' },
+    { nome: 'Outro', id: 'O' },
   ];
 
-  unidades = [
-    { descricao: 'Unidade A', value: 'a' },
-    { descricao: 'Unidade B', value: 'b' },
+  estadoCivil = [
+    { nome: 'Casado(a)', id: 'Casado' },
+    { nome: 'Solteiro(a)', id: 'Solteiro' },
+    { nome: 'União Estável', id: 'UniaoEstavel' },
+    { nome: 'Divorciado(a)', id: 'Divorciado' },
+    { nome: 'Viúvo(a)', id: 'Viuvo' },
   ];
-
-  cargos = [
-    { descricao: 'Cargo 1', value: 'cargo1' },
-    { descricao: 'Cargo 2', value: 'cargo2' },
-  ];
-
-  ufs = [];
 
   constructor(
     private readonly fb: FormBuilder,
-    private readonly router: Router
+    private readonly router: Router,
+    private readonly usuarioService: UsuarioService,
+    private readonly unidadeService: UnidadeOperacionalService,
+    private readonly cargoService: CargoService
   ) {
+    const passwordValidators = [
+      Validators.required,
+      Validators.minLength(6),
+      PasswordValidators.patternValidator(/\d/, { requiresDigit: true }),
+      PasswordValidators.patternValidator(/[A-Z]/, { requiresUppercase: true }),
+      PasswordValidators.patternValidator(/[a-z]/, { requiresLowercase: true }),
+      PasswordValidators.patternValidator(/[$@^!%*?&]/, { requiresSpecialChars: true }),
+    ];
+
     this.form = this.fb.group({
       nome: ['', Validators.required],
       dataNascimento: [null],
@@ -57,31 +89,30 @@ export class CadastroComponent {
       telefone: [''],
       celular: [''],
       sexo: [null],
-      cpf: ['', [
-        Validators.required,
-        Validators.pattern(/^\d{3}\.\d{3}\.\d{3}-\d{2}$/)
-      ]],
+      cpf: ['', [Validators.required, Validators.pattern(/^\d{3}\.\d{3}\.\d{3}-\d{2}$/)]],
       email: ['', [Validators.required, Validators.email]],
+      estadoCivil: [null, Validators.required],
       unidade: [null, Validators.required],
-      cep: ['', [Validators.required, Validators.pattern(/^\d{5}-?\d{3}$/)]],
-      rua: [{ value: '', disabled: true }, Validators.required],
-      bairro: [{ value: '', disabled: true }, Validators.required],
-      uf: [{ value: null, disabled: true }, Validators.required],
-      numero: ['', Validators.required],
-      complemento: [''],
-
-      descricao: [''],
-
       cargo: [null, Validators.required],
-      senha: ['', [Validators.required, Validators.minLength(6)]],
+      descricao: [''],
+      senha: ['', passwordValidators],
       confirmarSenha: ['', Validators.required],
     }, { validators: this.passwordsMatchValidator });
   }
 
-  passwordsMatchValidator: ValidatorFn = (group: AbstractControl) => {
-    const senha = group.get('senha')?.value;
-    const confirmar = group.get('confirmarSenha')?.value;
-    return senha === confirmar ? null : { passwordMismatch: true };
+  ngOnInit(): void {
+    this.loadDropdownData();
+  }
+
+  loadDropdownData(): void {
+    this.unidadeService.listaTodasUnidadesOperacioanais().subscribe(data => this.unidades = data);
+    this.cargoService.getAll().subscribe((data: Cargo[]) => this.cargos = data);
+  }
+
+  passwordsMatchValidator: ValidatorFn = (control: AbstractControl) => {
+    const senha = control.get('senha')?.value;
+    const confirmarSenha = control.get('confirmarSenha')?.value;
+    return senha === confirmarSenha ? null : { passwordMismatch: true };
   };
 
   isInvalid(controlName: string): boolean {
@@ -89,21 +120,64 @@ export class CadastroComponent {
     return !!(control && control.invalid && (control.dirty || control.touched));
   }
 
+  get showPasswordValidation(): boolean {
+    const control = this.form.get('senha');
+    return !!(control && (control.dirty || control.touched));
+  }
+  get isMinLengthValid(): boolean {
+    return this.form.get('senha')?.hasError('minlength') === false;
+  }
 
+  get isRequiresDigitValid(): boolean {
+    return this.form.get('senha')?.hasError('requiresDigit') === false;
+  }
+
+  get isRequiresUppercaseValid(): boolean {
+    return this.form.get('senha')?.hasError('requiresUppercase') === false;
+  }
+
+  get isRequiresLowercaseValid(): boolean {
+    return this.form.get('senha')?.hasError('requiresLowercase') === false;
+  }
+
+  get isRequiresSpecialCharsValid(): boolean {
+    return this.form.get('senha')?.hasError('requiresSpecialChars') === false;
+  }
 
   onSubmit() {
-    if (this.form.valid) {
-      this.successMessage = 'Cadastro realizado com sucesso!';
-      this.errorMessage = null;
-
-      console.log('Form enviado:', this.form.value);
-    } else {
-      this.successMessage = null;
+    if (this.form.invalid) {
       this.errorMessage = 'Por favor, corrija os erros no formulário.';
       this.form.markAllAsTouched();
-
-      console.log('Form inválido');
+      return;
     }
+
+    this.isLoading = true;
+    this.errorMessage = '';
+    this.successMessage = '';
+
+    const formData = this.form.getRawValue();
+
+    const payload = {
+      ...formData,
+      sexo: formData.sexo?.id || null,
+      estadoCivil: formData.estadoCivil?.id || null,
+      unidadeId: formData.unidade, 
+      cargoId: formData.cargo, 
+    };
+    delete payload.confirmarSenha;
+
+
+    this.usuarioService.insert(payload).pipe(
+      finalize(() => this.isLoading = false)
+    ).subscribe({
+      next: (response) => {
+        this.successMessage = response.mensagem || 'Cadastro realizado com sucesso! Redirecionando para tela de Login.';
+        setTimeout(() => this.back(), 2500);
+      },
+      error: (err) => {
+        this.errorMessage = err?.error?.mensagem || 'Ocorreu um erro ao realizar o cadastro. Tente novamente.';
+      },
+    });
   }
 
   back(_?: any) {

@@ -24,7 +24,7 @@ class DummyPrimeiroAcessoComponent {}
 @Component({ standalone: true, selector: 'dummy-validate-email', template: '' })
 class DummyValidateEmailComponent {}
 
-@Component({ standalone: true, selector: 'dummy-validate-token', template: '' })
+@Component({ standalone: true, selector: 'dummy-validar-token', template: '' })
 class DummyValidateTokenComponent {}
 
 @Component({ standalone: true, selector: 'dummy-recover-pass', template: '' })

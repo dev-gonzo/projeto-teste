@@ -21,6 +21,7 @@ export class UnidadeOperacionalService {
   private readonly endpoint = `${environment.apiUrl}/unidades`;
   public readonly urlUpload = `${environment.apiUrl}/unidades/upload-file`;
   private readonly urlLogs = `${environment.apiUrl}/unidades/logs`;
+  private readonly endpointAutocadastro = `${environment.apiUrl}/unidade-operacional`;
 
   private readonly jsonHeaders = new HttpHeaders({
     'Content-Type': 'application/json; charset=utf-8',
@@ -42,6 +43,10 @@ export class UnidadeOperacionalService {
 
   getAll(): Observable<UnidadeOperacional[]> {
     return this.http.get<UnidadeOperacional[]>(`${this.endpoint}/findall`);
+  }
+
+  listaTodasUnidadesOperacioanais(): Observable<UnidadeOperacional[]> {
+    return this.http.get<UnidadeOperacional[]>(`${this.endpointAutocadastro}`);
   }
 
   listByName(nome: string): Observable<UnidadeOperacional[]> {

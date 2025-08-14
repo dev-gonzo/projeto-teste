@@ -59,11 +59,10 @@ describe('UsuarioService', () => {
     nome: 'Usuário Teste Completo',
     cpf: '111.222.333-44',
     email: 'teste.completo@exemplo.com',
-    perfil: mockPerfil,
-    cargo: mockCargo,
-    unidadeOperacionalPrincipal: mockUnidadeOperacional,
-    unidadesOperacionais: [mockUnidadeOperacional],
-    status: 'ATIVO',
+    genero: 'M',
+    estadoCivil: 'Solteiro',
+    unidadeOperacionalId: 1,
+    cargoId: 1,
   };
 
 

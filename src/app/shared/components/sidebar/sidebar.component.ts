@@ -56,7 +56,7 @@ export class SidebarComponent {
     {
       icon: faGear,
       title: 'Configurações',
-      url: '/',
+      url: '/configuracoes',
     },
   ];
 

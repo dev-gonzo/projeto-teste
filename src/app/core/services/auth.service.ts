@@ -38,6 +38,8 @@ export class AuthService {
             this.setAppToken(response.token);
             this.setMensagemLogin(response.mensagem)
             this.router.navigate(['/auth/validar-token']);
+          } else {
+            this.setMensagemLogin('Erro ao realizar login, tente novamente mais tarde!')
           }
         })
       );

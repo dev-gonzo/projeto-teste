@@ -104,7 +104,7 @@ export interface DetalhesOitiva{
     id: number;
     codigoBoInquerito: string;
     nomeDepoente: string;
-    nomeResponsavelUnidade: string;
+    responsavelUnidadeOperacional: string;
     nomeDigitador: string;
     dataCadastro: string;
     flagSigilo: boolean;

@@ -5,7 +5,6 @@ import {
 } from '@angular/common/http/testing';
 import { Router } from '@angular/router';
 import { CookieService } from 'ngx-cookie-service';
-
 import { AuthService } from './auth.service';
 import { CryptoService } from './crypto.service';
 import { keys } from '../../shared/utils/variables';
@@ -73,11 +72,9 @@ describe('AuthService', () => {
       spyOn(service, 'setAppToken').and.callThrough();
       spyOn(service, 'setPermissaoPerfil').and.callThrough();
 
-      service.loggedInEvent.subscribe(() => {
-        eventFired = true;
-      });
+      service.loggedInEvent.subscribe(() => eventFired = true);
 
-      service.login(credentials).subscribe((response) => {
+      service.login(credentials).subscribe(response => {
         expect(response).toEqual(apiResponse);
       });
 
@@ -92,32 +89,36 @@ describe('AuthService', () => {
     });
 
     it('deve armazenar token, mensagem e navegar para /auth/validar-token quando o usuário não está ativado', () => {
-        const apiResponse: LoginResponse = { token: 'mock-token', ativado: false, perfil: 'user', mensagem: 'Ative sua conta' };
-        spyOn(service, 'setAppToken').and.callThrough();
-        spyOn(service, 'setMensagemLogin').and.callThrough();
+      const apiResponse: LoginResponse = { token: 'mock-token', ativado: false, perfil: 'user', mensagem: 'Ative sua conta' };
+      spyOn(service, 'setAppToken').and.callThrough();
+      spyOn(service, 'setMensagemLogin').and.callThrough();
 
-        service.login(credentials).subscribe(response => {
-            expect(response).toEqual(apiResponse);
-        });
+      service.login(credentials).subscribe(response => {
+        expect(response).toEqual(apiResponse);
+      });
 
-        const req = httpTestingController.expectOne(`${API_URL}/autenticacao/token`);
-        expect(req.request.method).toBe('POST');
-        req.flush(apiResponse);
+      const req = httpTestingController.expectOne(`${API_URL}/autenticacao/token`);
+      expect(req.request.method).toBe('POST');
+      req.flush(apiResponse);
 
-        expect(service.setAppToken).toHaveBeenCalledWith('mock-token');
-        expect(service.setMensagemLogin).toHaveBeenCalledWith('Ative sua conta');
-        expect(routerSpy.navigate).toHaveBeenCalledWith(['/auth/validar-token']);
+      expect(service.setAppToken).toHaveBeenCalledWith('mock-token');
+      expect(service.setMensagemLogin).toHaveBeenCalledWith('Ative sua conta');
+      expect(routerSpy.navigate).toHaveBeenCalledWith(['/auth/validar-token']);
     });
 
     it('não deve navegar ou definir token se a resposta não tiver um token', () => {
       const apiResponse: Partial<LoginResponse> = { mensagem: 'Credenciais inválidas' };
       spyOn(service, 'setAppToken');
 
-      service.login(credentials).subscribe(response => {
-          expect(response).toEqual(apiResponse as LoginResponse);
+      service.login(credentials).subscribe({
+        next: () => fail('Deveria ter lançado erro!'),
+        error: (err) => {
+          expect(err.message).toBe('Resposta de login inválida do servidor.');
+        }
       });
 
       const req = httpTestingController.expectOne(`${API_URL}/autenticacao/token`);
+      expect(req.request.method).toBe('POST');
       req.flush(apiResponse);
 
       expect(service.setAppToken).not.toHaveBeenCalled();
@@ -166,13 +167,13 @@ describe('AuthService', () => {
 
   describe('Gerenciamento de Mensagem de Login', () => {
     it('deve definir e obter a mensagem de login', () => {
-        const mensagem = 'Por favor, valide seu token.';
-        service.setMensagemLogin(mensagem);
-        expect(service.getMensagemLogin()).toBe(mensagem);
+      const mensagem = 'Por favor, valide seu token.';
+      service.setMensagemLogin(mensagem);
+      expect(service.getMensagemLogin()).toBe(mensagem);
     });
 
     it('getMensagemLogin deve retornar null inicialmente', () => {
-        expect(service.getMensagemLogin()).toBeNull();
+      expect(service.getMensagemLogin()).toBeNull();
     });
   });
 
@@ -189,7 +190,6 @@ describe('AuthService', () => {
 
     it('setPermissaoPerfil deve criptografar e definir o cookie de permissão', () => {
       service.setPermissaoPerfil(mockPermissao);
-
       expect(cryptoServiceSpy.hashKey).toHaveBeenCalledWith(keys.COOKIE_PERMISSAO);
       expect(cryptoServiceSpy.encrypt).toHaveBeenCalledWith(mockPermissao);
       expect(cookieServiceSpy.set).toHaveBeenCalledWith(
@@ -211,7 +211,6 @@ describe('AuthService', () => {
 
     it('removePermissaoPerfil deve chamar cookieService.delete', () => {
       service.removePermissaoPerfil();
-
       expect(cryptoServiceSpy.hashKey).toHaveBeenCalledWith(keys.COOKIE_PERMISSAO);
       expect(cookieServiceSpy.delete).toHaveBeenCalledWith(mockHashedKey, '/');
     });
@@ -230,7 +229,6 @@ describe('AuthService', () => {
 
     it('setAppToken deve criptografar e definir o cookie de token', () => {
       service.setAppToken(mockToken);
-
       expect(cryptoServiceSpy.encrypt).toHaveBeenCalledWith(mockToken);
       expect(cookieServiceSpy.set).toHaveBeenCalledWith(
         mockHashedKey,

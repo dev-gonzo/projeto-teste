@@ -2,7 +2,7 @@
   position="top-center"
   [showTransitionOptions]="'1000ms'"
   [hideTransitionOptions]="'1000ms'"
-/>
+></p-toast>
 
 <div class="w-full px-6 py-6 mx-auto bg-white">
   <breadcrumb [items]="breadcrumb"></breadcrumb>
@@ -13,27 +13,27 @@
     class="bg-white text-gray-800"
   >
     <app-unidade-operacional-form
-      [unidadeOperacional]="model$ | async" 
+      [unidadeOperacional]="model$ | async"
       [ufs]="ufs$ | async"
       #unidadeOperacionalForm
     ></app-unidade-operacional-form>
   </p-panel>
 
-  <div class="w-full flex justify-end py-4">
+  <div class="w-full flex justify-end py-4 gap-2">
     <button
       type="button"
       (click)="cancelar()"
-      class="text-white bg-red-700 hover:bg-red-800 focus:ring-4 focus:outline-none focus:ring-red-300 font-medium rounded-2xl p-2.5 text-center inline-flex items-center me-2"
+      class="text-white bg-red-700 hover:bg-red-800 focus:ring-4 focus:outline-none focus:ring-red-300 font-medium rounded-2xl p-2.5"
     >
-      <span>Cancelar e voltar</span>
+      Cancelar e voltar
     </button>
 
     <button
       type="button"
       (click)="salvar()"
-      class="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-2xl p-2.5 text-center inline-flex items-center me-2"
+      class="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-2xl p-2.5"
     >
-      <span>Salvar</span>
+      Salvar
     </button>
   </div>
 </div>

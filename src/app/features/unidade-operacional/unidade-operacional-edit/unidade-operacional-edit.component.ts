@@ -1,23 +1,18 @@
-import {
-  Component,
-  OnDestroy,
-  ViewChild
-} from '@angular/core';
+import { Component, OnDestroy, ViewChild } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { CommonModule } from '@angular/common';
+import { Observable, of, Subject } from 'rxjs';
+import { takeUntil, tap } from 'rxjs/operators';
 
 import { ToastModule } from 'primeng/toast';
 import { Panel } from 'primeng/panel';
-import { Observable, Subject, of } from 'rxjs';
-import { takeUntil } from 'rxjs/operators';
 import { MessageService } from 'primeng/api';
 
 import { SharedModule } from '../../../shared/shared.module';
 import { UnidadeOperacionalFormComponent } from '../shared/unidade-operacional-form/unidade-operacional-form.component';
 import { ErrorResponseHttp, ResponseSuccessHttp, Uf, UnidadeOperacional } from '../../../shared/models';
-import { MunicipioService, UfService, UnidadeOperacionalService } from '../../../core/services';
+import { EnderecoService, UnidadeOperacionalService } from '../../../core/services';
 import { FormUtils } from '../../../shared/utils';
-import { Prepare } from '../../../shared/utils/unidade-operacional.util';
 
 @Component({
   selector: 'app-unidade-operacional-edit',
@@ -30,18 +25,19 @@ import { Prepare } from '../../../shared/utils/unidade-operacional.util';
     ToastModule
   ],
   templateUrl: './unidade-operacional-edit.component.html',
-  styleUrl: './unidade-operacional-edit.component.scss'
+  styleUrls: ['./unidade-operacional-edit.component.scss']
 })
 export class UnidadeOperacionalEditComponent implements OnDestroy {
   @ViewChild('unidadeOperacionalForm', { static: true })
   unidadeOperacionalForm!: UnidadeOperacionalFormComponent;
 
   idUnidadeOperacional: string | null;
-  model!: UnidadeOperacional;
-  model$!: Observable<UnidadeOperacional>;
+  model$!: Observable<any>;
   ufs$: Observable<Uf[]>;
 
-  breadcrumb: any[] = [
+  private ufs: Uf[] = [];
+
+  breadcrumb: { label: string; route: string }[] = [
     { label: 'Unidade Operacional', route: '/unidade-operacional' },
     { label: 'Editar', route: '/edit' },
   ];
@@ -49,24 +45,23 @@ export class UnidadeOperacionalEditComponent implements OnDestroy {
   private readonly destroy$ = new Subject<void>();
 
   constructor(
-    public municipioService: MunicipioService,
     private readonly router: Router,
     private readonly activatedRoute: ActivatedRoute,
     private readonly unidadeOperacionalService: UnidadeOperacionalService,
-    private readonly ufService: UfService,
+    private readonly enderecoService: EnderecoService,
     private readonly messageService: MessageService
   ) {
     this.idUnidadeOperacional = this.activatedRoute.snapshot.paramMap.get('id');
 
-    this.ufs$ = ufService.getAll();
+    this.ufs$ = this.enderecoService.getUFs().pipe(
+      tap(listaDeUfs => this.ufs = listaDeUfs)
+    );
 
     this.activatedRoute.data
       .pipe(takeUntil(this.destroy$))
       .subscribe((response: any) => {
-        if (response && response.model) {
-          this.model = response.model;
-          this.model$ = of(this.model);
-        }
+        const model = response?.model ?? null;
+        this.model$ = of(model);
       });
   }
 
@@ -76,13 +71,34 @@ export class UnidadeOperacionalEditComponent implements OnDestroy {
   }
 
   salvar(): void {
-    if (!FormUtils.validate(this.unidadeOperacionalForm.form)) {
-      return;
-    }
-    const prepared = new Prepare(this.unidadeOperacionalForm.form).toUnidadeOperacional();
+    if (!FormUtils.validate(this.unidadeOperacionalForm.form)) return;
+
+    const formValue = this.unidadeOperacionalForm.form.getRawValue();
+
+    const ufSigla = formValue.uf;
+
+    const ufCompleto = this.ufs.find(u => u.sigla === ufSigla);
+    const payload = {
+      id: Number(this.idUnidadeOperacional),
+      nomeUnidadeOperacional: formValue.nomeUnidadeOperacional,
+      responsavelUnidadeOperacional: formValue.responsavelUnidadeOperacional,
+      numeroTelefonePrincipal: formValue.numeroTelefonePrincipal?.replace(/\D/g, '') || null,
+      numeroTelefoneSecundario: formValue.numeroTelefoneSecundario?.replace(/\D/g, '') || null,
+      endereco: {
+        estadoSigla: ufCompleto?.sigla || '',
+        municipioNome: formValue.municipio?.nome || '',
+        cep: formValue.cep?.replace(/\D/g, '') || '',
+        logradouro: formValue.nomeLogradouro,
+        numero: formValue.numeroLogradouro,
+        complemento: formValue.nomeComplemento,
+        bairro: formValue.nomeBairro,
+        municipioCodigoIbge: formValue.municipio?.codigoIbge || '',
+        estadoCodigoIbge: ufCompleto?.codigoIbge || ''
+      }
+    };
 
     this.unidadeOperacionalService
-      .update(prepared)
+      .update(payload)
       .pipe(takeUntil(this.destroy$))
       .subscribe({
         next: (response: ResponseSuccessHttp) => {

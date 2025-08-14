@@ -1,10 +1,14 @@
-<ng-container *ngIf="dataSource?.count === 0; then loaded; else results"></ng-container>
+<ng-container
+  *ngIf="dataSource?.count === 0; then loaded; else results"
+></ng-container>
 
 <ng-template #loaded>
   <div id="alert" class="bg-amber-100 border-l-8 border-amber-300 px-1 py-2">
     <p class="flex justify-center items-center text-lg">
-      <fa-icon class="bg-white w-9 h-9 mr-4 text-red-700 rounded-full flex justify-center items-center"
-        [icon]="['fas', 'exclamation']"></fa-icon>
+      <fa-icon
+        class="bg-white w-9 h-9 mr-4 text-red-700 rounded-full flex justify-center items-center"
+        [icon]="['fas', 'exclamation']"
+      ></fa-icon>
       <span>Não há registros para exibição.</span>
     </p>
   </div>
@@ -24,9 +28,8 @@
     currentPageReportTemplate="{currentPage} de {totalPages}"
     class="rounded-2xl transition-all"
   >
-
     <ng-template pTemplate="header">
-      <tr class="!text-white bg-sky-500 rounded py-4">
+      <tr class="!text-white bg-sky-800 rounded py-4">
         <th class="text-white p-4 text-center">Nome</th>
         <th class="text-white p-4 text-center">Telefone</th>
         <th class="text-white p-4 text-center">Município</th>
@@ -42,11 +45,12 @@
       <tr class="bg-white text-gray-800 rounded-2xl">
         <td class="text-center">{{ unidade?.nomeUnidadeOperacional }}</td>
         <td class="text-center">{{ unidade?.telefoneCompleto }}</td>
-        <td class="text-center">{{ unidade?.municipio?.nome }}</td>
-        <td class="text-center">{{ unidade?.nomeBairro }}</td>
-        <td class="text-center">{{ unidade?.nomeLogradouro }}</td>
-        <td class="text-center">{{ unidade?.numeroLogradouro }}</td>
-        <td class="text-center">{{ unidade?.cep | cep }}</td>
+        <td class="text-center">{{ unidade?.endereco?.municipioNome }}</td>
+        <td class="text-center">{{ unidade?.endereco?.bairro }}</td>
+        <td class="text-center">{{ unidade?.endereco?.logradouro }}</td>
+        <td class="text-center">{{ unidade?.endereco?.numero }}</td>
+        <td class="text-center">{{ unidade?.endereco?.cep | cep }}</td>
+
         <td class="text-center">
           <p-splitbutton
             appendTo="body"
@@ -57,7 +61,10 @@
       </tr>
     </ng-template>
     <ng-template pTemplate="paginatorright" let-state>
-      <span>Total de {{ state.totalRecords }} {{ state.totalRecords > 1 ? 'registros.' : 'registro.' }}</span>
+      <span
+        >Total de {{ state.totalRecords }}
+        {{ state.totalRecords > 1 ? "registros." : "registro." }}</span
+      >
     </ng-template>
   </p-table>
 </ng-template>

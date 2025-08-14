@@ -102,6 +102,7 @@
               pInputText
               id="cpf"
               type="text"
+              msCpf
               formControlName="cpf"
               placeholder="000.000.000-00"
               class="w-full"
@@ -109,11 +110,15 @@
               [ngClass]="{ 'ng-invalid ng-dirty': isInvalid('cpf') }"
             />
             <small *ngIf="isInvalid('cpf')" class="text-red-500">
-              <span *ngIf="form.get('cpf')?.errors?.['required']"
-                >CPF é obrigatório.</span
+              <small
+                class="p-error"
+                *ngIf="form.get('cpf')?.hasError('required')"
+                >CPF é obrigatório.</small
               >
-              <span *ngIf="form.get('cpf')?.errors?.['pattern']"
-                >Formato de CPF inválido.</span
+              <small
+                class="p-error"
+                *ngIf="form.get('cpf')?.hasError('cpfInvalido')"
+                >CPF inválido.</small
               >
             </small>
           </div>
@@ -212,7 +217,7 @@
               id="unidade"
               formControlName="unidade"
               [options]="unidades"
-              optionLabel="descricao"
+              optionLabel="nomeUnidadeOperacional"
               optionValue="id"
               placeholder="Selecione a unidade"
               styleClass="w-full"

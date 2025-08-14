@@ -1,4 +1,4 @@
-import { AbstractModel, Municipio, Uf } from '.';
+import { AbstractModel, Endereco, Municipio, Uf } from '.';
 
 export interface UnidadeOperacional extends AbstractModel<number> {
   nomeUnidadeOperacional: string;
@@ -19,5 +19,9 @@ export interface UnidadeOperacional extends AbstractModel<number> {
 
 export interface ListaUnidadeOperacional extends AbstractModel<number> {
   nomeUnidadeOperacional: string;
+  responsavelUnidadeOperacional?: string;
+  numeroTelefonePrincipal?: string;
+  numeroTelefoneSecundario?: string;
+  endereco?: Endereco;
 }
 

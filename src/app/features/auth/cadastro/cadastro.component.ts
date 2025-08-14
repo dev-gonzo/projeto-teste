@@ -16,6 +16,7 @@ import { NgxMaskDirective, NgxMaskPipe, provideNgxMask } from 'ngx-mask';
 import { PasswordValidators } from '../../../shared/validators';
 import { UsuarioService, CargoService, UnidadeOperacionalService } from '../../../core/services';
 import { Cargo, ListaUnidadeOperacional } from '../../../shared/models';
+import { CpfUtils } from '../../../shared/utils';
 
 @Component({
   selector: 'app-cadastro',
@@ -89,7 +90,7 @@ export class CadastroComponent implements OnInit {
       telefone: [''],
       celular: [''],
       sexo: [null],
-      cpf: ['', [Validators.required, Validators.pattern(/^\d{3}\.\d{3}\.\d{3}-\d{2}$/)]],
+      cpf: ['', [Validators.required, this.cpfValidator()]],
       email: ['', [Validators.required, Validators.email]],
       estadoCivil: [null, Validators.required],
       unidade: [null, Validators.required],
@@ -105,8 +106,15 @@ export class CadastroComponent implements OnInit {
   }
 
   loadDropdownData(): void {
-    this.unidadeService.listaTodasUnidadesOperacioanais().subscribe(data => this.unidades = data);
+    this.unidadeService.listaTodasUnidadesOperacioanais().subscribe((data: ListaUnidadeOperacional[]) => this.unidades = data);
     this.cargoService.getAll().subscribe((data: Cargo[]) => this.cargos = data);
+  }
+
+  cpfValidator(): ValidatorFn {
+    return (control: AbstractControl) => {
+      if (!control.value) return null;
+      return CpfUtils.validate(control.value) ? null : { cpfInvalido: true };
+    };
   }
 
   passwordsMatchValidator: ValidatorFn = (control: AbstractControl) => {
@@ -127,19 +135,15 @@ export class CadastroComponent implements OnInit {
   get isMinLengthValid(): boolean {
     return this.form.get('senha')?.hasError('minlength') === false;
   }
-
   get isRequiresDigitValid(): boolean {
     return this.form.get('senha')?.hasError('requiresDigit') === false;
   }
-
   get isRequiresUppercaseValid(): boolean {
     return this.form.get('senha')?.hasError('requiresUppercase') === false;
   }
-
   get isRequiresLowercaseValid(): boolean {
     return this.form.get('senha')?.hasError('requiresLowercase') === false;
   }
-
   get isRequiresSpecialCharsValid(): boolean {
     return this.form.get('senha')?.hasError('requiresSpecialChars') === false;
   }
@@ -158,14 +162,22 @@ export class CadastroComponent implements OnInit {
     const formData = this.form.getRawValue();
 
     const payload = {
-      ...formData,
-      sexo: formData.sexo?.id || null,
-      estadoCivil: formData.estadoCivil?.id || null,
-      unidadeId: formData.unidade, 
+      nome: formData.nome,
+      rg: formData.rg,
+      email: formData.email,
+      cpf: formData.cpf,
+      telefone: formData.telefone,
+      dataNascimento: formData.dataNascimento
+        ? formData.dataNascimento.toISOString().split('T')[0]
+        : null,
+      celular: formData.celular,
+      genero: formData.sexo?.nome || formData.sexo || '', 
+      estadoCivil: formData.estadoCivil?.id || formData.estadoCivil || '',
       cargoId: formData.cargo, 
+      unidadeOperacionalId: formData.unidade,
+      observacao: formData.descricao || '',
+      senha: formData.senha
     };
-    delete payload.confirmarSenha;
-
 
     this.usuarioService.insert(payload).pipe(
       finalize(() => this.isLoading = false)

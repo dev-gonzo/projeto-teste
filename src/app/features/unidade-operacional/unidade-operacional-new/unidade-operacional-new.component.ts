@@ -15,9 +15,8 @@ import { takeUntil } from 'rxjs/operators';
 import { SharedModule } from '../../../shared/shared.module';
 import { FormUtils } from '../../../shared/utils';
 import {
-  UfService,
-  MunicipioService,
   UnidadeOperacionalService,
+  EnderecoService,
 } from '../../../core/services';
 import {
   ErrorResponseHttp,
@@ -48,13 +47,12 @@ export class UnidadeOperacionalNewComponent implements OnDestroy {
   private readonly destroy$ = new Subject<void>();
 
   constructor(
-    public municipioService: MunicipioService,
+    public enderecoService: EnderecoService,
     private readonly router: Router,
     private readonly unidadeOperacionalService: UnidadeOperacionalService,
-    private readonly ufService: UfService,
     private readonly messageService: MessageService
   ) {
-    this.ufs$ = ufService.getAll();
+    this.ufs$ = enderecoService.getUFs();
   }
 
   ngOnDestroy(): void {

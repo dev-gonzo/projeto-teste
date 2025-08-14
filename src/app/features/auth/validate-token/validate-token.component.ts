@@ -62,13 +62,15 @@ export class ValidateTokenComponent implements OnInit, OnDestroy {
     private readonly tokenService: TokenService,
   ) { }
 
+
   ngOnInit(): void {
     this.mensagemLogin = this.authService.getMensagemLogin();
     const appToken = this.authService.getAppToken();
     this.token = appToken ?? '';
     this.startCooldown();
+
     if (this.authService.isAuthenticatedUser()) {
-      if (this.authService.isAuthenticatedToken()) {
+      if (this.authService.isAuthenticatedToken() && this.router.url !== '/auth/validar-token') {
         this.router.navigate(['/auth/validar-token']);
       }
     } else {
@@ -115,11 +117,11 @@ export class ValidateTokenComponent implements OnInit, OnDestroy {
         }
 
         this.errorMessage = 'Token inválido ou não ativado.';
-        this.sendingRequest = false; 
+        this.sendingRequest = false;
       },
       error: () => {
         this.errorMessage = 'Erro ao validar o token. Solicite um novo para continuar.';
-        this.sendingRequest = false; 
+        this.sendingRequest = false;
       },
     });
   }

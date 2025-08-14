@@ -44,7 +44,7 @@ import { EnderecoService } from '../../../../core/services';
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class UnidadeOperacionalFormComponent implements OnInit, OnChanges, OnDestroy {
-  @Input() unidadeOperacional: any | null = null;
+  @Input() unidadeOperacional: UnidadeOperacional | null = null;
   @Input() ufs: Uf[] | null = null;
 
   private readonly buscaMunicipio$ = new Subject<string>();
@@ -88,7 +88,7 @@ export class UnidadeOperacionalFormComponent implements OnInit, OnChanges, OnDes
 
   ngOnChanges(changes: SimpleChanges): void {
     if (changes['unidadeOperacional'] && this.unidadeOperacional) {
-      const endereco: Endereco = this.unidadeOperacional.endereco;
+      const endereco: Endereco = this.unidadeOperacional.endereco!;
 
       this.form.patchValue({
         nomeUnidadeOperacional: this.unidadeOperacional.nomeUnidadeOperacional,
@@ -132,14 +132,11 @@ export class UnidadeOperacionalFormComponent implements OnInit, OnChanges, OnDes
     if (cep && cep.length === 8) {
       this.enderecoService.getEnderecoPorCEP(cep).subscribe((endereco: Endereco) => {
         this.form.patchValue({
-          municipio: {
-            codigoIbge: endereco.municipio?.codigoIbge,
-            nomeLogradouro: endereco.logradouro,
-            nomeBairro: endereco.bairro,
-            nomeComplemento: endereco.complemento ?? '',
-            municipioNome: endereco.municipioNome,
-            estadoSigla: endereco.estadoSigla || null,
-          }
+          nomeLogradouro: endereco.logradouro,
+          nomeBairro: endereco.bairro,
+          nomeComplemento: endereco.complemento ?? '',
+          municipioNome: endereco.municipio?.nome,
+          estadoSigla: endereco.municipio?.uf?.sigla || null,
         });
         this.cdr.detectChanges();
       });

@@ -36,7 +36,7 @@ export class EnderecoService {
         map(apiData => ({
           id: 0,
           cep: apiData.cep,
-          rua: apiData.logradouro,
+          logradouro: apiData.logradouro,
           bairro: apiData.bairro,
           complemento: apiData.complemento,
           municipio: {

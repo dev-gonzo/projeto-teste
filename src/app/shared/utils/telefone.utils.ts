@@ -17,23 +17,23 @@ export function separarTelefone(telefone: string, dddLength = 2): TelefoneFormat
 }
 
 export function transformarTelefones(value: UnidadeOperacional): UnidadeOperacional {
-  const telefonePrincipalTransformado = value.telefonePrincipal
-    ? separarTelefone(value.telefonePrincipal)
+  const numeroTelefonePrincipalTransformado = value.numeroTelefonePrincipal
+    ? separarTelefone(value.numeroTelefonePrincipal)
     : null;
 
-  const telefoneSecundarioTransformado = value.telefoneSecundario
-    ? separarTelefone(value.telefoneSecundario)
+  const numeroTelefoneSecundarioTransformado = value.numeroTelefoneSecundario
+    ? separarTelefone(value.numeroTelefoneSecundario)
     : null;
 
   return {
     ...value,
-    ...(telefonePrincipalTransformado && {
-      telefonePrincipal: telefonePrincipalTransformado.numero,
-      telefoneDDD: telefonePrincipalTransformado.ddd,
+    ...(numeroTelefonePrincipalTransformado && {
+      numeroTelefonePrincipal: numeroTelefonePrincipalTransformado.numero,
+      telefoneDDD: numeroTelefonePrincipalTransformado.ddd,
     }),
-    ...(telefoneSecundarioTransformado && {
-      telefoneSecundario: telefoneSecundarioTransformado.numero,
-      telefoneSecundarioDDD: telefoneSecundarioTransformado.ddd,
+    ...(numeroTelefoneSecundarioTransformado && {
+      numeroTelefoneSecundario: numeroTelefoneSecundarioTransformado.numero,
+      telefoneSecundarioDDD: numeroTelefoneSecundarioTransformado.ddd,
     }),
   };
 }

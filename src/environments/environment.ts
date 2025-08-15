@@ -1,4 +1,4 @@
 export const environment = {
-  apiUrl: '',
-  secretKey: ''
+  apiUrl: 'api url maneira',
+  secretKey: 'secret key legal'
 };

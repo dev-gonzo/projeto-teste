@@ -60,13 +60,39 @@ export class UnidadeOperacionalNewComponent implements OnDestroy {
     this.destroy$.complete();
   }
 
+  gerandoPayload() {
+    if (!FormUtils.validate(this.unidadeOperacionalForm.form)) return;
+    const formValue = this.unidadeOperacionalForm.form.getRawValue();
+    const ufSigla = this.unidadeOperacionalForm.form.get('uf')?.value;;
+    const payload = {
+      nomeUnidadeOperacional: formValue.nomeUnidadeOperacional,
+      responsavelUnidadeOperacional: formValue.responsavelUnidadeOperacional,
+      numeroTelefonePrincipal: formValue.numeroTelefonePrincipal?.replace(/\D/g, '') || null,
+      numeroTelefoneSecundario: formValue.numeroTelefoneSecundario?.replace(/\D/g, '') || null,
+      endereco: {
+        estadoSigla: ufSigla || '',
+        municipioNome: formValue.municipio?.nome || '',
+        cep: formValue.cep?.replace(/\D/g, '') || '',
+        logradouro: formValue.nomeLogradouro,
+        numero: formValue.numeroLogradouro,
+        complemento: formValue.nomeComplemento,
+        bairro: formValue.nomeBairro,
+        municipioCodigoIbge: formValue.municipio?.codigoIbge || '',
+      }
+    };
+
+    return payload;
+  }
+
   salvar(): void {
-    if (!FormUtils.validate(this.unidadeOperacionalForm.form)) {
+    const payload = this.gerandoPayload();
+
+    if (!payload) {
       return;
     }
-    const prepared = new Prepare(this.unidadeOperacionalForm.form).toUnidadeOperacional();
+
     this.unidadeOperacionalService
-      .insert(prepared)
+      .update(payload)
       .pipe(takeUntil(this.destroy$))
       .subscribe({
         next: (response: ResponseSuccessHttp) => {

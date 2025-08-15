@@ -27,7 +27,7 @@ spec:
               protocol: TCP
           envFrom:
             - secretRef:
-                name: avs-portaldemidias-frontend-secrets 
+                name: avs-portaldemidias
           livenessProbe:
             httpGet:
               path: /avs-portaldemidias/healthz

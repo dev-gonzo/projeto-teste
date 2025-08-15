@@ -2,7 +2,6 @@ import { Injectable } from '@angular/core';
 import { HttpClient, HttpParams } from '@angular/common/http';
 import { ActivatedRouteSnapshot, RouterStateSnapshot } from '@angular/router';
 import { Observable, filter, take, throwError, map } from 'rxjs';
-import { CookieService } from 'ngx-cookie-service';
 import {
   UnidadeOperacional,
   HistoricoAcoes,
@@ -30,7 +29,6 @@ export class UnidadeOperacionalService extends ApiService {
   constructor(
     protected override authService: AuthService,
     private readonly http: HttpClient,
-    private readonly cookieService: CookieService
   ) {
     super(authService);
   }

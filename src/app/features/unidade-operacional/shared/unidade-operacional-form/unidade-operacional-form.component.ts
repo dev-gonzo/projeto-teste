@@ -100,8 +100,8 @@ export class UnidadeOperacionalFormComponent implements OnInit, OnChanges, OnDes
         numeroLogradouro: endereco?.numero,
         nomeComplemento: endereco?.complemento,
         nomeBairro: endereco?.bairro,
-        municipioNome: endereco?.municipioNome,
-        estadoSigla: endereco?.estadoSigla || null
+        municipio: endereco?.municipioNome,
+        uf: endereco?.estadoSigla || null
       });
     }
   }
@@ -122,7 +122,7 @@ export class UnidadeOperacionalFormComponent implements OnInit, OnChanges, OnDes
   setUf(event: AutoCompleteSelectEvent): void {
     const municipio: Municipio = event.value;
     if (municipio?.uf?.sigla) {
-      this.form.get('estadoSigla')?.setValue(municipio.uf.sigla);
+      this.form.get('uf')?.setValue(municipio.uf.sigla);
     }
   }
 
@@ -135,8 +135,8 @@ export class UnidadeOperacionalFormComponent implements OnInit, OnChanges, OnDes
           nomeLogradouro: endereco.logradouro,
           nomeBairro: endereco.bairro,
           nomeComplemento: endereco.complemento ?? '',
-          municipioNome: endereco.municipio?.nome,
-          estadoSigla: endereco.municipio?.uf?.sigla || null,
+          municipio: endereco.municipio?.nome,
+          uf: endereco.municipio?.uf?.sigla || null,
         });
         this.cdr.detectChanges();
       });

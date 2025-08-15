@@ -18,7 +18,7 @@ import {
 } from '@angular/forms';
 import { CommonModule } from '@angular/common';
 
-import { Subject, debounceTime, switchMap, takeUntil } from 'rxjs';
+import { Subject, debounceTime, switchMap, take, takeUntil } from 'rxjs';
 import { NgxMaskDirective } from 'ngx-mask';
 import { AutoComplete, AutoCompleteCompleteEvent, AutoCompleteSelectEvent } from 'primeng/autocomplete';
 import { Select } from 'primeng/select';
@@ -130,12 +130,12 @@ export class UnidadeOperacionalFormComponent implements OnInit, OnChanges, OnDes
     const cep = this.getAtributo('cep').value?.replace(/\D/g, '');
 
     if (cep && cep.length === 8) {
-      this.enderecoService.getEnderecoPorCEP(cep).subscribe((endereco: Endereco) => {
+      this.enderecoService.getEnderecoPorCEP(cep).pipe(take(1)).subscribe((endereco: Endereco) => {
         this.form.patchValue({
           nomeLogradouro: endereco.logradouro,
           nomeBairro: endereco.bairro,
           nomeComplemento: endereco.complemento ?? '',
-          municipio: endereco.municipio?.nome,
+          municipio: endereco.municipioNome,
           uf: endereco.municipio?.uf?.sigla || null,
         });
         this.cdr.detectChanges();

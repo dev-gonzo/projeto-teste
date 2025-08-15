@@ -70,7 +70,7 @@ export class UnidadeOperacionalEditComponent implements OnDestroy {
     this.destroy$.complete();
   }
 
-  salvar(): void {
+  gerandoPayload() {
     if (!FormUtils.validate(this.unidadeOperacionalForm.form)) return;
 
     const formValue = this.unidadeOperacionalForm.form.getRawValue();
@@ -96,6 +96,17 @@ export class UnidadeOperacionalEditComponent implements OnDestroy {
         estadoCodigoIbge: ufCompleto?.codigoIbge || ''
       }
     };
+
+    return payload;
+
+  }
+
+  salvar(): void {
+    const payload = this.gerandoPayload();
+
+    if (!payload) {
+      return ;
+    }
 
     this.unidadeOperacionalService
       .update(payload)

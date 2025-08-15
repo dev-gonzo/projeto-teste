@@ -1,19 +1,15 @@
 import { Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { HttpParams } from '@angular/common/http';
-
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 import { ButtonModule } from 'primeng/button';
 import { MessageService } from 'primeng/api';
 import { Tooltip } from 'primeng/tooltip';
-import { Panel } from 'primeng/panel';
 import { ToastModule } from 'primeng/toast';
 import { DialogModule } from 'primeng/dialog';
 import { pickBy, identity } from 'lodash-es';
 import { finalize, Subject, takeUntil } from 'rxjs';
-
 import { SharedModule } from '../../../shared/shared.module';
-
 import {
   UnidadeOperacional,
   ErrorResponseHttp,
@@ -21,6 +17,7 @@ import {
   PageImpl,
   Pageable,
   ResponseSuccessHttp,
+  ListaUnidadeOperacional,
 } from '../../../shared/models';
 import { UnidadeOperacionalFilterComponent } from '../shared/unidade-operacional-filter/unidade-operacional-filter.component';
 import { UnidadeOperacionalTableComponent } from '../shared/unidade-operacional-table/unidade-operacional-table.component';
@@ -48,11 +45,10 @@ export class UnidadeOperacionalListComponent implements OnDestroy, OnInit {
   filterForm!: UnidadeOperacionalFilterComponent;
 
   breadcrumb: any[] = [{ label: 'Unidade Operacional', route: '/unidades-operacionais' }];
-  dataSource: Page<UnidadeOperacional> = PageImpl.of([], 0);
+  dataSource: Page<UnidadeOperacional> = PageImpl.of([], 0); 
   confirmRemoveVisible = false;
   idRemove: number | undefined;
   row!: UnidadeOperacional;
-
   private readonly destroy$ = new Subject<void>();
 
   constructor(
@@ -90,8 +86,8 @@ export class UnidadeOperacionalListComponent implements OnDestroy, OnInit {
     this.unidadeOperacionalService
       .query(httpParams)
       .pipe(takeUntil(this.destroy$))
-      .subscribe((value) => {
-        this.dataSource = value;
+      .subscribe(page => { 
+        this.dataSource = page;
       });
   }
 
@@ -119,23 +115,14 @@ export class UnidadeOperacionalListComponent implements OnDestroy, OnInit {
       )
       .subscribe({
         next: (response: ResponseSuccessHttp) => {
-          this.messageService.add({
-            severity: 'success',
-            summary: '',
-            detail: response.mensagem,
-          });
+          this.messageService.add({ severity: 'success', summary: '', detail: response.mensagem });
           this.search();
         },
         error: (error: ErrorResponseHttp) => {
-          this.messageService.add({
-            severity: 'error',
-            summary: '',
-            detail: error.erro,
-          });
+          this.messageService.add({ severity: 'error', summary: '', detail: error.erro });
         }
       });
   }
-
 
   cancelRemove(): void {
     this.confirmRemoveVisible = false;

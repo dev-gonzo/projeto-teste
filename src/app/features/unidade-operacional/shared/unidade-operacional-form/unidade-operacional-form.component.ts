@@ -6,6 +6,7 @@ import {
   OnChanges,
   OnDestroy,
   OnInit,
+  SimpleChanges,
 } from '@angular/core';
 import {
   AbstractControl,
@@ -17,23 +18,15 @@ import {
 } from '@angular/forms';
 import { CommonModule } from '@angular/common';
 
-import {
-  Subject,
-  debounceTime,
-  switchMap,
-  takeUntil,
-} from 'rxjs';
+import { Subject, debounceTime, switchMap, takeUntil } from 'rxjs';
 import { NgxMaskDirective } from 'ngx-mask';
+import { AutoComplete, AutoCompleteCompleteEvent, AutoCompleteSelectEvent } from 'primeng/autocomplete';
 import { Select } from 'primeng/select';
-import {
-  AutoComplete,
-  AutoCompleteCompleteEvent,
-  AutoCompleteSelectEvent,
-} from 'primeng/autocomplete';
-
-import { UnidadeOperacional, Municipio, Uf } from '../../../../shared/models';
-import { MunicipioService } from '../../../../core/services';
 import { InputTextModule } from 'primeng/inputtext';
+
+import { UnidadeOperacional, Municipio, Uf, Endereco } from '../../../../shared/models';
+import { EnderecoService } from '../../../../core/services';
+import { MessageService } from 'primeng/api';
 
 @Component({
   selector: 'app-unidade-operacional-form',
@@ -52,8 +45,8 @@ import { InputTextModule } from 'primeng/inputtext';
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class UnidadeOperacionalFormComponent implements OnInit, OnChanges, OnDestroy {
-  @Input() unidadeOperacional!: UnidadeOperacional | null;
-  @Input() ufs?: Uf[] | null;
+  @Input() unidadeOperacional: UnidadeOperacional | null = null;
+  @Input() ufs: Uf[] | null = null;
 
   private readonly buscaMunicipio$ = new Subject<string>();
   private readonly destroy$ = new Subject<void>();
@@ -64,20 +57,21 @@ export class UnidadeOperacionalFormComponent implements OnInit, OnChanges, OnDes
   constructor(
     public formBuilder: FormBuilder,
     private readonly cdr: ChangeDetectorRef,
-    private readonly municipioService: MunicipioService
+    private readonly enderecoService: EnderecoService,
+    private readonly messageService: MessageService
   ) {
     this.form = this.formBuilder.group({
       nomeUnidadeOperacional: [null, [Validators.required, Validators.maxLength(100)]],
-      cep: [null, [Validators.maxLength(8)]],
+      cep: [null, [Validators.maxLength(9)]],
       nomeLogradouro: [null, [Validators.maxLength(500)]],
       numeroLogradouro: [null, [Validators.maxLength(10)]],
       nomeComplemento: [null, [Validators.maxLength(500)]],
       nomeBairro: [null, [Validators.maxLength(100)]],
       municipio: [null],
       uf: [{ value: null, disabled: true }],
-      telefonePrincipal: [null, [Validators.maxLength(11)]],
-      telefoneSecundario: [null, [Validators.maxLength(11)]],
-      nomeResponsavelUnidade: [null, [Validators.maxLength(500)]],
+      numeroTelefonePrincipal: [null, [Validators.maxLength(11)]],
+      numeroTelefoneSecundario: [null, [Validators.maxLength(11)]],
+      responsavelUnidadeOperacional: [null, [Validators.maxLength(500)]],
     });
   }
 
@@ -85,7 +79,7 @@ export class UnidadeOperacionalFormComponent implements OnInit, OnChanges, OnDes
     this.buscaMunicipio$
       .pipe(
         debounceTime(500),
-        switchMap((query) => this.municipioService.query(query)),
+        switchMap((query) => this.enderecoService.getMunicipiosPorNome(query)),
         takeUntil(this.destroy$)
       )
       .subscribe((municipios) => {
@@ -94,43 +88,83 @@ export class UnidadeOperacionalFormComponent implements OnInit, OnChanges, OnDes
       });
   }
 
+  ngOnChanges(changes: SimpleChanges): void {
+    if (changes['unidadeOperacional'] && this.unidadeOperacional) {
+      const endereco: Endereco = this.unidadeOperacional.endereco!;
+
+      this.form.patchValue({
+        nomeUnidadeOperacional: this.unidadeOperacional.nomeUnidadeOperacional,
+        responsavelUnidadeOperacional: this.unidadeOperacional.responsavelUnidadeOperacional,
+        numeroTelefonePrincipal: this.unidadeOperacional.numeroTelefonePrincipal,
+        numeroTelefoneSecundario: this.unidadeOperacional.numeroTelefoneSecundario,
+        cep: endereco?.cep,
+        nomeLogradouro: endereco?.logradouro,
+        numeroLogradouro: endereco?.numero,
+        nomeComplemento: endereco?.complemento,
+        nomeBairro: endereco?.bairro,
+        municipio: {
+          nome: endereco?.municipioNome,
+        },
+        uf: endereco?.estadoSigla,
+      });
+    }
+  }
+
   ngOnDestroy(): void {
     this.destroy$.next();
     this.destroy$.complete();
   }
 
-  ngOnChanges(): void {
-    if (this.unidadeOperacional) {
-      this.form.patchValue({ ...this.unidadeOperacional });
-
-      if (this.unidadeOperacional.telefonePrincipal && this.unidadeOperacional.telefoneDDD) {
-        this.getAtributo('telefonePrincipal')?.setValue(
-          this.unidadeOperacional.telefoneDDD + this.unidadeOperacional.telefonePrincipal
-        );
-      }
-      if (
-        this.unidadeOperacional.telefoneSecundario &&
-        this.unidadeOperacional.telefoneSecundarioDDD
-      ) {
-        this.getAtributo('telefoneSecundario')?.setValue(
-          this.unidadeOperacional.telefoneSecundarioDDD +
-          this.unidadeOperacional.telefoneSecundario
-        );
-      }
-    }
+  getAtributo(atributo: string): AbstractControl {
+    return this.form.get(atributo) as AbstractControl;
   }
 
   buscarMunicipio(event: AutoCompleteCompleteEvent): void {
     this.buscaMunicipio$.next(event.query);
   }
 
-  setUf(municipio: AutoCompleteSelectEvent): void {
-    if (municipio?.value?.uf) {
-      this.getAtributo('uf').setValue(municipio.value.uf);
+  setUf(event: AutoCompleteSelectEvent): void {
+    const municipio: Municipio = event.value;
+    if (municipio?.uf?.sigla) {
+      this.form.get('uf')?.setValue(municipio.uf.sigla);
     }
   }
 
-  getAtributo(atributo: string): AbstractControl {
-    return this.form.get(atributo) as AbstractControl;
+  onCepBlur(): void {
+    const cep = this.getAtributo('cep').value?.replace(/\D/g, '');
+
+    if (cep && cep.length === 8) {
+      this.enderecoService.getEnderecoPorCEP(cep)
+        .pipe(takeUntil(this.destroy$))
+        .subscribe({
+          next: (endereco: Endereco) => {
+            if (endereco.erro) {
+              this.messageService.add({
+                severity: 'error',
+                summary: 'ERRO',
+                detail: 'CEP não encontrado, tente novamente mais tarde.',
+              });
+              return;
+            }
+
+            this.form.patchValue({
+              nomeLogradouro: endereco.logradouro,
+              nomeBairro: endereco.bairro,
+              nomeComplemento: endereco.complemento ?? '',
+              municipio: endereco.municipio,
+              uf: endereco.municipio?.uf?.sigla || '',
+            });
+            this.cdr.detectChanges();
+          },
+          error: () => {
+            this.messageService.add({
+              severity: 'error',
+              summary: 'ERRO',
+              detail: 'CEP não encontrado, tente novamente mais tarde.',
+            });
+          }
+        });
+    }
   }
+
 }

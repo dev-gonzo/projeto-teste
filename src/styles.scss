@@ -9,7 +9,7 @@ p-panel .p-panel .p-panel-header {
   @apply bg-white text-gray-800 rounded-lg;
 }
 
-.breadcrumb-link-color{
+.breadcrumb-link-color {
   color: $cor-bradcrumb;
 }
 
@@ -29,4 +29,42 @@ p-panel .p-panel .p-panel-header {
 
 .p-menubar-end {
   margin-left: auto;
+}
+
+.p-datatable {
+  @apply rounded-lg shadow-sm overflow-hidden;
+
+  .p-datatable-thead > tr > th {
+    background-color: $cor-bradcrumb;
+    @apply text-white font-semibold text-center p-4;
+    border: none;
+  }
+
+  .p-datatable-tbody > tr {
+    background-color: white;
+    transition: background-color 0.2s ease-in-out;
+  }
+  .p-datatable-tbody > tr:hover {
+    background-color: lighten($cor-bradcrumb, 40%);
+  }
+
+  .p-datatable-tbody td {
+    @apply text-center p-3;
+    border: none;
+  }
+}
+
+.p-toast {
+  .p-toast-message {
+    @apply rounded-lg font-medium;
+  }
+
+  .p-toast-message-info {
+    background-color: lighten($cor-bradcrumb, 30%);
+    @apply text-gray-800;
+  }
+
+  .p-toast-message-error {
+    @apply bg-red-300 text-red-900;
+  }
 }

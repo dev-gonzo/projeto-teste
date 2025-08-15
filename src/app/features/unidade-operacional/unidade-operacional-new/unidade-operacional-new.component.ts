@@ -15,8 +15,7 @@ import { takeUntil } from 'rxjs/operators';
 import { SharedModule } from '../../../shared/shared.module';
 import { FormUtils } from '../../../shared/utils';
 import {
-  UfService,
-  MunicipioService,
+  EnderecoService,
   UnidadeOperacionalService,
 } from '../../../core/services';
 import {
@@ -25,7 +24,6 @@ import {
   Uf
 } from '../../../shared/models';
 import { UnidadeOperacionalFormComponent } from '../shared/unidade-operacional-form/unidade-operacional-form.component';
-import { Prepare } from '../../../shared/utils/unidade-operacional.util';
 
 @Component({
   selector: 'app-unidade-operacional-new',
@@ -48,13 +46,12 @@ export class UnidadeOperacionalNewComponent implements OnDestroy {
   private readonly destroy$ = new Subject<void>();
 
   constructor(
-    public municipioService: MunicipioService,
+    private readonly enderecoService: EnderecoService,
     private readonly router: Router,
     private readonly unidadeOperacionalService: UnidadeOperacionalService,
-    private readonly ufService: UfService,
     private readonly messageService: MessageService
   ) {
-    this.ufs$ = ufService.getAll();
+    this.ufs$ = enderecoService.getUFs();
   }
 
   ngOnDestroy(): void {
@@ -62,13 +59,40 @@ export class UnidadeOperacionalNewComponent implements OnDestroy {
     this.destroy$.complete();
   }
 
+  gerandoPayload() {
+    if (!FormUtils.validate(this.unidadeOperacionalForm.form)) return;
+    const formValue = this.unidadeOperacionalForm.form.getRawValue();
+    const ufSigla = this.unidadeOperacionalForm.form.get('uf')?.value;;
+    const payload = {
+      nomeUnidadeOperacional: formValue.nomeUnidadeOperacional,
+      responsavelUnidadeOperacional: formValue.responsavelUnidadeOperacional,
+      numeroTelefonePrincipal: formValue.numeroTelefonePrincipal?.replace(/\D/g, '') || null,
+      numeroTelefoneSecundario: formValue.numeroTelefoneSecundario?.replace(/\D/g, '') || null,
+      endereco: {
+        estadoSigla: ufSigla || '',
+        municipioNome: formValue.municipio?.nome || '',
+        cep: formValue.cep?.replace(/\D/g, '') || '',
+        logradouro: formValue.nomeLogradouro,
+        numero: formValue.numeroLogradouro,
+        complemento: formValue.nomeComplemento,
+        bairro: formValue.nomeBairro,
+        municipioCodigoIbge: formValue.municipio?.codigoIbge || '',
+        erro: false,
+      }
+    };
+
+    return payload;
+  }
+
   salvar(): void {
-    if (!FormUtils.validate(this.unidadeOperacionalForm.form)) {
+    const payload = this.gerandoPayload();
+
+    if (!payload) {
       return;
     }
-    const prepared = new Prepare(this.unidadeOperacionalForm.form).toUnidadeOperacional();
+
     this.unidadeOperacionalService
-      .insert(prepared)
+      .insert(payload)
       .pipe(takeUntil(this.destroy$))
       .subscribe({
         next: (response: ResponseSuccessHttp) => {

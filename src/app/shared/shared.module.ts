@@ -51,8 +51,7 @@ import { MessageService } from 'primeng/api';
     DialogModule,
     ButtonModule,
     MenubarModule,
-    AvatarModule,
-    
+    AvatarModule
   ],
   providers: [DatePipe, MessageService],
   exports: [

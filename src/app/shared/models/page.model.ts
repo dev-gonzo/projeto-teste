@@ -1,3 +1,5 @@
+import { UnidadeOperacional } from "./unidade-operacional.model";
+
 export interface Page<T> {
   data: T[];
   count: number;
@@ -15,4 +17,17 @@ export class PageImpl<T> implements Page<T> {
 export interface PageResponse<T> {
   content: T[];
   totalElements: number;
+}
+
+export interface UnidadeOperacionalPageResponse {
+  _embedded?: {
+    unidadeOperacionalDTOList: UnidadeOperacional[];
+  };
+  page?: {
+    size: number;
+    totalElements: number;
+    totalPages: number;
+    number: number;
+  };
+  _links?: any;
 }

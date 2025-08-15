@@ -1,6 +1,6 @@
 #!/bin/bash
 
-BUILD_DIR="./"
+BUILD_DIR="/usr/share/nginx/html"
 
 ENV_MAP=(
   "API_URL:__API_URL_PLACEHOLDER__"

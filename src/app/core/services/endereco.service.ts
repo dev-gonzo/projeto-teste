@@ -36,7 +36,9 @@ export class EnderecoService extends ApiService {
           id: 0,
           codigoIbge: Number(apiData.ibge),
           nome: apiData.localidade,
-          uf: apiData.uf
+          uf: {
+            nome: apiData.uf
+          }
         }
       } as Endereco))
     );

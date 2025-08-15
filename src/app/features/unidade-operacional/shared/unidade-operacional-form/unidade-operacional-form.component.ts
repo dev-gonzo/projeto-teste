@@ -152,7 +152,7 @@ export class UnidadeOperacionalFormComponent implements OnInit, OnChanges, OnDes
               nomeBairro: endereco.bairro,
               nomeComplemento: endereco.complemento ?? '',
               municipio: endereco.municipio,
-              uf: endereco.municipio?.uf || '',
+              uf: endereco.municipio?.uf?.sigla || '',
             });
             this.cdr.detectChanges();
           },

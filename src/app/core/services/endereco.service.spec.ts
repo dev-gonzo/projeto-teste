@@ -136,7 +136,8 @@ describe('EnderecoService', () => {
           nome: 'São Paulo',
           sigla: 'SP'
         }
-      }
+      },
+      erro: false,
     };
 
     it('deve buscar endereço por CEP e mapear a resposta corretamente (com Bearer Token)', () => {

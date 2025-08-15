@@ -68,7 +68,7 @@ export class UnidadeOperacionalFormComponent implements OnInit, OnChanges, OnDes
       nomeComplemento: [null, [Validators.maxLength(500)]],
       nomeBairro: [null, [Validators.maxLength(100)]],
       municipio: [null],
-      estadoSigla: [{ value: null, disabled: true }],
+      uf: [{ value: null, disabled: true }],
       numeroTelefonePrincipal: [null, [Validators.maxLength(11)]],
       numeroTelefoneSecundario: [null, [Validators.maxLength(11)]],
       responsavelUnidadeOperacional: [null, [Validators.maxLength(500)]],
@@ -102,8 +102,10 @@ export class UnidadeOperacionalFormComponent implements OnInit, OnChanges, OnDes
         numeroLogradouro: endereco?.numero,
         nomeComplemento: endereco?.complemento,
         nomeBairro: endereco?.bairro,
-        municipio: endereco?.municipioNome,
-        uf: endereco?.estadoSigla || null
+        municipio: {
+          nome: endereco?.municipioNome,
+        },
+        uf: endereco?.estadoSigla,
       });
     }
   }
@@ -150,7 +152,7 @@ export class UnidadeOperacionalFormComponent implements OnInit, OnChanges, OnDes
               nomeBairro: endereco.bairro,
               nomeComplemento: endereco.complemento ?? '',
               municipio: endereco.municipio,
-              uf: endereco.estadoSigla || null,
+              uf: endereco.municipio?.uf || '',
             });
             this.cdr.detectChanges();
           },

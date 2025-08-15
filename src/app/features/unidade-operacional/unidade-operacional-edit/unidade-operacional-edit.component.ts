@@ -75,7 +75,7 @@ export class UnidadeOperacionalEditComponent implements OnDestroy {
 
     const formValue = this.unidadeOperacionalForm.form.getRawValue();
 
-    const ufSigla = formValue.uf;
+    const ufSigla = this.unidadeOperacionalForm.form.get('uf')?.value;;
 
     const ufCompleto = this.ufs.find(u => u.sigla === ufSigla);
     const payload = {
@@ -85,7 +85,7 @@ export class UnidadeOperacionalEditComponent implements OnDestroy {
       numeroTelefonePrincipal: formValue.numeroTelefonePrincipal?.replace(/\D/g, '') || null,
       numeroTelefoneSecundario: formValue.numeroTelefoneSecundario?.replace(/\D/g, '') || null,
       endereco: {
-        estadoSigla: ufCompleto?.sigla || '',
+        estadoSigla: ufSigla || '',
         municipioNome: formValue.municipio?.nome || '',
         cep: formValue.cep?.replace(/\D/g, '') || '',
         logradouro: formValue.nomeLogradouro,
@@ -105,7 +105,7 @@ export class UnidadeOperacionalEditComponent implements OnDestroy {
     const payload = this.gerandoPayload();
 
     if (!payload) {
-      return ;
+      return;
     }
 
     this.unidadeOperacionalService

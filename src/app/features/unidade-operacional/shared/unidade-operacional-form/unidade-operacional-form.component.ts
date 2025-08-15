@@ -18,7 +18,7 @@ import {
 } from '@angular/forms';
 import { CommonModule } from '@angular/common';
 
-import { Subject, debounceTime, switchMap, take, takeUntil } from 'rxjs';
+import { Subject, debounceTime, switchMap, takeUntil } from 'rxjs';
 import { NgxMaskDirective } from 'ngx-mask';
 import { AutoComplete, AutoCompleteCompleteEvent, AutoCompleteSelectEvent } from 'primeng/autocomplete';
 import { Select } from 'primeng/select';
@@ -141,8 +141,8 @@ export class UnidadeOperacionalFormComponent implements OnInit, OnChanges, OnDes
             if ((endereco as any).erro) {
               this.messageService.add({
                 severity: 'error',
-                summary: '',
-                detail: 'CEP não encontrado',
+                summary: 'ERRO',
+                detail: 'CEP não encontrado, tente novamente mais tarde.',
               });
               return;
             }
@@ -159,8 +159,8 @@ export class UnidadeOperacionalFormComponent implements OnInit, OnChanges, OnDes
           error: () => {
             this.messageService.add({
               severity: 'error',
-              summary: '',
-              detail: 'CEP não encontrado',
+              summary: 'ERRO',
+              detail: 'CEP não encontrado, tente novamente mais tarde.',
             });
           }
         });

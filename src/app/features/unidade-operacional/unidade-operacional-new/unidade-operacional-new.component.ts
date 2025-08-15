@@ -15,8 +15,8 @@ import { takeUntil } from 'rxjs/operators';
 import { SharedModule } from '../../../shared/shared.module';
 import { FormUtils } from '../../../shared/utils';
 import {
-  UnidadeOperacionalService,
   EnderecoService,
+  UnidadeOperacionalService,
 } from '../../../core/services';
 import {
   ErrorResponseHttp,
@@ -24,7 +24,6 @@ import {
   Uf
 } from '../../../shared/models';
 import { UnidadeOperacionalFormComponent } from '../shared/unidade-operacional-form/unidade-operacional-form.component';
-import { Prepare } from '../../../shared/utils/unidade-operacional.util';
 
 @Component({
   selector: 'app-unidade-operacional-new',
@@ -47,7 +46,7 @@ export class UnidadeOperacionalNewComponent implements OnDestroy {
   private readonly destroy$ = new Subject<void>();
 
   constructor(
-    public enderecoService: EnderecoService,
+    private readonly enderecoService: EnderecoService,
     private readonly router: Router,
     private readonly unidadeOperacionalService: UnidadeOperacionalService,
     private readonly messageService: MessageService
@@ -92,7 +91,7 @@ export class UnidadeOperacionalNewComponent implements OnDestroy {
     }
 
     this.unidadeOperacionalService
-      .update(payload)
+      .insert(payload)
       .pipe(takeUntil(this.destroy$))
       .subscribe({
         next: (response: ResponseSuccessHttp) => {

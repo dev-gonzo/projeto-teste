@@ -1,6 +1,11 @@
-BUILD_DIR="/usr/share/nginx/html"
+#!/bin/bash
 
-mkdir -p "$BUILD_DIR/assets"
+BUILD_DIR="./"
+
+ENV_MAP=(
+  "API_URL:__API_URL_PLACEHOLDER__"
+  "SECRET_KEY:__SECRET_KEY_PLACEHOLDER__"
+)
 
 echo "---"
 echo "Starting to replace environment variables in JS files."

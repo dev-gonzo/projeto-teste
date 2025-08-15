@@ -26,6 +26,7 @@ import { InputTextModule } from 'primeng/inputtext';
 
 import { UnidadeOperacional, Municipio, Uf, Endereco } from '../../../../shared/models';
 import { EnderecoService } from '../../../../core/services';
+import { MessageService } from 'primeng/api';
 
 @Component({
   selector: 'app-unidade-operacional-form',
@@ -56,7 +57,8 @@ export class UnidadeOperacionalFormComponent implements OnInit, OnChanges, OnDes
   constructor(
     public formBuilder: FormBuilder,
     private readonly cdr: ChangeDetectorRef,
-    private readonly enderecoService: EnderecoService
+    private readonly enderecoService: EnderecoService,
+    private readonly messageService: MessageService
   ) {
     this.form = this.formBuilder.group({
       nomeUnidadeOperacional: [null, [Validators.required, Validators.maxLength(100)]],
@@ -130,16 +132,37 @@ export class UnidadeOperacionalFormComponent implements OnInit, OnChanges, OnDes
     const cep = this.getAtributo('cep').value?.replace(/\D/g, '');
 
     if (cep && cep.length === 8) {
-      this.enderecoService.getEnderecoPorCEP(cep).pipe(take(1)).subscribe((endereco: Endereco) => {
-        this.form.patchValue({
-          nomeLogradouro: endereco.logradouro,
-          nomeBairro: endereco.bairro,
-          nomeComplemento: endereco.complemento ?? '',
-          municipio: endereco.municipioNome,
-          uf: endereco.municipio?.uf?.sigla || null,
+      this.enderecoService.getEnderecoPorCEP(cep)
+        .pipe(takeUntil(this.destroy$))
+        .subscribe({
+          next: (endereco: Endereco) => {
+            if ((endereco as any).erro) {
+              this.messageService.add({
+                severity: 'error',
+                summary: '',
+                detail: 'CEP não encontrado',
+              });
+              return;
+            }
+
+            this.form.patchValue({
+              nomeLogradouro: endereco.logradouro,
+              nomeBairro: endereco.bairro,
+              nomeComplemento: endereco.complemento ?? '',
+              municipio: endereco.municipio,
+              uf: endereco.municipio?.uf?.sigla || null,
+            });
+            this.cdr.detectChanges();
+          },
+          error: () => {
+            this.messageService.add({
+              severity: 'error',
+              summary: '',
+              detail: 'CEP não encontrado',
+            });
+          }
         });
-        this.cdr.detectChanges();
-      });
     }
   }
+
 }

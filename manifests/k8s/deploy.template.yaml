@@ -1,24 +1,24 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: avs-portaldemidia
+  name: avs-portaldemidias
   labels:
-    app: avs-portaldemidia
+    app: avs-portaldemidias
     tier: frontend
 spec:
   replicas: 1
   selector:
     matchLabels:
-      app: avs-portaldemidia
+      app: avs-portaldemidias
       tier: frontend
   template:
     metadata:
       labels:
-        app: avs-portaldemidia
+        app: avs-portaldemidias
         tier: frontend
     spec:
       containers:
-        - name: avs-portaldemidia
+        - name: avs-portaldemidias
           image: ${IMAGE}
           imagePullPolicy: Always
           ports:
@@ -30,7 +30,7 @@ spec:
                 name: avs-portaldemidias-frontend-secrets 
           livenessProbe:
             httpGet:
-              path: /avs-portaldemidia/healthz
+              path: /avs-portaldemidias/healthz
               port: http
             initialDelaySeconds: 120
             periodSeconds: 10
@@ -39,7 +39,7 @@ spec:
             failureThreshold: 5
           readinessProbe:
             httpGet:
-              path: /avs-portaldemidia/healthz
+              path: /avs-portaldemidias/healthz
               port: http
             initialDelaySeconds: 60
             periodSeconds: 10
@@ -59,9 +59,9 @@ spec:
 apiVersion: v1
 kind: Service
 metadata:
-  name: avs-portaldemidia
+  name: avs-portaldemidias
   labels:
-    app: avs-portaldemidia
+    app: avs-portaldemidias
     tier: frontend
   annotations:
     networking.gke.io/load-balancer-type: "Internal"
@@ -73,7 +73,7 @@ spec:
       targetPort: 80
       protocol: TCP
   selector:
-    app: avs-portaldemidia
+    app: avs-portaldemidias
     tier: frontend
 
 ---
@@ -81,16 +81,16 @@ spec:
 apiVersion: autoscaling/v2
 kind: HorizontalPodAutoscaler
 metadata:
-  name: avs-portaldemidia
+  name: avs-portaldemidias
   namespace: default
   labels:
-    app: avs-portaldemidia
+    app: avs-portaldemidias
     tier: frontend
 spec:
   scaleTargetRef:
     apiVersion: apps/v1
     kind: Deployment
-    name: avs-portaldemidia
+    name: avs-portaldemidias
   minReplicas: 1
   maxReplicas: 1
   metrics:

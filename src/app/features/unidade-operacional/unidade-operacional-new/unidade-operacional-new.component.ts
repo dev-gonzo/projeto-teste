@@ -77,6 +77,7 @@ export class UnidadeOperacionalNewComponent implements OnDestroy {
         complemento: formValue.nomeComplemento,
         bairro: formValue.nomeBairro,
         municipioCodigoIbge: formValue.municipio?.codigoIbge || '',
+        erro: false,
       }
     };
 

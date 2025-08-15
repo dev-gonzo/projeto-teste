@@ -15,6 +15,7 @@ export interface Endereco extends AbstractModel<number> {
   municipio?: Municipio;
   estadoSigla?: string;
   municipioNome?: string;
+  erro: boolean;
 }
 
 export interface Municipio extends AbstractModel<number> {
@@ -51,6 +52,7 @@ export function mapApiCepToEndereco(apiData: ApiCepResponse): Endereco {
         nome: apiData.estado || '',
         sigla: apiData.uf
       }
-    }
+    },
+    erro: false
   };
 }

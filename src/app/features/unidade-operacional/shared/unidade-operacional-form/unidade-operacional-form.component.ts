@@ -138,7 +138,7 @@ export class UnidadeOperacionalFormComponent implements OnInit, OnChanges, OnDes
         .pipe(takeUntil(this.destroy$))
         .subscribe({
           next: (endereco: Endereco) => {
-            if ((endereco as any).erro) {
+            if (endereco.erro) {
               this.messageService.add({
                 severity: 'error',
                 summary: 'ERRO',

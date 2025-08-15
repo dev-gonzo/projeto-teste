@@ -93,7 +93,8 @@ export class UnidadeOperacionalEditComponent implements OnDestroy {
         complemento: formValue.nomeComplemento,
         bairro: formValue.nomeBairro,
         municipioCodigoIbge: formValue.municipio?.codigoIbge || '',
-        estadoCodigoIbge: ufCompleto?.codigoIbge || ''
+        estadoCodigoIbge: ufCompleto?.codigoIbge || '',
+        erro: false,
       }
     };
 

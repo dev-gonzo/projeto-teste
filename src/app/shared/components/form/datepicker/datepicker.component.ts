@@ -85,8 +85,7 @@ export class DatepickerComponent extends ColumnHostClass {
   }
 
   get error(): string | null {
-    if (!this.control?.touched || !this.control.errors) return null;
-
+    if (!this.control || !this.control.touched || !this.control.errors) return null;
     const errors = this.control.errors;
     return typeof errors['message'] === 'string' ? errors['message'] : null;
   }

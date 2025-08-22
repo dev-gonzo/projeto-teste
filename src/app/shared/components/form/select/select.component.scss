@@ -1,27 +1,35 @@
-.custom-select {
+.form-control.custom-select {
   &.text-muted .select-value {
     color: var(--color-secondary) !important;
     opacity: 0.8;
   }
   
   &.is-invalid {
-    border-color: var(--color-danger) !important;
-    
     .select-value {
-      color: var(--color-danger) !important;
+      color: var(--color-error) !important;
     }
     
     &.text-muted .select-value {
-      color: var(--color-danger) !important;
+      color: var(--color-error) !important;
     }
-    
-    .select-arrow {
-      color: var(--color-danger) !important;
-    }
-    
-    &:focus {
-      border-color: var(--color-danger) !important;
-      box-shadow: 0 0 0 0.1rem color-mix(in srgb, var(--color-danger) 25%, transparent) !important;
-    }
+  }
+}
+
+.form-control.is-invalid + .select-arrow,
+.form-control.custom-select.is-invalid .select-arrow {
+  color: var(--color-error) !important;
+}
+
+.select-arrow {
+  position: absolute;
+  top: 50%;
+  right: 0.75rem;
+  transform: translateY(-50%);
+  pointer-events: none;
+  transition: transform 0.2s ease;
+  color: var(--color-muted);
+  
+  &.rotated {
+    transform: translateY(-50%) rotate(180deg);
   }
 }

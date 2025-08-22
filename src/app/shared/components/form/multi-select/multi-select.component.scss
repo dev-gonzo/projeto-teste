@@ -1,4 +1,4 @@
-.custom-multi-select {
+.form-control.custom-multi-select {
   display: flex;
   align-items: center;
   justify-content: space-between;
@@ -87,44 +87,7 @@
     }
   }
   
-  .select-actions {
-    display: flex;
-    align-items: center;
-    gap: 0.25rem;
-    margin-left: 0.5rem;
-    
-    .clear-all-btn {
-      background: none;
-      border: none;
-      color: var(--color-secondary);
-      cursor: pointer;
-      font-size: 1rem;
-      line-height: 1;
-      padding: 0;
-      width: 16px;
-      height: 16px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      border-radius: 50%;
-      transition: all 0.2s ease;
-      
-      &:hover {
-        background-color: var(--color-muted);
-        color: var(--color-foreground);
-      }
-    }
-    
-    .select-arrow {
-      transition: transform 0.2s ease-in-out;
-      font-size: 0.8rem;
-      color: var(--color-secondary);
-      
-      &.rotated {
-        transform: rotate(180deg);
-      }
-    }
-  }
+
   
   &.text-muted .select-content .select-placeholder {
     color: var(--color-secondary) !important;
@@ -132,25 +95,32 @@
   }
   
   &.is-invalid {
-    border-color: var(--color-danger) !important;
-    
     .select-content .select-placeholder {
-      color: var(--color-danger) !important;
-    }
-    
-    .select-actions .select-arrow {
-      color: var(--color-danger) !important;
-    }
-    
-    &:focus {
-      border-color: var(--color-danger) !important;
-      box-shadow: 0 0 0 0.1rem color-mix(in srgb, var(--color-danger) 25%, transparent) !important;
+      color: var(--color-error) !important;
     }
   }
   
   &.show {
     border-color: color-mix(in srgb, var(--color-primary) 60%, var(--color-primary-contrast));
     box-shadow: 0 0 0 0.1rem color-mix(in srgb, var(--color-primary) 15%, transparent);
+  }
+}
+
+.form-control.custom-multi-select.is-invalid + .select-arrow {
+  color: var(--color-error) !important;
+}
+
+.select-arrow {
+  top: 50%;
+  right: 0.75rem;
+  transform: translateY(-50%);
+  pointer-events: none;
+  transition: transform 0.2s ease;
+  color: var(--color-muted);
+  font-size: 0.8rem;
+  
+  &.rotated {
+    transform: translateY(-50%) rotate(180deg);
   }
 }
 

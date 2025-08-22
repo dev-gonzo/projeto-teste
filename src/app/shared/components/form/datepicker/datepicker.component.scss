@@ -3,7 +3,7 @@
     cursor: pointer;
     background-color: var(--color-background) !important;
     color: var(--color-foreground) !important;
-    border-color: var(--color-border) !important;
+    border-color: var(--color-border);
     border-top-left-radius: 0.375rem !important;
     border-bottom-left-radius: 0.375rem !important;
     
@@ -16,15 +16,15 @@
 
 
     &.is-invalid {
-      border-color: var(--color-danger) !important;
+      border-color: var(--color-error) !important;
       
       &::placeholder {
-        color: var(--color-danger) !important;
+        color: var(--color-error) !important;
       }
       
       &:focus {
-        border-color: var(--color-danger) !important;
-        box-shadow: 0 0 0 0.1rem color-mix(in srgb, var(--color-danger) 25%, transparent) !important;
+        border-color: var(--color-error) !important;
+        box-shadow: 0 0 0 0.1rem color-mix(in srgb, var(--color-error) 25%, transparent) !important;
         border-right: 0;
       }
     }
@@ -34,7 +34,7 @@
     cursor: pointer;
     background-color: transparent !important;
     color: var(--color-surface-contrast) !important;
-    border-color: var(--color-border) !important;
+    border-color: var(--color-border);
     border-left: 0;
     border-top-right-radius: 0.375rem !important;
     border-bottom-right-radius: 0.375rem !important;
@@ -60,13 +60,13 @@
 
   &:has(.form-control.is-invalid) {
     .input-group-text {
-      border-color: var(--color-danger) !important;
+      border-color: var(--color-error) !important;
       border-left: 0;
-      color: var(--color-danger) !important;
+      color: var(--color-error) !important;
       background-color: var(--color-background) !important;
       
       fa-icon {
-        color: var(--color-danger) !important;
+        color: var(--color-error) !important;
       }
     }
   }

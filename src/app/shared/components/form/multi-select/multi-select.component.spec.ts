@@ -598,6 +598,7 @@ describe('MultiSelectComponent', () => {
     describe('Clear All Button', () => {
        beforeEach(() => {
          component.control.setValue(['opt1', 'opt2']);
+         component.showDropdown = true;
          fixture.detectChanges();
        });
  
@@ -610,6 +611,7 @@ describe('MultiSelectComponent', () => {
          spyOn(component, 'clearAll');
          
          const clearButton = fixture.debugElement.query(By.css('.clear-all-btn'));
+         expect(clearButton).toBeTruthy();
          clearButton.nativeElement.click();
          
          expect(component.clearAll).toHaveBeenCalled();

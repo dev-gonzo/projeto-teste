@@ -1,31 +1,31 @@
 .form-control {
   &.is-invalid {
     &::placeholder {
-      color: var(--color-danger) !important;
+      color: var(--color-error) !important;
       opacity: 1;
     }
     
     &::input-placeholder {
-      color: var(--color-danger) !important;
+      color: var(--color-error) !important;
     }
     
     &::placeholder {
-      color: var(--color-danger) !important;
+      color: var(--color-error) !important;
       opacity: 1;
     }
     
     &:input-placeholder {
-      color: var(--color-danger) !important;
+      color: var(--color-error) !important;
     }
     
     &::input-placeholder {
-      color: var(--color-danger) !important;
+      color: var(--color-error) !important;
     }
   }
 }
 
 .form-control.is-invalid + .autocomplete-arrow {
-  color: var(--color-danger) !important;
+  color: var(--color-error) !important;
 }
 
 .autocomplete-arrow {

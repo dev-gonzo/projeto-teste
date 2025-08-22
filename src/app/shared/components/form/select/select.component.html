@@ -2,7 +2,7 @@
   <div class="w-100 position-relative">
     <div
       [id]="selectId"
-      class="form-select custom-select"
+      class="form-control custom-select"
       [ngClass]="{
         'text-muted': !error && !control.value,
         'is-invalid': error,
@@ -11,6 +11,7 @@
       (click)="toggleDropdown()"
       (blur)="onBlur()"
       tabindex="0"
+      style="padding-right: 2.5rem;"
     >
       <span class="select-value">{{ displayValue || placeholder }}</span>
       <span class="select-arrow" [ngClass]="{ 'rotated': showDropdown }">▼</span>

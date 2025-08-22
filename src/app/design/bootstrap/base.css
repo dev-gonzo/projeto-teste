@@ -263,6 +263,7 @@ html, body {
   overflow-y: auto;
   border: 1px solid var(--color-border);
   margin-top: 0.125rem;
+  background-color: var(--color-background);
 }
 
 .custom-select-option {

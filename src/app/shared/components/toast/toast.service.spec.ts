@@ -1,6 +1,4 @@
-import { TestBed } from '@angular/core/testing';
-import { fakeAsync, tick } from '@angular/core/testing';
-
+import { TestBed, fakeAsync, tick } from '@angular/core/testing';
 import { ToastService, ToastType } from './toast.service';
 
 describe('ToastService', () => {
@@ -15,257 +13,128 @@ describe('ToastService', () => {
     expect(service).toBeTruthy();
   });
 
-  describe('Initial State', () => {
-    it('should have initial signal values', () => {
-      expect(service.message()).toBeNull();
-      expect(service.type()).toBe('info');
-      expect(service.visible()).toBe(false);
-    });
-  });
-
-  describe('show method', () => {
-    it('should set message, type, and visibility', () => {
-      const testMessage = 'Test message';
-      const testType: ToastType = 'success';
-
-      service.show(testMessage, testType);
-
-      expect(service.message()).toBe(testMessage);
-      expect(service.type()).toBe(testType);
-      expect(service.visible()).toBe(true);
+  describe('show', () => {
+    it('should add toast to the list', () => {
+      const message = 'Test message';
+      const type: ToastType = 'info';
+      
+      const id = service.show(message, type);
+      const toasts = service.getToasts();
+      
+      expect(toasts.length).toBe(1);
+      expect(toasts[0].message).toBe(message);
+      expect(toasts[0].type).toBe(type);
+      expect(toasts[0].id).toBe(id);
     });
 
-    it('should default to info type when no type provided', () => {
-      const testMessage = 'Test message';
-
-      service.show(testMessage);
-
-      expect(service.message()).toBe(testMessage);
-      expect(service.type()).toBe('info');
-      expect(service.visible()).toBe(true);
+    it('should generate unique IDs for toasts', () => {
+      const id1 = service.show('Message 1');
+      const id2 = service.show('Message 2');
+      
+      expect(id1).not.toBe(id2);
     });
 
-    it('should hide toast after 4000ms for first time showing a type', fakeAsync(() => {
-      service.show('Test message', 'success');
-      expect(service.visible()).toBe(true);
-
-      tick(3999);
-      expect(service.visible()).toBe(true);
-
-      tick(1);
-      expect(service.visible()).toBe(false);
+    it('should auto-close toast after 5 seconds when autoClose is true', fakeAsync(() => {
+      const _id = service.show('Test message', 'info', true);
+      
+      expect(service.getToasts().length).toBe(1);
+      
+      tick(5000);
+      
+      expect(service.getToasts().length).toBe(0);
     }));
 
-    it('should hide toast after 2000ms for repeated type', fakeAsync(() => {
+    it('should not auto-close toast when autoClose is false', fakeAsync(() => {
+      const _id = service.show('Test message', 'info', false);
       
-      service.show('First message', 'success');
-      tick(4000);
-      expect(service.visible()).toBe(false);
-
+      expect(service.getToasts().length).toBe(1);
       
-      service.show('Second message', 'success');
-      expect(service.visible()).toBe(true);
-
-      tick(1999);
-      expect(service.visible()).toBe(true);
-
-      tick(1);
-      expect(service.visible()).toBe(false);
-    }));
-
-    it('should use 4000ms duration when switching to different type', fakeAsync(() => {
+      tick(5000);
       
-      service.show('First message', 'success');
-      tick(4000);
-      expect(service.visible()).toBe(false);
-
-      
-      service.show('Second message', 'error');
-      expect(service.visible()).toBe(true);
-
-      tick(3999);
-      expect(service.visible()).toBe(true);
-
-      tick(1);
-      expect(service.visible()).toBe(false);
+      expect(service.getToasts().length).toBe(1);
     }));
   });
 
-  describe('success method', () => {
-    it('should call show with success type', () => {
-      spyOn(service, 'show');
-      const testMessage = 'Success message';
-
-      service.success(testMessage);
-
-      expect(service.show).toHaveBeenCalledWith(testMessage, 'success');
+  describe('remove', () => {
+    it('should remove toast by ID', () => {
+      const id1 = service.show('Message 1');
+      const id2 = service.show('Message 2');
+      
+      expect(service.getToasts().length).toBe(2);
+      
+      service.remove(id1);
+      
+      const toasts = service.getToasts();
+      expect(toasts.length).toBe(1);
+      expect(toasts[0].id).toBe(id2);
     });
 
-    it('should set correct values when called directly', () => {
-      const testMessage = 'Success message';
-
-      service.success(testMessage);
-
-      expect(service.message()).toBe(testMessage);
-      expect(service.type()).toBe('success');
-      expect(service.visible()).toBe(true);
-    });
-  });
-
-  describe('error method', () => {
-    it('should call show with error type', () => {
-      spyOn(service, 'show');
-      const testMessage = 'Error message';
-
-      service.error(testMessage);
-
-      expect(service.show).toHaveBeenCalledWith(testMessage, 'error');
-    });
-
-    it('should set correct values when called directly', () => {
-      const testMessage = 'Error message';
-
-      service.error(testMessage);
-
-      expect(service.message()).toBe(testMessage);
-      expect(service.type()).toBe('error');
-      expect(service.visible()).toBe(true);
+    it('should not affect other toasts when removing non-existent ID', () => {
+      const _id = service.show('Message');
+      
+      service.remove('non-existent-id');
+      
+      expect(service.getToasts().length).toBe(1);
     });
   });
 
-  describe('info method', () => {
-    it('should call show with info type', () => {
-      spyOn(service, 'show');
-      const testMessage = 'Info message';
-
-      service.info(testMessage);
-
-      expect(service.show).toHaveBeenCalledWith(testMessage, 'info');
-    });
-
-    it('should set correct values when called directly', () => {
-      const testMessage = 'Info message';
-
-      service.info(testMessage);
-
-      expect(service.message()).toBe(testMessage);
-      expect(service.type()).toBe('info');
-      expect(service.visible()).toBe(true);
+  describe('clear', () => {
+    it('should remove all toasts', () => {
+      service.show('Message 1');
+      service.show('Message 2');
+      service.show('Message 3');
+      
+      expect(service.getToasts().length).toBe(3);
+      
+      service.clear();
+      
+      expect(service.getToasts().length).toBe(0);
     });
   });
 
-  describe('warning method', () => {
-    it('should call show with warning type', () => {
-      spyOn(service, 'show');
-      const testMessage = 'Warning message';
-
-      service.warning(testMessage);
-
-      expect(service.show).toHaveBeenCalledWith(testMessage, 'warning');
+  describe('convenience methods', () => {
+    it('should create success toast', () => {
+      const _id = service.success('Success message');
+      const toasts = service.getToasts();
+      
+      expect(toasts.length).toBe(1);
+      expect(toasts[0].type).toBe('success');
+      expect(toasts[0].message).toBe('Success message');
     });
 
-    it('should set correct values when called directly', () => {
-      const testMessage = 'Warning message';
-
-      service.warning(testMessage);
-
-      expect(service.message()).toBe(testMessage);
-      expect(service.type()).toBe('warning');
-      expect(service.visible()).toBe(true);
-    });
-  });
-
-  describe('Signal Reactivity', () => {
-    it('should update signals reactively', () => {
-      const messageValues: (string | null)[] = [];
-      const typeValues: ToastType[] = [];
-      const visibleValues: boolean[] = [];
-
+    it('should create danger toast', () => {
+      const _id = service.danger('Danger message');
+      const toasts = service.getToasts();
       
-      const messageEffect = () => messageValues.push(service.message());
-      const typeEffect = () => typeValues.push(service.type());
-      const visibleEffect = () => visibleValues.push(service.visible());
-
-      
-      messageEffect();
-      typeEffect();
-      visibleEffect();
-
-      service.show('Test message', 'success');
-      
-      messageEffect();
-      typeEffect();
-      visibleEffect();
-
-      expect(messageValues).toEqual([null, 'Test message']);
-      expect(typeValues).toEqual(['info', 'success']);
-      expect(visibleValues).toEqual([false, true]);
-    });
-  });
-
-  describe('Multiple Toast Scenarios', () => {
-    it('should handle rapid successive calls', fakeAsync(() => {
-      service.show('First message', 'info');
-      expect(service.message()).toBe('First message');
-      expect(service.type()).toBe('info');
-
-      tick(1000);
-      service.show('Second message', 'error');
-      expect(service.message()).toBe('Second message');
-      expect(service.type()).toBe('error');
-      expect(service.visible()).toBe(true);
-
-      tick(4000);
-      expect(service.visible()).toBe(false);
-    }));
-
-    it('should handle all toast types in sequence', fakeAsync(() => {
-      const types: ToastType[] = ['success', 'error', 'info', 'warning'];
-      
-      types.forEach((type, index) => {
-        service.show(`Message ${index + 1}`, type);
-        expect(service.type()).toBe(type);
-        expect(service.visible()).toBe(true);
-        tick(4000);
-        expect(service.visible()).toBe(false);
-      });
-    }));
-  });
-
-  describe('Edge Cases', () => {
-    it('should handle empty message', () => {
-      service.show('', 'info');
-      
-      expect(service.message()).toBe('');
-      expect(service.type()).toBe('info');
-      expect(service.visible()).toBe(true);
+      expect(toasts.length).toBe(1);
+      expect(toasts[0].type).toBe('danger');
+      expect(toasts[0].message).toBe('Danger message');
     });
 
-    it('should handle very long message', () => {
-      const longMessage = 'A'.repeat(1000);
-      service.show(longMessage, 'warning');
+    it('should create info toast', () => {
+      const _id = service.info('Info message');
+      const toasts = service.getToasts();
       
-      expect(service.message()).toBe(longMessage);
-      expect(service.type()).toBe('warning');
-      expect(service.visible()).toBe(true);
+      expect(toasts.length).toBe(1);
+      expect(toasts[0].type).toBe('info');
+      expect(toasts[0].message).toBe('Info message');
     });
 
-    it('should maintain lastType state correctly', fakeAsync(() => {
+    it('should create warning toast', () => {
+      const _id = service.warning('Warning message');
+      const toasts = service.getToasts();
       
-      service.show('Success 1', 'success');
-      tick(4000);
+      expect(toasts.length).toBe(1);
+      expect(toasts[0].type).toBe('warning');
+      expect(toasts[0].message).toBe('Warning message');
+    });
+
+    it('should respect autoClose parameter in convenience methods', fakeAsync(() => {
+      service.success('Success message', false);
       
+      tick(5000);
       
-      service.show('Success 2', 'success');
-      tick(2000);
-      expect(service.visible()).toBe(false);
-      
-      
-      service.show('Error 1', 'error');
-      tick(3999);
-      expect(service.visible()).toBe(true);
-      tick(1);
-      expect(service.visible()).toBe(false);
+      expect(service.getToasts().length).toBe(1);
     }));
   });
 });

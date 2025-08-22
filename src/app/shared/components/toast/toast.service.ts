@@ -1,36 +1,58 @@
 import { Injectable, signal } from '@angular/core';
 
-export type ToastType = 'success' | 'error' | 'info' | 'warning';
+export type ToastType = 'success' | 'danger' | 'info' | 'warning';
+
+export interface ToastMessage {
+  id: string;
+  message: string;
+  type: ToastType;
+}
 
 @Injectable({ providedIn: 'root' })
 export class ToastService {
-  message = signal<string | null>(null);
-  type = signal<ToastType>('info');
-  visible = signal(false);
-  private lastType: ToastType | null = null;
+  private toasts = signal<ToastMessage[]>([]);
+  private idCounter = 0;
 
-  show(msg: string, type: ToastType = 'info'): void {
-    this.message.set(msg);
-    this.type.set(type);
-    this.visible.set(true);
-    
-    
-    const duration = this.lastType === type ? 2000 : 4000;
-    this.lastType = type;
-    
-    setTimeout(() => this.visible.set(false), duration);
+getToasts = this.toasts.asReadonly();
+
+  private generateId(): string {
+    return `toast-${++this.idCounter}-${Date.now()}`;
   }
 
-  success(msg: string): void {
-    this.show(msg, 'success');
+  show(message: string, type: ToastType = 'info', autoClose = true): string {
+    const id = this.generateId();
+    const toast: ToastMessage = { id, message, type };
+    
+    this.toasts.update(toasts => [...toasts, toast]);
+    
+    if (autoClose) {
+      setTimeout(() => this.remove(id), 5000);
+    }
+    
+    return id;
   }
-  error(msg: string): void {
-    this.show(msg, 'error');
+
+  remove(id: string): void {
+    this.toasts.update(toasts => toasts.filter(toast => toast.id !== id));
   }
-  info(msg: string): void {
-    this.show(msg, 'info');
+
+  clear(): void {
+    this.toasts.set([]);
   }
-  warning(msg: string): void {
-    this.show(msg, 'warning');
+
+  success(message: string, autoClose = true): string {
+    return this.show(message, 'success', autoClose);
+  }
+
+  danger(message: string, autoClose = true): string {
+    return this.show(message, 'danger', autoClose);
+  }
+
+  info(message: string, autoClose = true): string {
+    return this.show(message, 'info', autoClose);
+  }
+
+  warning(message: string, autoClose = true): string {
+    return this.show(message, 'warning', autoClose);
   }
 }

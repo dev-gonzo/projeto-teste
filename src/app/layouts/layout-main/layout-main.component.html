@@ -18,7 +18,9 @@
           [isSidebarOpen]="isSidebarOpen"
         >
         </app-navbar>
-        <div class="flex-grow-1  px-3 d-flex flex-column ">
+        <div class="flex-grow-1 p-3 d-flex flex-column">
+          <app-alert></app-alert>
+          <app-toast />
           <router-outlet></router-outlet>
         </div>
         <app-footer></app-footer>

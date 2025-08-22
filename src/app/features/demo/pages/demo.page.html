@@ -1,3 +1,111 @@
+<app-section-wrapper title="Demonstração de Alerts">
+  <div class="mt-4 p-3 theme-surface rounded">
+    <p class="text-muted mb-3">
+      Clique nos botões abaixo para testar os diferentes tipos de alert:
+    </p>
+
+    <div class="row g-2">
+      <div class="col-md-3">
+        <button
+          type="button"
+          class="btn btn-success w-100"
+          (click)="showSuccessAlert()"
+        >
+          <i class="fas fa-check-circle me-1"></i>
+          Success Alert
+        </button>
+      </div>
+
+      <div class="col-md-3">
+        <button
+          type="button"
+          class="btn btn-danger w-100"
+          (click)="showDangerAlert()"
+        >
+          <i class="fas fa-exclamation-triangle me-1"></i>
+          Danger Alert
+        </button>
+      </div>
+
+      <div class="col-md-3">
+        <button
+          type="button"
+          class="btn btn-warning w-100"
+          (click)="showWarningAlert()"
+        >
+          <i class="fas fa-exclamation-triangle me-1"></i>
+          Warning Alert
+        </button>
+      </div>
+
+      <div class="col-md-3">
+        <button
+          type="button"
+          class="btn btn-info w-100"
+          (click)="showInfoAlert()"
+        >
+          <i class="fas fa-info-circle me-1"></i>
+          Info Alert
+        </button>
+      </div>
+    </div>
+  </div>
+</app-section-wrapper>
+
+<app-section-wrapper title="Demonstração de Alerts Não Fecháveis">
+  <div class="mt-4 p-3 theme-surface rounded">
+    <p class="text-muted mb-3">
+      Clique nos botões abaixo para testar alertas que não podem ser fechados manualmente:
+    </p>
+
+    <div class="row g-2">
+      <div class="col-md-3">
+        <button
+          type="button"
+          class="btn btn-outline-success w-100"
+          (click)="showNonClosableSuccessAlert()"
+        >
+          <i class="fas fa-check-circle me-1"></i>
+          Success (Não Fechável)
+        </button>
+      </div>
+
+      <div class="col-md-3">
+        <button
+          type="button"
+          class="btn btn-outline-danger w-100"
+          (click)="showNonClosableDangerAlert()"
+        >
+          <i class="fas fa-exclamation-triangle me-1"></i>
+          Danger (Não Fechável)
+        </button>
+      </div>
+
+      <div class="col-md-3">
+        <button
+          type="button"
+          class="btn btn-outline-warning w-100"
+          (click)="showNonClosableWarningAlert()"
+        >
+          <i class="fas fa-exclamation-triangle me-1"></i>
+          Warning (Não Fechável)
+        </button>
+      </div>
+
+      <div class="col-md-3">
+        <button
+          type="button"
+          class="btn btn-outline-info w-100"
+          (click)="showNonClosableInfoAlert()"
+        >
+          <i class="fas fa-info-circle me-1"></i>
+          Info (Não Fechável)
+        </button>
+      </div>
+    </div>
+  </div>
+</app-section-wrapper>
+
 <app-section-wrapper title="Demonstração Formulário">
   <p class="text-muted mb-4">
     Esta página demonstra todos os componentes de formulário disponíveis no
@@ -127,6 +235,7 @@
     />
   </app-form-wrapper>
 </app-section-wrapper>
+
 <div class="mt-4 p-3 theme-surface rounded">
   <h3 class="h6 fw-bold mb-3">Demonstração de Toasts</h3>
   <p class="text-muted mb-3">
@@ -140,7 +249,7 @@
         class="btn btn-success w-100"
         (click)="showSuccessToast()"
       >
-        <i class="bi bi-check-circle me-1"></i>
+        <i class="fas fa-check-circle me-1"></i>
         Success Toast
       </button>
     </div>
@@ -149,10 +258,10 @@
       <button
         type="button"
         class="btn btn-danger w-100"
-        (click)="showErrorToast()"
+        (click)="showDangerToast()"
       >
-        <i class="bi bi-x-circle me-1"></i>
-        Error Toast
+        <i class="fas fa-exclamation-triangle me-1"></i>
+        Danger Toast
       </button>
     </div>
 
@@ -162,7 +271,7 @@
         class="btn btn-warning w-100"
         (click)="showWarningToast()"
       >
-        <i class="bi bi-exclamation-triangle me-1"></i>
+        <i class="fas fa-exclamation-triangle me-1"></i>
         Warning Toast
       </button>
     </div>
@@ -173,12 +282,13 @@
         class="btn btn-info w-100"
         (click)="showInfoToast()"
       >
-        <i class="bi bi-info-circle me-1"></i>
+        <i class="fas fa-info-circle me-1"></i>
         Info Toast
       </button>
     </div>
   </div>
 </div>
+
 <app-section-wrapper title="Debug - Status do Formulário">
   <div class="row g-2 small">
     <div class="col-md-4"><strong>Válido:</strong> {{ form.valid }}</div>

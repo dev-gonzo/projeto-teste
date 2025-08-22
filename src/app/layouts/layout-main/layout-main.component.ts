@@ -4,11 +4,13 @@ import { MatSidenavModule } from '@angular/material/sidenav';
 import { RouterOutlet } from '@angular/router';
 
 import { ThemeState } from '@app/design/theme/theme.state';
-import { FooterComponent } from '../component/footer/footer.component';
-import { NavbarComponent } from '../component/navbar/navbar.component';
-import { MobileMenuComponent } from '../component/mobile-menu/mobile-menu.component';
-import { SpacerSidebarComponent } from '../component/spacer-sidebar/spacer-sidebar.component';
+import { AlertComponent } from '@app/shared/components/alert/alert.component';
+import { ToastComponent } from '@app/shared/components/toast/toast.component';
 import { DesktopSidebarComponent } from '../component/desktop-sidebar/desktop-sidebar.component';
+import { FooterComponent } from '../component/footer/footer.component';
+import { MobileMenuComponent } from '../component/mobile-menu/mobile-menu.component';
+import { NavbarComponent } from '../component/navbar/navbar.component';
+import { SpacerSidebarComponent } from '../component/spacer-sidebar/spacer-sidebar.component';
 
 @Component({
   selector: 'app-layout-main',
@@ -22,7 +24,9 @@ import { DesktopSidebarComponent } from '../component/desktop-sidebar/desktop-si
     MobileMenuComponent,
     SpacerSidebarComponent,
     DesktopSidebarComponent,
-  ],
+    AlertComponent,
+    ToastComponent
+],
   templateUrl: './layout-main.component.html',
 })
 export class LayoutMainComponent implements OnInit {

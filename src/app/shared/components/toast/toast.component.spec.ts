@@ -1,351 +1,156 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
-import { CommonModule } from '@angular/common';
-import { signal } from '@angular/core';
 
 import { ToastComponent } from './toast.component';
 import { ToastService, ToastType } from './toast.service';
-import { ScrollService } from '../../services/scroll.service';
 
 describe('ToastComponent', () => {
   let component: ToastComponent;
   let fixture: ComponentFixture<ToastComponent>;
-  let mockToastService: jasmine.SpyObj<ToastService>;
-  let mockScrollService: jasmine.SpyObj<ScrollService>;
+  let toastService: ToastService;
 
   beforeEach(async () => {
-    
-    mockToastService = jasmine.createSpyObj('ToastService', ['show', 'success', 'error', 'info', 'warning'], {
-      message: signal<string | null>(null),
-      type: signal<ToastType>('info'),
-      visible: signal(false)
-    });
-
-    mockScrollService = jasmine.createSpyObj('ScrollService', ['scrollToTop', 'scrollToElement']);
-
     await TestBed.configureTestingModule({
-      imports: [ToastComponent, CommonModule],
-      providers: [
-        { provide: ToastService, useValue: mockToastService },
-        { provide: ScrollService, useValue: mockScrollService }
-      ]
+      imports: [ToastComponent]
     }).compileComponents();
 
     fixture = TestBed.createComponent(ToastComponent);
     component = fixture.componentInstance;
+    toastService = TestBed.inject(ToastService);
+    fixture.detectChanges();
   });
 
   it('should create', () => {
     expect(component).toBeTruthy();
   });
 
-  it('should inject ToastService and ScrollService', () => {
-    expect(component.toast).toBe(mockToastService);
-    expect(component.scrollService).toBe(mockScrollService);
+  it('should display toasts from service', () => {
+    toastService.show('Test message', 'info');
+    fixture.detectChanges();
+
+    const toastElements = fixture.debugElement.queryAll(By.css('.toast-item'));
+    expect(toastElements.length).toBe(1);
+    expect(toastElements[0].nativeElement.textContent).toContain('Test message');
   });
 
-  describe('Template Rendering', () => {
-    it('should not render toast when not visible', () => {
-      mockToastService.visible.set(false);
-      fixture.detectChanges();
+  it('should display multiple toasts', () => {
+    toastService.show('Message 1', 'info');
+    toastService.show('Message 2', 'success');
+    fixture.detectChanges();
 
-      const toastElement = fixture.debugElement.query(By.css('.position-fixed'));
-      expect(toastElement).toBeNull();
-    });
-
-    it('should render toast when visible', () => {
-      mockToastService.visible.set(true);
-      mockToastService.message.set('Test message');
-      fixture.detectChanges();
-
-      const toastElement = fixture.debugElement.query(By.css('.position-fixed'));
-      expect(toastElement).toBeTruthy();
-    });
-
-    it('should display the correct message', () => {
-      const testMessage = 'Test toast message';
-      mockToastService.visible.set(true);
-      mockToastService.message.set(testMessage);
-      fixture.detectChanges();
-
-      const messageElement = fixture.debugElement.query(By.css('.px-4'));
-      expect(messageElement.nativeElement.textContent.trim()).toBe(testMessage);
-    });
-
-    it('should have correct container classes', () => {
-      mockToastService.visible.set(true);
-      mockToastService.message.set('Test message');
-      fixture.detectChanges();
-
-      const containerElement = fixture.debugElement.query(By.css('.position-fixed'));
-      expect(containerElement.nativeElement.classList.contains('position-fixed')).toBe(true);
-      expect(containerElement.nativeElement.classList.contains('w-100')).toBe(true);
-      expect(containerElement.nativeElement.classList.contains('d-flex')).toBe(true);
-      expect(containerElement.nativeElement.classList.contains('justify-content-center')).toBe(true);
-    });
-
-    it('should have correct toast message classes', () => {
-      mockToastService.visible.set(true);
-      mockToastService.message.set('Test message');
-      fixture.detectChanges();
-
-      const messageElement = fixture.debugElement.query(By.css('.px-4'));
-      expect(messageElement.nativeElement.classList.contains('px-4')).toBe(true);
-      expect(messageElement.nativeElement.classList.contains('py-2')).toBe(true);
-      expect(messageElement.nativeElement.classList.contains('rounded')).toBe(true);
-      expect(messageElement.nativeElement.classList.contains('shadow')).toBe(true);
-    });
-
-    it('should have correct inline styles', () => {
-      mockToastService.visible.set(true);
-      mockToastService.message.set('Test message');
-      fixture.detectChanges();
-
-      const containerElement = fixture.debugElement.query(By.css('.position-fixed'));
-      const style = containerElement.nativeElement.style;
-      expect(style.bottom).toBe('16px');
-      expect(style.zIndex).toBe('1050');
-    });
+    const toastElements = fixture.debugElement.queryAll(By.css('.toast-item'));
+    expect(toastElements.length).toBe(2);
   });
 
-  describe('CSS Classes Computed Property', () => {
-    it('should return bg-success class for success type', () => {
-      mockToastService.type.set('success');
-      fixture.detectChanges();
+  it('should remove toast when close button is clicked', () => {
+    const _id = toastService.show('Test message', 'info');
+    fixture.detectChanges();
 
-      const cssClass = component.cssClass();
-      expect(cssClass['bg-success']).toBe(true);
-      expect(cssClass['bg-danger']).toBe(false);
-      expect(cssClass['bg-info']).toBe(false);
-      expect(cssClass['bg-warning']).toBe(false);
+    const closeButton = fixture.debugElement.query(By.css('.btn-close'));
+    closeButton.nativeElement.click();
+    fixture.detectChanges();
+
+    const toastElements = fixture.debugElement.queryAll(By.css('.toast-item'));
+    expect(toastElements.length).toBe(0);
+  });
+
+  describe('getToastClasses', () => {
+    it('should return correct classes for success type', () => {
+      const classes = component.getToastClasses('success');
+      expect(classes).toContain('bg-success-subtle');
+      expect(classes).toContain('border-success');
+      expect(classes).toContain('text-success-emphasis');
     });
 
-    it('should return bg-danger class for error type', () => {
-      mockToastService.type.set('error');
-      fixture.detectChanges();
-
-      const cssClass = component.cssClass();
-      expect(cssClass['bg-success']).toBe(false);
-      expect(cssClass['bg-danger']).toBe(true);
-      expect(cssClass['bg-info']).toBe(false);
-      expect(cssClass['bg-warning']).toBe(false);
+    it('should return correct classes for danger type', () => {
+      const classes = component.getToastClasses('danger');
+      expect(classes).toContain('bg-danger-subtle');
+      expect(classes).toContain('border-danger');
+      expect(classes).toContain('text-danger-emphasis');
     });
 
-    it('should return bg-info class for info type', () => {
-      mockToastService.type.set('info');
-      fixture.detectChanges();
-
-      const cssClass = component.cssClass();
-      expect(cssClass['bg-success']).toBe(false);
-      expect(cssClass['bg-danger']).toBe(false);
-      expect(cssClass['bg-info']).toBe(true);
-      expect(cssClass['bg-warning']).toBe(false);
+    it('should return correct classes for warning type', () => {
+      const classes = component.getToastClasses('warning');
+      expect(classes).toContain('bg-warning-subtle');
+      expect(classes).toContain('border-warning');
+      expect(classes).toContain('text-warning-emphasis');
     });
 
-    it('should return bg-warning class for warning type', () => {
-      mockToastService.type.set('warning');
-      fixture.detectChanges();
+    it('should return correct classes for info type', () => {
+      const classes = component.getToastClasses('info');
+      expect(classes).toContain('bg-info-subtle');
+      expect(classes).toContain('border-info');
+      expect(classes).toContain('text-info-emphasis');
+    });
 
-      const cssClass = component.cssClass();
-      expect(cssClass['bg-success']).toBe(false);
-      expect(cssClass['bg-danger']).toBe(false);
-      expect(cssClass['bg-info']).toBe(false);
-      expect(cssClass['bg-warning']).toBe(true);
+    it('should return info classes for unknown type', () => {
+      const classes = component.getToastClasses('unknown' as ToastType);
+      expect(classes).toContain('bg-info-subtle');
+      expect(classes).toContain('border-info');
+      expect(classes).toContain('text-info-emphasis');
     });
   });
 
-  describe('Text Color Classes', () => {
-    it('should apply text-white class for success type', () => {
-      mockToastService.visible.set(true);
-      mockToastService.type.set('success');
-      mockToastService.message.set('Success message');
-      fixture.detectChanges();
-
-      const messageElement = fixture.debugElement.query(By.css('.px-4'));
-      expect(messageElement.nativeElement.classList.contains('text-white')).toBe(true);
-      expect(messageElement.nativeElement.classList.contains('text-dark')).toBe(false);
+  describe('getIconClass', () => {
+    it('should return correct icon for success type', () => {
+      const iconClass = component.getIconClass('success');
+      expect(iconClass).toBe('fas fa-check-circle');
     });
 
-    it('should apply text-white class for error type', () => {
-      mockToastService.visible.set(true);
-      mockToastService.type.set('error');
-      mockToastService.message.set('Error message');
-      fixture.detectChanges();
-
-      const messageElement = fixture.debugElement.query(By.css('.px-4'));
-      expect(messageElement.nativeElement.classList.contains('text-white')).toBe(true);
-      expect(messageElement.nativeElement.classList.contains('text-dark')).toBe(false);
+    it('should return correct icon for danger type', () => {
+      const iconClass = component.getIconClass('danger');
+      expect(iconClass).toBe('fas fa-exclamation-triangle');
     });
 
-    it('should apply text-dark class for warning type', () => {
-      mockToastService.visible.set(true);
-      mockToastService.type.set('warning');
-      mockToastService.message.set('Warning message');
-      fixture.detectChanges();
-
-      const messageElement = fixture.debugElement.query(By.css('.px-4'));
-      expect(messageElement.nativeElement.classList.contains('text-dark')).toBe(true);
-      expect(messageElement.nativeElement.classList.contains('text-white')).toBe(false);
+    it('should return correct icon for warning type', () => {
+      const iconClass = component.getIconClass('warning');
+      expect(iconClass).toBe('fas fa-exclamation-circle');
     });
 
-    it('should apply text-dark class for info type', () => {
-      mockToastService.visible.set(true);
-      mockToastService.type.set('info');
-      mockToastService.message.set('Info message');
-      fixture.detectChanges();
+    it('should return correct icon for info type', () => {
+      const iconClass = component.getIconClass('info');
+      expect(iconClass).toBe('fas fa-info-circle');
+    });
 
-      const messageElement = fixture.debugElement.query(By.css('.px-4'));
-      expect(messageElement.nativeElement.classList.contains('text-dark')).toBe(true);
-      expect(messageElement.nativeElement.classList.contains('text-white')).toBe(false);
+    it('should return info icon for unknown type', () => {
+      const iconClass = component.getIconClass('unknown' as ToastType);
+      expect(iconClass).toBe('fas fa-info-circle');
     });
   });
 
-  describe('Dynamic CSS Classes Application', () => {
-    it('should apply correct background class for success type', () => {
-      mockToastService.visible.set(true);
-      mockToastService.type.set('success');
-      mockToastService.message.set('Success message');
+  describe('visual elements', () => {
+    it('should display correct icon for each toast type', () => {
+      toastService.show('Success message', 'success');
+      toastService.show('Danger message', 'danger');
+      toastService.show('Warning message', 'warning');
+      toastService.show('Info message', 'info');
       fixture.detectChanges();
 
-      const messageElement = fixture.debugElement.query(By.css('.px-4'));
-      expect(messageElement.nativeElement.classList.contains('bg-success')).toBe(true);
+      const icons = fixture.debugElement.queryAll(By.css('i'));
+      expect(icons[0].nativeElement.className).toContain('fa-check-circle');
+      expect(icons[1].nativeElement.className).toContain('fa-exclamation-triangle');
+      expect(icons[2].nativeElement.className).toContain('fa-exclamation-circle');
+      expect(icons[3].nativeElement.className).toContain('fa-info-circle');
     });
 
-    it('should apply correct background class for error type', () => {
-      mockToastService.visible.set(true);
-      mockToastService.type.set('error');
-      mockToastService.message.set('Error message');
+    it('should have proper accessibility attributes', () => {
+      toastService.show('Test message', 'info');
       fixture.detectChanges();
 
-      const messageElement = fixture.debugElement.query(By.css('.px-4'));
-      expect(messageElement.nativeElement.classList.contains('bg-danger')).toBe(true);
+      const toastElement = fixture.debugElement.query(By.css('.toast-item'));
+      const closeButton = fixture.debugElement.query(By.css('.btn-close'));
+
+      expect(toastElement.nativeElement.getAttribute('role')).toBe('alert');
+      expect(closeButton.nativeElement.getAttribute('aria-label')).toBe('Fechar toast');
     });
 
-    it('should apply correct background class for info type', () => {
-      mockToastService.visible.set(true);
-      mockToastService.type.set('info');
-      mockToastService.message.set('Info message');
+    it('should apply correct CSS classes based on toast type', () => {
+      toastService.show('Success message', 'success');
       fixture.detectChanges();
 
-      const messageElement = fixture.debugElement.query(By.css('.px-4'));
-      expect(messageElement.nativeElement.classList.contains('bg-info')).toBe(true);
-    });
-
-    it('should apply correct background class for warning type', () => {
-      mockToastService.visible.set(true);
-      mockToastService.type.set('warning');
-      mockToastService.message.set('Warning message');
-      fixture.detectChanges();
-
-      const messageElement = fixture.debugElement.query(By.css('.px-4'));
-      expect(messageElement.nativeElement.classList.contains('bg-warning')).toBe(true);
-    });
-  });
-
-  describe('Integration with ToastService', () => {
-    it('should react to service visibility changes', () => {
-      
-      mockToastService.visible.set(false);
-      fixture.detectChanges();
-      let toastElement = fixture.debugElement.query(By.css('.position-fixed'));
-      expect(toastElement).toBeNull();
-
-      
-      mockToastService.visible.set(true);
-      mockToastService.message.set('Test message');
-      fixture.detectChanges();
-      toastElement = fixture.debugElement.query(By.css('.position-fixed'));
-      expect(toastElement).toBeTruthy();
-
-      
-      mockToastService.visible.set(false);
-      fixture.detectChanges();
-      toastElement = fixture.debugElement.query(By.css('.position-fixed'));
-      expect(toastElement).toBeNull();
-    });
-
-    it('should react to service message changes', () => {
-      mockToastService.visible.set(true);
-      
-      
-      mockToastService.message.set('Initial message');
-      fixture.detectChanges();
-      let messageElement = fixture.debugElement.query(By.css('.px-4'));
-      expect(messageElement.nativeElement.textContent.trim()).toBe('Initial message');
-
-      
-      mockToastService.message.set('Updated message');
-      fixture.detectChanges();
-      messageElement = fixture.debugElement.query(By.css('.px-4'));
-      expect(messageElement.nativeElement.textContent.trim()).toBe('Updated message');
-    });
-
-    it('should react to service type changes', () => {
-      mockToastService.visible.set(true);
-      mockToastService.message.set('Test message');
-      
-      
-      mockToastService.type.set('success');
-      fixture.detectChanges();
-      let messageElement = fixture.debugElement.query(By.css('.px-4'));
-      expect(messageElement.nativeElement.classList.contains('bg-success')).toBe(true);
-      expect(messageElement.nativeElement.classList.contains('text-white')).toBe(true);
-
-      
-      mockToastService.type.set('warning');
-      fixture.detectChanges();
-      messageElement = fixture.debugElement.query(By.css('.px-4'));
-      expect(messageElement.nativeElement.classList.contains('bg-warning')).toBe(true);
-      expect(messageElement.nativeElement.classList.contains('text-dark')).toBe(true);
-      expect(messageElement.nativeElement.classList.contains('bg-success')).toBe(false);
-      expect(messageElement.nativeElement.classList.contains('text-white')).toBe(false);
-    });
-  });
-
-  describe('Edge Cases', () => {
-    it('should handle null message gracefully', () => {
-      mockToastService.visible.set(true);
-      mockToastService.message.set(null);
-      fixture.detectChanges();
-
-      const messageElement = fixture.debugElement.query(By.css('.px-4'));
-      expect(messageElement.nativeElement.textContent.trim()).toBe('');
-    });
-
-    it('should handle empty message', () => {
-      mockToastService.visible.set(true);
-      mockToastService.message.set('');
-      fixture.detectChanges();
-
-      const messageElement = fixture.debugElement.query(By.css('.px-4'));
-      expect(messageElement.nativeElement.textContent.trim()).toBe('');
-    });
-
-    it('should handle very long messages', () => {
-      const longMessage = 'A'.repeat(1000);
-      mockToastService.visible.set(true);
-      mockToastService.message.set(longMessage);
-      fixture.detectChanges();
-
-      const messageElement = fixture.debugElement.query(By.css('.px-4'));
-      expect(messageElement.nativeElement.textContent.trim()).toBe(longMessage);
-    });
-  });
-
-  describe('Component Structure', () => {
-    it('should be a standalone component', () => {
-      expect(ToastComponent).toBeDefined();
-      const componentDef = (ToastComponent as unknown as { ɵcmp: { standalone: boolean } }).ɵcmp;
-      expect(componentDef.standalone).toBe(true);
-    });
-
-    it('should import CommonModule', () => {
-      expect(() => fixture.detectChanges()).not.toThrow();
-    });
-
-    it('should have correct selector', () => {
-      const componentDef = (ToastComponent as unknown as { ɵcmp: { selectors: string[][] } }).ɵcmp;
-      expect(componentDef.selectors[0][0]).toBe('app-toast');
+      const toastElement = fixture.debugElement.query(By.css('.toast-item'));
+      expect(toastElement.nativeElement.className).toContain('bg-success-subtle');
+      expect(toastElement.nativeElement.className).toContain('border-success');
     });
   });
 });

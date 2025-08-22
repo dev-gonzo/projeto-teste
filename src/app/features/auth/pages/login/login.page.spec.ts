@@ -4,6 +4,7 @@ import { ChangeDetectorRef } from '@angular/core';
 import { ReactiveFormsModule } from '@angular/forms';
 import { of, throwError } from 'rxjs';
 import { provideNgxMask } from 'ngx-mask';
+import { ToastrService } from 'ngx-toastr';
 
 import { AuthApiService } from '@app/api/auth/auth.api.service';
 import { AuthService } from '@app/auth/service/auth.service';
@@ -21,7 +22,8 @@ describe('LoginPage', () => {
   let mockAuthApi: jasmine.SpyObj<AuthApiService>;
   let mockAuthService: jasmine.SpyObj<AuthService>;
   let mockRouter: jasmine.SpyObj<Router>;
-  let mockToastService: jasmine.SpyObj<ToastService>;
+
+  let mockToastrService: jasmine.SpyObj<ToastrService>;
   let mockFormValidator: jasmine.SpyObj<FormValidatorService>;
   let _mockChangeDetectorRef: jasmine.SpyObj<ChangeDetectorRef>;
 
@@ -29,7 +31,8 @@ describe('LoginPage', () => {
     const authApiSpy = jasmine.createSpyObj('AuthApiService', ['login']);
     const authServiceSpy = jasmine.createSpyObj('AuthService', ['setToken']);
     const routerSpy = jasmine.createSpyObj('Router', ['navigate', 'createUrlTree', 'serializeUrl']);
-    const toastServiceSpy = jasmine.createSpyObj('ToastService', ['success', 'error']);
+    const toastServiceSpy = jasmine.createSpyObj('ToastService', ['success', 'danger']);
+    const toastrServiceSpy = jasmine.createSpyObj('ToastrService', ['success', 'error']);
     const formValidatorSpy = jasmine.createSpyObj('FormValidatorService', ['validateForm']);
     const changeDetectorRefSpy = jasmine.createSpyObj('ChangeDetectorRef', ['detectChanges']);
     const activatedRouteSpy = {
@@ -50,6 +53,7 @@ describe('LoginPage', () => {
         { provide: AuthService, useValue: authServiceSpy },
         { provide: Router, useValue: routerSpy },
         { provide: ToastService, useValue: toastServiceSpy },
+        { provide: ToastrService, useValue: toastrServiceSpy },
         { provide: FormValidatorService, useValue: formValidatorSpy },
         { provide: ChangeDetectorRef, useValue: changeDetectorRefSpy },
         { provide: ActivatedRoute, useValue: activatedRouteSpy },
@@ -62,7 +66,8 @@ describe('LoginPage', () => {
     mockAuthApi = TestBed.inject(AuthApiService) as jasmine.SpyObj<AuthApiService>;
     mockAuthService = TestBed.inject(AuthService) as jasmine.SpyObj<AuthService>;
     mockRouter = TestBed.inject(Router) as jasmine.SpyObj<Router>;
-    mockToastService = TestBed.inject(ToastService) as jasmine.SpyObj<ToastService>;
+
+    mockToastrService = TestBed.inject(ToastrService) as jasmine.SpyObj<ToastrService>;
     mockFormValidator = TestBed.inject(FormValidatorService) as jasmine.SpyObj<FormValidatorService>;
     _mockChangeDetectorRef = TestBed.inject(ChangeDetectorRef) as jasmine.SpyObj<ChangeDetectorRef>;
   });
@@ -104,7 +109,7 @@ describe('LoginPage', () => {
       expect(mockAuthApi.login).toHaveBeenCalledWith(formData);
       expect(mockAuthService.setToken).toHaveBeenCalledWith(mockToken);
       expect(mockRouter.navigate).toHaveBeenCalledWith(['/home']);
-      expect(mockToastService.success).toHaveBeenCalledWith('Login efetuado!');
+      expect(mockToastrService.success).toHaveBeenCalledWith('Login efetuado!');
     });
 
     it('should show error toast when login API fails', async () => {
@@ -117,7 +122,7 @@ describe('LoginPage', () => {
       await component.onSubmit();
 
       expect(mockAuthApi.login).toHaveBeenCalledWith(formData);
-      expect(mockToastService.error).toHaveBeenCalledWith('E-mail ou senha inválidos');
+      expect(mockToastrService.error).toHaveBeenCalledWith('E-mail ou senha inválidos');
       expect(mockAuthService.setToken).not.toHaveBeenCalled();
       expect(mockRouter.navigate).not.toHaveBeenCalled();
     });

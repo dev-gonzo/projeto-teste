@@ -60,6 +60,103 @@
     }
   }
 }
+
+//Botão de trocar unidade
+.btn-sm {
+  transition: all 0.2s ease;
+  border-radius: 4px;
+  
+  &:hover {
+    background-color: color-mix(in srgb, var(--color-menu-contrast) 15%, transparent);
+    transform: scale(1.1);
+  }
+  
+  &:active {
+    transform: scale(0.95);
+  }
+}
+
+//Dropdown de Perfil do Usuário
+.dropdown {
+  position: relative;
+  
+  .dropdown-toggle {
+    background: none;
+    border: none;
+    transition: all 0.2s ease;
+    border-radius: 8px;
+    outline: none !important;
+    box-shadow: none !important;
+    
+    &:hover {
+      background-color: color-mix(in srgb, var(--color-menu-contrast) 10%, transparent);
+    }
+    
+    &:focus,
+    &:active {
+      outline: none !important;
+      box-shadow: none !important;
+      border: none !important;
+    }
+    
+    &::after {
+      display: none; // Remove a seta padrão do Bootstrap
+    }
+  }
+  
+  .user-avatar {
+    border: 2px solid color-mix(in srgb, var(--color-menu-contrast) 20%, transparent);
+    transition: all 0.2s ease;
+    
+    &:hover {
+      border-color: color-mix(in srgb, var(--color-menu-contrast) 40%, transparent);
+    }
+  }
+  
+  .user-name {
+    font-size: 0.9rem;
+    line-height: 1.1;
+    color: white !important;
+  }
+
+  .user-role {
+    font-size: 0.75rem;
+    opacity: 0.8;
+    line-height: 1.1;
+    color: white !important;
+  }
+  
+  .dropdown-menu {
+    background: linear-gradient(45deg, var(--color-menu) 0%, var(--color-menu-hover) 100%);
+    border: none;
+    border-radius: 8px;
+    box-shadow: 0 4px 12px color-mix(in srgb, var(--color-menu) 30%, transparent);
+    margin-top: 0.5rem;
+    min-width: 200px;
+    right: 0;
+    left: auto;
+    
+    .dropdown-item {
+      color: white !important;
+      
+      fa-icon {
+        width: 16px;
+        opacity: 0.7;
+      }
+
+      &:hover,
+      &:focus {
+        background-color: transparent !important;
+        color: white !important;
+      }
+    }
+    
+    .dropdown-divider {
+      border-color: color-mix(in srgb, var(--color-menu-contrast) 15%, transparent);
+      margin: 0.5rem 0;
+    }
+  }
+}
 //Responsividade
 @media (width <= 768px) {
   .portal-title {
@@ -73,6 +170,18 @@
   .hamburger-btn {
     padding: 0.375rem !important;
   }
+  
+  .unit-info {
+    display: none !important;
+  }
+  
+  .dropdown {
+    .user-name::after {
+      content: ' - 70 DP Tatuapé';
+      font-weight: normal;
+      font-size: 0.8rem;
+    }
+  }
 }
 
 @media (width <= 576px) {
@@ -82,6 +191,14 @@
   
   .logo-container {
     gap: 0.5rem !important;
+  }
+  
+  .dropdown {
+    .user-name::after {
+      content: ' - 70 DP Tatuapé';
+      font-weight: normal;
+      font-size: 0.75rem;
+    }
   }
 }
 //Animações

@@ -30,6 +30,7 @@ export class InputComponent extends ColumnHostClass {
   @Input() type: 'text' | 'email' | 'password' | 'number' | 'tel' = 'text';
   @Input() id?: string;
   @Input() mask?: string;
+  @Input() autocomplete?: string;
 
   get inputId(): string {
     return this.id ?? `input-${this.label.toLowerCase().replace(/\s+/g, '-')}`;

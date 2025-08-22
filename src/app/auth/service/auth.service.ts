@@ -1,15 +1,14 @@
 
 import { inject, Injectable } from '@angular/core';
 import { Router } from '@angular/router';
-
-import { ToastService } from '@app/shared/components/toast/toast.service';
+import { ToastrService } from 'ngx-toastr';
 
 @Injectable({ providedIn: 'root' })
 export class AuthService {
   private readonly TOKEN_KEY = 'auth-token';
 
   private readonly router = inject(Router);
-  private readonly toast = inject(ToastService);
+  private readonly toast = inject(ToastrService);
 
   getToken(): string | null {
     return localStorage.getItem(this.TOKEN_KEY);

@@ -5,6 +5,7 @@ import { ReactiveFormsModule } from '@angular/forms';
 import { By } from '@angular/platform-browser';
 import { provideNgxMask } from 'ngx-mask';
 import { signal } from '@angular/core';
+import { ToastrService } from 'ngx-toastr';
 
 import { FormValidatorService } from '@app/core/services/form-validation/form-validator.service';
 import { ToastService } from '@app/shared/components/toast/toast.service';
@@ -22,12 +23,14 @@ describe('RegisterPage', () => {
   let fixture: ComponentFixture<RegisterPage>;
   let mockRouter: jasmine.SpyObj<Router>;
   let mockToastService: jasmine.SpyObj<ToastService>;
+  let mockToastrService: jasmine.SpyObj<ToastrService>;
   let mockFormValidator: jasmine.SpyObj<FormValidatorService>;
   let mockChangeDetectorRef: jasmine.SpyObj<ChangeDetectorRef>;
 
   beforeEach(async () => {
     const routerSpy = jasmine.createSpyObj('Router', ['navigate']);
-    const toastServiceSpy = jasmine.createSpyObj('ToastService', ['success', 'error']);
+    const toastServiceSpy = jasmine.createSpyObj('ToastService', ['success', 'danger']);
+    const toastrServiceSpy = jasmine.createSpyObj('ToastrService', ['success', 'error']);
     const formValidatorSpy = jasmine.createSpyObj('FormValidatorService', ['validateForm']);
     const changeDetectorRefSpy = jasmine.createSpyObj('ChangeDetectorRef', ['detectChanges']);
     const activatedRouteSpy = {};
@@ -49,6 +52,7 @@ describe('RegisterPage', () => {
         { provide: Router, useValue: routerSpy },
         { provide: ActivatedRoute, useValue: activatedRouteSpy },
         { provide: ToastService, useValue: toastServiceSpy },
+        { provide: ToastrService, useValue: toastrServiceSpy },
         { provide: FormValidatorService, useValue: formValidatorSpy },
         { provide: ChangeDetectorRef, useValue: changeDetectorRefSpy },
         { provide: ThemeState, useValue: themeStateSpy },
@@ -60,6 +64,7 @@ describe('RegisterPage', () => {
     component = fixture.componentInstance;
     mockRouter = TestBed.inject(Router) as jasmine.SpyObj<Router>;
     mockToastService = TestBed.inject(ToastService) as jasmine.SpyObj<ToastService>;
+    mockToastrService = TestBed.inject(ToastrService) as jasmine.SpyObj<ToastrService>;
     mockFormValidator = TestBed.inject(FormValidatorService) as jasmine.SpyObj<FormValidatorService>;
     mockChangeDetectorRef = TestBed.inject(ChangeDetectorRef) as jasmine.SpyObj<ChangeDetectorRef>;
   });
@@ -111,7 +116,7 @@ describe('RegisterPage', () => {
       await component.onSubmit();
 
       expect(mockFormValidator.validateForm).toHaveBeenCalledWith(component.form, registerSchema);
-      expect(mockToastService.success).toHaveBeenCalledWith('Usuário registrado com sucesso!');
+      expect(mockToastrService.success).toHaveBeenCalledWith('Usuário registrado com sucesso!');
       expect(mockRouter.navigate).toHaveBeenCalledWith(['/auth/login']);
     });
 
@@ -142,13 +147,13 @@ describe('RegisterPage', () => {
         try {
           throw new Error('Registration failed');
         } catch {
-          mockToastService.error('Erro ao registrar usuário. Tente novamente.');
+          mockToastrService.error('Erro ao registrar usuário. Tente novamente.');
         }
       });
 
       await component.onSubmit();
 
-      expect(mockToastService.error).toHaveBeenCalledWith('Erro ao registrar usuário. Tente novamente.');
+      expect(mockToastrService.error).toHaveBeenCalledWith('Erro ao registrar usuário. Tente novamente.');
     });
 
     it('should handle form submission with empty values', async () => {

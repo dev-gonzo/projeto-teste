@@ -9,7 +9,7 @@ import { createFormFromSchema } from '@app/core/utils/createFormFromSchema';
 import { FormWrapperComponent } from '@app/shared/components/form/form-wrapper/form-wrapper.component';
 import { InputComponent } from '@app/shared/components/form/input/input.component';
 import { PasswordComponent } from '@app/shared/components/form/password/password.component';
-import { ToastService } from '@app/shared/components/toast/toast.service';
+import { ToastrService } from 'ngx-toastr';
 import { AccessibilityControlsComponent } from '@app/shared/components/accessibility-controls/accessibility-controls.component';
 import { ThemeState } from '@app/design/theme/theme.state';
 
@@ -25,7 +25,7 @@ export class RegisterPage implements OnInit {
   private readonly cdRef = inject(ChangeDetectorRef);
   private readonly validator = inject(FormValidatorService);
   private readonly router = inject(Router);
-  private readonly toast = inject(ToastService);
+  private readonly toast = inject(ToastrService);
   readonly theme = inject(ThemeState);
 
   form!: TypedFormGroup<RegisterFormData>;

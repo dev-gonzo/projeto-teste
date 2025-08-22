@@ -1,10 +1,18 @@
-<div *ngIf="toast.visible()" class="position-fixed w-100 d-flex justify-content-center" style="bottom: 5rem; z-index: 1050; bottom: 16px;">
-  <div
-    [ngClass]="cssClass()"
-    class="px-4 py-2 rounded shadow"
-    [class.text-white]="toast.type() === 'success' || toast.type() === 'error'"
-    [class.text-dark]="toast.type() === 'warning' || toast.type() === 'info'"
-  >
-    {{ toast.message() }}
-  </div>
+<div class="toast-container">
+  @for (toast of toastService.getToasts(); track toast.id) {
+    <div 
+      [class]="getToastClasses(toast.type)"
+      class="toast-item d-flex align-items-center p-3 mb-3 rounded"
+      role="alert"
+    >
+      <i [class]="getIconClass(toast.type)" class="me-2"></i>
+      <span class="flex-grow-1">{{ toast.message }}</span>
+      <button 
+        type="button" 
+        class="btn-close ms-2" 
+        [attr.aria-label]="'Fechar toast'"
+        (click)="closeToast(toast.id)"
+      ></button>
+    </div>
+  }
 </div>

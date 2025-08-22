@@ -15,10 +15,12 @@ import { InputComponent } from '@app/shared/components/form/input/input.componen
 import { RadioComponent } from '@app/shared/components/form/radio/radio.component';
 import { SelectComponent } from '@app/shared/components/form/select/select.component';
 import { MultiSelectComponent } from '@app/shared/components/form/multi-select/multi-select.component';
+import { ToastrService } from 'ngx-toastr';
 import { ToastService } from '@app/shared/components/toast/toast.service';
 
 import { DemoFormData, demoSchema } from './demo.schema';
 import { SectionWrapperComponent } from '@app/shared/components/section-wrapper/section-wrapper.component';
+import { AlertService } from '@app/shared/components/alert/alert.service';
 
 @Component({
   standalone: true,
@@ -41,7 +43,9 @@ import { SectionWrapperComponent } from '@app/shared/components/section-wrapper/
 export class DemoPage implements OnInit {
   private readonly cdRef = inject(ChangeDetectorRef);
   private readonly validator = inject(FormValidatorService);
+  private readonly toastrService = inject(ToastrService);
   private readonly toastService = inject(ToastService);
+  private readonly alertService = inject(AlertService);
 
   form!: TypedFormGroup<DemoFormData>;
 
@@ -138,12 +142,31 @@ export class DemoPage implements OnInit {
   }
 
   
-  showSuccessToast(): void {
-    this.toastService.success('Operação realizada com sucesso!');
+
+
+  
+  showSuccessAlert(): void {
+    this.alertService.success('Operação realizada com sucesso!');
   }
 
-  showErrorToast(): void {
-    this.toastService.error('Ocorreu um erro durante a operação!');
+  showDangerAlert(): void {
+    this.alertService.danger('Ocorreu um erro durante a operação!');
+  }
+
+  showWarningAlert(): void {
+    this.alertService.warning('Atenção: Esta ação pode ter consequências!');
+  }
+
+  showInfoAlert(): void {
+    this.alertService.info('Esta é uma mensagem informativa.');
+  }
+
+  showSuccessToast(): void {
+    this.alertService.success('Operação realizada com sucesso!');
+  }
+
+  showDangerToast(): void {
+    this.toastService.danger('Ocorreu um erro durante a operação!');
   }
 
   showWarningToast(): void {
@@ -152,5 +175,21 @@ export class DemoPage implements OnInit {
 
   showInfoToast(): void {
     this.toastService.info('Esta é uma mensagem informativa.');
+  }
+
+  showNonClosableSuccessAlert(): void {
+    this.alertService.success('Operação realizada com sucesso! (Não pode ser fechado)', false);
+  }
+
+  showNonClosableDangerAlert(): void {
+    this.alertService.danger('Ocorreu um erro durante a operação! (Não pode ser fechado)', false);
+  }
+
+  showNonClosableWarningAlert(): void {
+    this.alertService.warning('Atenção: Esta ação pode ter consequências! (Não pode ser fechado)', false);
+  }
+
+  showNonClosableInfoAlert(): void {
+    this.alertService.info('Esta é uma mensagem informativa. (Não pode ser fechado)', false);
   }
 }

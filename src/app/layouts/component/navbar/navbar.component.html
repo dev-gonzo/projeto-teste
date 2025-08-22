@@ -10,12 +10,17 @@
   </button>
 
   <!-- Logo do Portal de Mídias -->
-  <div class="logo-container d-flex align-items-center gap-2">
-    <img 
-      src="assets/img/logoPortal-dark.png" 
-      alt="Portal de Mídias" 
-      class="navbar-logo"
-      style="height: 58px; width: auto;">
+  <div class="d-flex flex-column unit-info">
+    <small>Você está aqui:</small>
+    <div class="d-flex align-items-center gap-2 ">
+      <span class="fw-bold">70 DP Tatuapé</span>
+      <button 
+        class="btn btn-sm text-white p-1 " 
+        title="Alterar unidade operacional"
+        aria-label="Alterar unidade operacional">
+        <fa-icon [icon]="faExchange"></fa-icon>
+      </button>
+    </div>
   </div>
 
   <!-- Spacer -->
@@ -24,5 +29,51 @@
   <!-- Controles de Acessibilidade -->
   <div class="accessibility-controls d-flex align-items-center gap-2">
     <app-accessibility-controls buttonClass="text-white" />
+  </div>
+
+  <!-- Ícone de Alerta -->
+  <button 
+    class="btn text-white p-2" 
+    title="Alertas"
+    aria-label="Alertas">
+    <fa-icon [icon]="faBell"></fa-icon>
+  </button>
+
+  <!-- Dropdown de Perfil do Usuário -->
+  <div class="dropdown">
+    <button 
+      class="btn dropdown-toggle d-flex align-items-center gap-2 text-white p-2" 
+      type="button" 
+      id="userDropdown" 
+      data-bs-toggle="dropdown" 
+      aria-expanded="false"
+      [attr.aria-expanded]="isUserDropdownOpen"
+      (click)="toggleUserDropdown()">
+      <img 
+         src="assets/img/default-avatar.svg" 
+         alt="Foto do usuário" 
+         class="user-avatar rounded-circle"
+         width="32" 
+         height="32">
+      <div class="d-none d-md-block text-start">
+        <div class="user-name fw-bold">Nome do Usuário</div>
+        <div class="user-role">Unidade Operacional</div>
+      </div>
+    </button>
+    <ul class="dropdown-menu dropdown-menu-end" [class.show]="isUserDropdownOpen">
+      <li>
+        <a class="dropdown-item d-flex align-items-center gap-2 " href="#" (click)="goToProfile($event)">
+          <fa-icon [icon]="faUser"></fa-icon>
+          Meu Perfil
+        </a>
+      </li>
+      <li><hr class="dropdown-divider"></li>
+      <li>
+        <a class="dropdown-item d-flex align-items-center gap-2" href="#" (click)="logout($event)">
+          <fa-icon [icon]="faSignOut"></fa-icon>
+          Sair
+        </a>
+      </li>
+    </ul>
   </div>
 </nav>

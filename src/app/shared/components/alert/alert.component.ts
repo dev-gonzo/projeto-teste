@@ -1,19 +1,19 @@
 import { Component, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 
-import { ToastService, ToastType } from './toast.service';
+import { AlertService, AlertType } from './alert.service';
 
 @Component({
-  selector: 'app-toast',
+  selector: 'app-alert',
   standalone: true,
   imports: [CommonModule],
-  templateUrl: './toast.component.html',
-  styleUrl: './toast.component.scss'
+  templateUrl: './alert.component.html',
+  styleUrl: './alert.component.scss'
 })
-export class ToastComponent {
-  toastService = inject(ToastService);
+export class AlertComponent {
+  alertService = inject(AlertService);
 
-  getToastClasses(type: ToastType): string {
+  getAlertClasses(type: AlertType): string {
     const baseClasses = 'border-start border-5';
     
     switch (type) {
@@ -30,7 +30,7 @@ export class ToastComponent {
     }
   }
 
-  getIconClass(type: ToastType): string {
+  getIconClass(type: AlertType): string {
     switch (type) {
       case 'success':
         return 'fas fa-check-circle';
@@ -45,7 +45,7 @@ export class ToastComponent {
     }
   }
 
-  closeToast(id: string): void {
-    this.toastService.remove(id);
+  closeAlert(id: string): void {
+    this.alertService.remove(id);
   }
 }

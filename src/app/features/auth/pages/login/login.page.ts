@@ -10,7 +10,7 @@ import { TypedFormGroup } from '@app/core/types/forms';
 import { createFormFromSchema } from '@app/core/utils/createFormFromSchema';
 import { FormWrapperComponent } from '@app/shared/components/form/form-wrapper/form-wrapper.component';
 import { InputComponent } from '@app/shared/components/form/input/input.component';
-import { ToastService } from '@app/shared/components/toast/toast.service';
+import { ToastrService } from 'ngx-toastr';
 
 import { LoginFormData, loginSchema } from './login.schema'; 
 import { AccessibilityControlsComponent } from '@app/shared/components/accessibility-controls/accessibility-controls.component';
@@ -28,7 +28,7 @@ export class LoginPage implements OnInit {
   private readonly authApi = inject(AuthApiService);
   private readonly auth = inject(AuthService);
   private readonly router = inject(Router);
-  private readonly toast = inject(ToastService);
+  private readonly toast = inject(ToastrService);
 
   form!: TypedFormGroup<LoginFormData>;
 

@@ -1,0 +1,105 @@
+<div
+  class="row justify-content-center animated-gradient-bg min-vh-100 theme-background"
+>
+  <div class="col-12 d-flex justify-content-end p-4 flex-grow-1">
+    <app-accessibility-controls
+     
+    />
+  </div>
+
+  <div class="col-10 col-md-6">
+    <div class="p-4 theme-surface rounded-3">
+      <div class="text-center px-md-5">
+        <img
+          src="assets/img/logoPortal.png"
+          alt="Portal de Mídias"
+          class="w-25"
+        />
+        <p class="text-muted mb-4">Crie sua conta no Portal de Mídias.</p>
+
+        <h2 class="h5 fw-bold text-primary mb-3">
+          Preencha os dados abaixo
+        </h2>
+      </div>
+
+      <app-form-wrapper
+        [formGroup]="form"
+        (formSubmit)="onSubmit()"
+        (formReset)="onReset()"
+        submitButtonText="Cadastrar"
+        resetButtonText="Cancelar"
+        [showResetButton]="true"
+
+      >
+
+        <app-form-input
+          label="Nome"
+          placeholder="Digite seu nome completo"
+          [control]="$any(form.get('nome'))"
+          col="12"
+        />
+
+        <app-form-input
+          label="E-mail"
+          placeholder="seuemail@dominio.com.br"
+          type="email"
+          [control]="$any(form.get('email'))"
+          col="12"
+        />
+
+        <app-form-input
+          label="CPF"
+          placeholder="000.000.000-00"
+          mask="000.000.000-00"
+          [control]="$any(form.get('cpf'))"
+          colMd="6"
+        />
+
+        <app-form-input
+          label="RG"
+          placeholder="00.000.000-0"
+          [control]="$any(form.get('rg'))"
+          colMd="6"
+        />
+
+        <app-form-input
+          label="Telefone"
+          placeholder="(00) 0000-0000"
+          mask="(00) 0000-0000"
+          [control]="$any(form.get('telefone'))"
+          colMd="6"
+        />
+
+        <app-form-input
+          label="Celular"
+          placeholder="(00) 00000-0000"
+          mask="(00) 00000-0000"
+          [control]="$any(form.get('celular'))"
+          colMd="6"
+        />
+
+        <app-form-password
+          passwordLabel="Senha"
+          confirmPasswordLabel="Confirmar Senha"
+          passwordPlaceholder="Digite sua senha"
+          confirmPasswordPlaceholder="Confirme sua senha"
+          [passwordControl]="$any(form.get('senha'))"
+          [confirmPasswordControl]="$any(form.get('confirmarSenha'))"
+          col="12"
+        />
+      </app-form-wrapper>
+      
+
+    </div>
+  </div>
+  <div class="col-12 pt-3"></div>
+  <div
+    class="col-12 col-md-2 d-flex justify-content-center align-items-end flex-grow-1 mb-3"
+  >
+    <img
+      [src]="theme.theme() === 'light' ? 'assets/img/logo-almaviva.png' : 'assets/img/logo-almaviva-new.png'"
+      alt="Almaviva"
+      style="width: 200px"
+    />
+  </div>
+</div>

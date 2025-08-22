@@ -1,0 +1,43 @@
+<div class="d-flex align-items-center">
+  <div class="font-controls d-flex align-items-center ">
+    <button 
+      type="button" 
+      [class]="'btn btn-sm ' + (buttonClass || '')" 
+      [style.background-color]="!buttonClass ? buttonColor : null"
+      (click)="decreaseFont()" 
+      title="Diminuir fonte"
+      aria-label="Diminuir tamanho da fonte">
+      <mat-icon>text_decrease</mat-icon>
+    </button>
+    
+    <button 
+      type="button" 
+      [class]="'btn btn-sm ' + (buttonClass || '')" 
+      [style.background-color]="!buttonClass ? buttonColor : null"
+      (click)="resetFont()" 
+      title="Resetar fonte"
+      aria-label="Resetar tamanho da fonte">
+      <mat-icon>text_fields</mat-icon>
+    </button>
+    
+    <button 
+      type="button" 
+      [class]="'btn btn-sm ' + (buttonClass || '')" 
+      [style.background-color]="!buttonClass ? buttonColor : null"
+      (click)="increaseFont()" 
+      title="Aumentar fonte"
+      aria-label="Aumentar tamanho da fonte">
+      <mat-icon>text_increase</mat-icon>
+    </button>
+  </div>
+  
+  <button 
+    type="button" 
+    [class]="'btn btn-sm ' + (buttonClass || '')" 
+    [style.background-color]="!buttonClass ? buttonColor : null"
+    (click)="toggleTheme()" 
+    [title]="theme.theme() === 'dark' ? 'Alternar para tema claro' : 'Alternar para tema escuro'"
+    [attr.aria-label]="theme.theme() === 'dark' ? 'Alternar para tema claro' : 'Alternar para tema escuro'">
+    <mat-icon>{{ theme.theme() === 'dark' ? 'light_mode' : 'dark_mode' }}</mat-icon>
+  </button>
+</div>

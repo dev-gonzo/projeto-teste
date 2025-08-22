@@ -1,0 +1,110 @@
+//Navbar Styles
+.navbar {
+  background: linear-gradient(45deg, var(--color-menu) 0%, var(--color-menu-hover) 100%) !important;
+  color: var(--color-menu-contrast) !important;
+  box-shadow: 0 2px 4px color-mix(in srgb, var(--color-menu-hover) 0%, transparent);
+  position: sticky;
+  top: 0;
+  z-index: 1000;
+  transition: all 0.3s ease;
+  //border-bottom: 1px solid color-mix(in srgb, var(--color-menu-contrast) 10%, transparent);
+}
+//Botão Hambúrguer
+.hamburger-btn {
+  transition: all 0.2s ease;
+  border-radius: 8px;
+  
+
+
+  &:active {
+    transform: scale(0.95);
+  }
+
+  mat-icon {
+    transition: transform 0.2s ease;
+  }
+
+  &.menu-open mat-icon {
+    transform: rotate(90deg);
+  }
+}
+//Logo do Portal
+.navbar-logo {
+  transition: all 0.2s ease;
+  filter: drop-shadow(0 1px 2px color-mix(in srgb, var(--color-foreground) 10%, transparent));
+  
+  &:hover {
+    transform: scale(1.05);
+  }
+}
+
+.logo-container {
+  transition: all 0.2s ease;
+  
+
+}
+
+.portal-title {
+  text-shadow: 0 1px 2px color-mix(in srgb, var(--color-menu-contrast) 10%, transparent);
+  letter-spacing: 0.5px;
+}
+//Controles de Acessibilidade
+.accessibility-controls {
+  .btn {
+    transition: all 0.2s ease;
+    border-radius: 6px;
+    
+    &:hover {
+      background-color: color-mix(in srgb, var(--color-menu-contrast) 10%, transparent);
+      transform: translateY(-1px);
+    }
+  }
+}
+//Responsividade
+@media (width <= 768px) {
+  .portal-title {
+    font-size: 1rem !important;
+  }
+  
+  .navbar-logo {
+    height: 28px !important;
+  }
+  
+  .hamburger-btn {
+    padding: 0.375rem !important;
+  }
+}
+
+@media (width <= 576px) {
+  .portal-title {
+    display: none;
+  }
+  
+  .logo-container {
+    gap: 0.5rem !important;
+  }
+}
+//Animações
+@keyframes slideIn {
+  from {
+    opacity: 0;
+    transform: translateY(-10px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.navbar {
+  animation: slideIn 0.3s ease-out;
+}
+//Estados de foco para acessibilidade
+.hamburger-btn:focus,
+.accessibility-controls .btn:focus {
+  outline: 2px solid color-mix(in srgb, var(--color-menu-contrast) 50%, transparent);
+  outline-offset: 2px;
+}
+
+

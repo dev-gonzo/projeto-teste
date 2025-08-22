@@ -1,0 +1,10 @@
+<div *ngIf="toast.visible()" class="position-fixed w-100 d-flex justify-content-center" style="bottom: 5rem; z-index: 1050; bottom: 16px;">
+  <div
+    [ngClass]="cssClass()"
+    class="px-4 py-2 rounded shadow"
+    [class.text-white]="toast.type() === 'success' || toast.type() === 'error'"
+    [class.text-dark]="toast.type() === 'warning' || toast.type() === 'info'"
+  >
+    {{ toast.message() }}
+  </div>
+</div>

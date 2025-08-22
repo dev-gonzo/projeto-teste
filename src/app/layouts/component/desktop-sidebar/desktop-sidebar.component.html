@@ -1,0 +1,70 @@
+<!-- Desktop Sidebar -->
+<aside 
+  class="desktop-sidebar" 
+  [class.expanded]="isExpanded"
+  [class.collapsed]="!isExpanded">
+  
+  <!-- Header do Sidebar -->
+  <div class="sidebar-header">
+    <div class="logo-container" *ngIf="isExpanded">
+      <img 
+        src="assets/img/logoPortal-dark.png" 
+        alt="Portal de Mídias" 
+        class="sidebar-logo"
+        style="height: 100px; width: auto;">
+    </div>
+    
+    <!-- Botão de Toggle -->
+    <button 
+      class="btn-toggle-sidebar" 
+      (click)="toggleExpansion()"
+      [attr.aria-label]="isExpanded ? 'Minimizar sidebar' : 'Expandir sidebar'">
+      <fa-icon icon="bars"></fa-icon>
+    </button>
+  </div>
+
+  <!-- Lista de Menu Items -->
+  <nav class="sidebar-nav">
+    <ul class="menu-list">
+      <li 
+        *ngFor="let item of menuItems" 
+        class="menu-item">
+        <a 
+          [routerLink]="item.route"
+          routerLinkActive="active"
+          [routerLinkActiveOptions]="{ exact: true }"
+          class="menu-link"
+          [attr.title]="!isExpanded ? item.label : null"
+          (click)="onMenuItemClick(item)">
+          <div class="menu-icon">
+            <fa-icon [icon]="getIconName(item.icon)"></fa-icon>
+          </div>
+          <span class="menu-label" *ngIf="isExpanded">{{ item.label }}</span>
+        </a>
+      </li>
+    </ul>
+  </nav>
+
+  <!-- Configurações -->
+  <div class="sidebar-settings">
+    <a 
+      routerLink="/configuracoes"
+      routerLinkActive="active"
+      [routerLinkActiveOptions]="{ exact: true }"
+      class="menu-link settings-link"
+      [attr.title]="!isExpanded ? 'Configurações' : null"
+      (click)="onSettingsClick()">
+      <div class="menu-icon">
+        <fa-icon icon="cog"></fa-icon>
+      </div>
+      <span class="menu-label" *ngIf="isExpanded">Configurações</span>
+    </a>
+  </div>
+
+  <!-- Footer do Sidebar -->
+  <div class="sidebar-footer" *ngIf="isExpanded">
+    <div class="sidebar-version">
+      <small>Portal de Mídias v1.0</small>
+    </div>
+  </div>
+</aside>

@@ -1,0 +1,61 @@
+<div class="p-4">
+  <form
+    *ngIf="form"
+    [formGroup]="form"
+    (ngSubmit)="onSubmit()"
+    class="row g-3"
+  >
+    <div class="col-12">
+      <app-form-input
+        label="Nome"
+        placeholder="Digite seu nome"
+        [control]="form.controls.nome"
+      />
+    </div>
+    <div class="col-12">
+      <app-form-input
+        label="CPF"
+        placeholder="Digite seu CPF"
+        mask="000.000.000-00"
+        [control]="form.controls.cpf"
+      />
+    </div>
+    <div class="col-12">
+      <app-form-select
+        [options]="selectOptions"
+        label="Estado"
+        placeholder="Selecione uma opção"
+        [control]="form.controls.estado"
+      ></app-form-select>
+    </div>
+    <div class="col-12">
+      <app-form-autocomplete
+        label="Buscar cidade"
+        placeholder="Digite uma cidade"
+        [options]="cidades"
+        [control]="form.controls.cidade"
+      ></app-form-autocomplete>
+    </div>
+    <div class="col-12">
+      <app-form-radio
+        label="Tipo de usuário"
+        name="tipoUsuario"
+        [options]="opcoesUsuario"
+        [control]="form.controls.tipoUsuario"
+      ></app-form-radio>
+    </div>
+
+    <div class="col-12">
+      <app-form-checkbox
+        label="Aceito os termos"
+        [control]="form.controls.aceito!"
+      ></app-form-checkbox>
+    </div>
+
+    <div class="col-12 d-flex justify-content-end">
+      <button type="submit" class="theme-primary px-4 py-2 rounded small">
+        Salvar
+      </button>
+    </div>
+  </form>
+</div>

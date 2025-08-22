@@ -1,0 +1,33 @@
+<app-form-wrapper [label]="label" [error]="error" [inputId]="selectId">
+  <div class="w-100 position-relative">
+    <div
+      [id]="selectId"
+      class="form-select custom-select"
+      [ngClass]="{
+        'text-muted': !error && !control.value,
+        'is-invalid': error,
+        'show': showDropdown
+      }"
+      (click)="toggleDropdown()"
+      (blur)="onBlur()"
+      tabindex="0"
+    >
+      <span class="select-value">{{ displayValue || placeholder }}</span>
+      <span class="select-arrow" [ngClass]="{ 'rotated': showDropdown }">▼</span>
+    </div>
+
+    <ul
+      *ngIf="showDropdown"
+      class="custom-select-dropdown position-absolute w-100 bg-white border rounded mt-1 shadow list-unstyled"
+    >
+      <li
+        *ngFor="let opt of options"
+        (click)="selectOption(opt)"
+        class="custom-select-option px-3 py-2"
+        [ngClass]="{ 'selected': opt.value === control.value }"
+      >
+        {{ opt.label }}
+      </li>
+    </ul>
+  </div>
+</app-form-wrapper>

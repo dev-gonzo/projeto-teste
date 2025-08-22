@@ -1,0 +1,59 @@
+//Desktop Sidebar
+.desktop-sidebar {
+  position: fixed;
+  top: 0;
+  left: 0;
+  background: linear-gradient(135deg, var(--color-primary) 0%, var(--color-primary-hover) 100%);
+  color: var(--color-primary-contrast);
+  transition: width 0.3s ease;
+  display: flex;
+  flex-direction: column;
+  box-shadow: 2px 0 10px color-mix(in srgb, var(--color-foreground) 10%, transparent);
+  overflow: hidden;
+  height: 100vh;
+  z-index: 1000;
+  //Estado expandido
+  &.expanded {
+    width: 250px;
+  }
+  //Estado minimizado
+  &.collapsed {
+    width: 80px;
+  }
+  //Ocultar em mobile
+  @media (width <= 768px) {
+    display: none;
+  }
+}
+
+.sidebar-content {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  padding: 1rem;
+}
+
+.btn-toggle-sidebar {
+  background: none;
+  border: none;
+  color: var(--color-primary-contrast);
+  cursor: pointer;
+  padding: 0.5rem;
+  border-radius: 50%;
+  transition: background-color 0.2s ease;
+  align-self: flex-end;
+  font-size: 1.2rem;
+  width: 40px;
+  height: 40px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  &:hover {
+    background-color: color-mix(in srgb, var(--color-primary-contrast) 10%, transparent);
+  }
+
+  .collapsed & {
+    align-self: center;
+  }
+}

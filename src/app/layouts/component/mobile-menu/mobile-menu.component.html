@@ -1,0 +1,72 @@
+<!-- Backdrop -->
+<div 
+  class="mobile-menu-backdrop" 
+  [class.show]="isOpen"
+  (click)="onBackdropClick()">
+</div>
+
+<!-- Menu Drawer -->
+<div 
+  class="mobile-menu-drawer" 
+  [class.show]="isOpen">
+  
+  <!-- Header do Menu -->
+  <div class="mobile-menu-header">
+    <div class="d-flex align-items-center gap-2">
+       <img 
+      src="assets/img/logoPortal-dark.png" 
+      alt="Portal de Mídias" 
+      class="navbar-logo"
+      style="height: 58px; width: auto;">
+    </div>
+    <button 
+      class="btn-close-menu text-white" 
+      (click)="closeMenu.emit()"
+      aria-label="Fechar menu">
+      <fa-icon icon="times"></fa-icon>
+    </button>
+  </div>
+
+  <!-- Lista de Menu Items -->
+  <nav class="mobile-menu-nav">
+    <ul class="menu-list">
+      <li 
+        *ngFor="let item of menuItems" 
+        class="menu-item">
+        <a 
+          [routerLink]="item.route"
+          routerLinkActive="active"
+          [routerLinkActiveOptions]="{ exact: true }"
+          class="menu-link"
+          (click)="onMenuItemClick(item)">
+          <div class="menu-icon">
+            <fa-icon [icon]="getIconName(item.icon)"></fa-icon>
+          </div>
+          <span class="menu-label">{{ item.label }}</span>
+        </a>
+      </li>
+    </ul>
+  </nav>
+
+  <!-- Configurações -->
+  <div class="mobile-menu-settings">
+    <a 
+      routerLink="/configuracoes"
+      routerLinkActive="active"
+      [routerLinkActiveOptions]="{ exact: true }"
+      class="menu-link settings-link"
+      (click)="onSettingsClick()">
+      <div class="menu-icon">
+        <fa-icon icon="cog"></fa-icon>
+      </div>
+      <span class="menu-label">Configurações</span>
+    </a>
+  </div>
+
+  <!-- Footer do Menu -->
+  <div class="mobile-menu-footer">
+    <div class="menu-version">
+      <small >Portal de Mídias v1.0</small>
+    </div>
+  </div>
+</div>

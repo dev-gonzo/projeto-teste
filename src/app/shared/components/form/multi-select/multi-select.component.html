@@ -1,0 +1,108 @@
+<app-form-wrapper [label]="label" [error]="error" [inputId]="selectId">
+  <div class="w-100 position-relative">
+    <div
+      [id]="selectId"
+      class="form-select custom-multi-select"
+      [ngClass]="{
+        'text-muted': !error && selectedValues.length === 0,
+        'is-invalid': error,
+        'show': showDropdown
+      }"
+      (click)="toggleDropdown()"
+      (blur)="onBlur()"
+      tabindex="0"
+    >
+      <div class="select-content">
+  
+        <div *ngIf="selectedValues.length > 0" class="selected-chips">
+          <span 
+            *ngFor="let option of options; let i = index" 
+            class="selected-chip"
+            [ngClass]="{ 'visible': isOptionSelected(option) }"
+          >
+            <span class="chip-label">{{ option.label }}</span>
+            <button 
+              type="button" 
+              class="chip-remove" 
+              (click)="removeSelectedOption(option, $event)"
+              [attr.aria-label]="'Remover ' + option.label"
+            >
+              ×
+            </button>
+          </span>
+        </div>
+        
+  
+        <span *ngIf="selectedValues.length === 0" class="select-placeholder">
+          {{ placeholder }}
+        </span>
+        
+  
+        <span *ngIf="selectedValues.length > 3" class="select-summary">
+          {{ selectedValues.length }} itens selecionados
+        </span>
+      </div>
+      
+      <div class="select-actions">
+  
+        <button 
+          *ngIf="selectedValues.length > 0" 
+          type="button" 
+          class="clear-all-btn"
+          (click)="clearAll(); $event.stopPropagation()"
+          [attr.aria-label]="'Limpar todas as seleções'"
+        >
+          ×
+        </button>
+        
+  
+        <span class="select-arrow" [ngClass]="{ 'rotated': showDropdown }">▼</span>
+      </div>
+    </div>
+
+    <ul
+      *ngIf="showDropdown"
+      class="custom-multi-select-dropdown position-absolute w-100 bg-white rounded mt-1 shadow list-unstyled"
+    >
+
+      <li class="px-3 py-2 d-flex justify-content-between align-items-center">
+        <small class="text-muted">Selecione as opções desejadas</small>
+        <button 
+          type="button" 
+          class="close-btn" 
+          (click)="closeDropdown()"
+          [attr.aria-label]="'Fechar dropdown'"
+        >
+          Fechar
+        </button>
+      </li>
+      
+      <li
+        *ngFor="let opt of options"
+        (click)="toggleOption(opt, $event)"
+        class="custom-multi-select-option px-3 py-2 d-flex align-items-center"
+        [ngClass]="{ 
+          'selected': isOptionSelected(opt),
+          'disabled': isOptionDisabled(opt)
+        }"
+      >
+        <input 
+          type="checkbox" 
+          class="form-check-input me-2" 
+          [checked]="isOptionSelected(opt)"
+          [disabled]="isOptionDisabled(opt)"
+          readonly
+        >
+        <span class="flex-grow-1">{{ opt.label }}</span>
+      </li>
+    
+      <li *ngIf="options.length === 0" class="no-options px-3 py-2 text-muted">
+        Nenhuma opção disponível
+      </li>
+    
+      <li *ngIf="maxSelections && selectedValues.length >= maxSelections" class="px-3 py-2 text-muted small">
+        Máximo de {{ maxSelections }} seleções atingido
+      </li>
+    </ul>
+  </div>
+</app-form-wrapper>

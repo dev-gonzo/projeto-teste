@@ -1,0 +1,25 @@
+.form-control {
+  &.is-invalid {
+    &::placeholder {
+      color: var(--color-danger) !important;
+      opacity: 1;
+    }
+    
+    &::input-placeholder {
+      color: var(--color-danger) !important;
+    }
+    
+    &::placeholder {
+      color: var(--color-danger) !important;
+      opacity: 1;
+    }
+    
+    &:input-placeholder {
+      color: var(--color-danger) !important;
+    }
+    
+    &::input-placeholder {
+      color: var(--color-danger) !important;
+    }
+  }
+}

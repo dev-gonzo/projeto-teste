@@ -1,0 +1,15 @@
+<app-form-wrapper
+  [label]="label"
+  [error]="error"
+  [inputId]="checkboxId"
+>
+  <div class="form-check">
+    <input
+      [id]="checkboxId"
+      type="checkbox"
+      class="form-check-input"
+      [formControl]="control"
+    />
+
+  </div>
+</app-form-wrapper>

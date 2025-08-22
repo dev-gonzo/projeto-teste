@@ -1,0 +1,63 @@
+import { CommonModule } from '@angular/common';
+import { Component, inject, OnInit } from '@angular/core';
+import { MatSidenavModule } from '@angular/material/sidenav';
+import { RouterOutlet } from '@angular/router';
+
+import { ThemeState } from '@app/design/theme/theme.state';
+import { FooterComponent } from '../component/footer/footer.component';
+import { NavbarComponent } from '../component/navbar/navbar.component';
+import { MobileMenuComponent } from '../component/mobile-menu/mobile-menu.component';
+import { SpacerSidebarComponent } from '../component/spacer-sidebar/spacer-sidebar.component';
+import { DesktopSidebarComponent } from '../component/desktop-sidebar/desktop-sidebar.component';
+
+@Component({
+  selector: 'app-layout-main',
+  standalone: true,
+  imports: [
+    CommonModule,
+    RouterOutlet,
+    MatSidenavModule,
+    NavbarComponent,
+    FooterComponent,
+    MobileMenuComponent,
+    SpacerSidebarComponent,
+    DesktopSidebarComponent,
+  ],
+  templateUrl: './layout-main.component.html',
+})
+export class LayoutMainComponent implements OnInit {
+  isSidebarOpen = false;
+  isSidebarExpanded = true;
+  readonly theme = inject(ThemeState);
+
+  ngOnInit(): void {
+    const savedState = localStorage.getItem('sidebar-expanded');
+    if (savedState !== null) {
+      this.isSidebarExpanded = savedState === 'true';
+    }
+  }
+
+  toggleDesktopSidebar(): void {
+    this.isSidebarExpanded = !this.isSidebarExpanded;
+
+    localStorage.setItem('sidebar-expanded', this.isSidebarExpanded.toString());
+  }
+
+  toggleSidebar(): void {
+    this.isSidebarOpen = !this.isSidebarOpen;
+  }
+
+  toggleMobileMenu(): void {
+    this.isSidebarOpen = !this.isSidebarOpen;
+  }
+
+  closeMobileMenu(): void {
+    this.isSidebarOpen = false;
+  }
+
+  onSidebarStateChange(isExpanded: boolean): void {
+    this.isSidebarExpanded = isExpanded;
+
+    localStorage.setItem('sidebar-expanded', this.isSidebarExpanded.toString());
+  }
+}

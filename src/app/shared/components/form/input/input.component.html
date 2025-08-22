@@ -1,0 +1,13 @@
+<app-form-wrapper [label]="label" [error]="error" [inputId]="inputId">
+  <input
+    [id]="inputId"
+    [type]="type"
+    [placeholder]="placeholder"
+    [formControl]="control"
+    [mask]="mask"
+    class="form-control"
+    [ngClass]="{
+      'is-invalid': error,
+    }"
+  />
+</app-form-wrapper>

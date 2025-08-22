@@ -1,0 +1,28 @@
+<nav class="navbar p-3 d-flex gap-3 align-items-center">
+  <!-- Botão Hambúrguer (apenas mobile) -->
+  <button 
+    class="btn text-white hamburger-btn d-flex d-md-none align-items-center p-2" 
+    [class.menu-open]="isSidebarOpen"
+    (click)="toggleSidebar.emit()"
+    [attr.aria-expanded]="isSidebarOpen"
+    aria-label="{{ isSidebarOpen ? 'Fechar menu' : 'Abrir menu' }}">
+    <fa-icon [icon]="isSidebarOpen ? faTimes : faBars"></fa-icon>
+  </button>
+
+  <!-- Logo do Portal de Mídias -->
+  <div class="logo-container d-flex align-items-center gap-2">
+    <img 
+      src="assets/img/logoPortal-dark.png" 
+      alt="Portal de Mídias" 
+      class="navbar-logo"
+      style="height: 58px; width: auto;">
+  </div>
+
+  <!-- Spacer -->
+  <div class="flex-grow-1"></div>
+
+  <!-- Controles de Acessibilidade -->
+  <div class="accessibility-controls d-flex align-items-center gap-2">
+    <app-accessibility-controls buttonClass="text-white" />
+  </div>
+</nav>

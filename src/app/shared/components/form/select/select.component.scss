@@ -1,0 +1,27 @@
+.custom-select {
+  &.text-muted .select-value {
+    color: var(--color-secondary) !important;
+    opacity: 0.8;
+  }
+  
+  &.is-invalid {
+    border-color: var(--color-danger) !important;
+    
+    .select-value {
+      color: var(--color-danger) !important;
+    }
+    
+    &.text-muted .select-value {
+      color: var(--color-danger) !important;
+    }
+    
+    .select-arrow {
+      color: var(--color-danger) !important;
+    }
+    
+    &:focus {
+      border-color: var(--color-danger) !important;
+      box-shadow: 0 0 0 0.1rem color-mix(in srgb, var(--color-danger) 25%, transparent) !important;
+    }
+  }
+}

@@ -1,0 +1,72 @@
+<div
+  class="row justify-content-center animated-gradient-bg vh-100 overflow-hidden"
+>
+  <div class="col-12 d-flex justify-content-end p-4 flex-grow-1">
+    <app-accessibility-controls
+
+      buttonClass=" text-white"
+    />
+  </div>
+
+  <div class="col-10 col-md-4">
+    <div class="p-4 theme-surface rounded-3">
+      <div class="text-center px-md-5">
+        <img
+          src="assets/img/logoPortal.png"
+          alt="Portal de Mídias"
+          class="w-50"
+        />
+        <p class="text-muted mb-4">Seja bem vindo(a) ao Portal de Mídias.</p>
+
+        <h2 class="h5 fw-bold text-primary mb-3">
+          Informe seus dados de Acesso
+        </h2>
+      </div>
+
+      <app-form-wrapper
+        [formGroup]="form"
+        (formSubmit)="onSubmit()"
+        submitButtonText="Entrar"
+        [showResetButton]="false"
+        submitButtonClass="btn btn-primary w-100"
+      >
+        <app-form-input
+          label="E-mail"
+          placeholder="Digite seu e-mail"
+          type="email"
+          [control]="$any(form.get('email'))"
+          col="12"
+        />
+
+        <app-form-input
+          label="Senha"
+          placeholder="Digite sua senha"
+          type="password"
+          [control]="$any(form.get('password'))"
+          col="12"
+        />
+      </app-form-wrapper>
+      <div class="col-12 text-center mt-3 "><small>Esqueceu a senha? <a class="btn-link text-decoration-none" [routerLink]="['/auth/recuperar-senha']">Clique aqui.</a></small></div>
+      <div class="col-12 text-center mt-2">
+        <hr  class="mb-1"/>
+        <button 
+          type="button" 
+          class="btn btn-link text-decoration-none "
+          [routerLink]="['/auth/register']">
+          Crie sua conta
+        </button>
+      </div>
+    </div>
+  </div>
+  <div class="col-12"></div>
+  <div
+    class="col-12 col-md-2 d-flex justify-content-center align-items-end flex-grow-1 mb-3"
+  >
+    <img
+      src="assets/img/logo-almaviva-new.png"
+      alt="Almaviva"
+      style="width: 200px"
+      class="mt-2"
+    />
+  </div>
+</div>

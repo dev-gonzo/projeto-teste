@@ -1,0 +1,12 @@
+<svg width="32" height="32" viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <rect width="32" height="32" rx="6" fill="#ffffff"/>
+  <rect x="4" y="4" width="24" height="24" rx="4" fill="#0d6efd"/>
+  
+  <!-- Ícone de mídia/play -->
+  <path d="M12 10L20 16L12 22V10Z" fill="#ffffff"/>
+  
+  <!-- Detalhes decorativos -->
+  <circle cx="24" cy="8" r="2" fill="#ffffff" opacity="0.8"/>
+  <rect x="6" y="24" width="4" height="2" rx="1" fill="#ffffff" opacity="0.6"/>
+  <rect x="12" y="24" width="6" height="2" rx="1" fill="#ffffff" opacity="0.6"/>
+</svg>

@@ -4,7 +4,7 @@
   animation: gradientShift 15s ease-in-out infinite;
   position: relative;
   overflow: hidden;
-  //Container para partículas flutuantes
+
   &::before {
     content: '';
     position: absolute;
@@ -23,7 +23,7 @@
     animation: floatingParticles 20s linear infinite;
     z-index: 1;
   }
-  //Efeito de brilho sutil
+
   &::after {
     content: '';
     position: absolute;
@@ -41,7 +41,7 @@
     z-index: 1;
   }
 }
-//Garantir que o conteúdo fique acima das partículas
+
 .animated-gradient-bg > .col-12,
 .animated-gradient-bg > .col-11,
 .animated-gradient-bg > .col-md-4,

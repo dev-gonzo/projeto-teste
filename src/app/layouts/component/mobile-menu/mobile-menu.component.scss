@@ -1,4 +1,3 @@
-//Backdrop
 .mobile-menu-backdrop {
   position: fixed;
   top: 0;
@@ -16,7 +15,6 @@
     visibility: visible;
   }
 }
-//Drawer
 .mobile-menu-drawer {
   position: fixed;
   top: 0;
@@ -35,7 +33,6 @@
     transform: translateX(0);
   }
 }
-//Cabeçalho do Menu
 .mobile-menu-header {
   display: flex;
   align-items: center;
@@ -84,7 +81,6 @@
     }
   }
 }
-//Navegação
 .mobile-menu-nav {
   flex: 1;
   overflow-y: auto;
@@ -183,7 +179,6 @@
     color: var(--color-primary);
   }
 }
-//Configurações
 .mobile-menu-settings {
   padding: 0.5rem 0;
   border-top: 1px solid var(--color-border);
@@ -253,7 +248,6 @@
     }
   }
 }
-//Footer do Menu
 .mobile-menu-footer {
   padding: 1rem 1.5rem;
   border-top: 1px solid var(--color-border);
@@ -266,7 +260,7 @@
     margin: 0;
   }
 }
-//Responsividade
+
 @media (width <= 768px) {
   .mobile-menu-drawer {
     width: 100%;
@@ -297,7 +291,7 @@
     font-size: 0.9rem;
   }
 }
-//Animações
+
 @keyframes slideIn {
   from {
     transform: translateX(-100%);

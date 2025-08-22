@@ -85,7 +85,7 @@
   border-radius: 0.375rem;
   box-shadow: 0 0.5rem 1rem color-mix(in srgb, var(--color-foreground) 15%, transparent);
   background-color: var(--color-background);
-  //Posicionamento dinâmico
+
   &.dropdown-up {
     top: auto;
     bottom: 100%;

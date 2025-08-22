@@ -92,11 +92,8 @@ export class ContactUsPageComponent implements OnInit, OnDestroy {
     );
 
     if (result.success) {
-      //eslint-disable-next-line no-console
-      console.log('Dados válidos:', this.form.value);
+      this.form.reset();
     } else {
-      //eslint-disable-next-line no-console
-      console.log('Erros form:', result.errors);
       this.form.markAllAsTouched();
       this.cdRef.detectChanges();
     }

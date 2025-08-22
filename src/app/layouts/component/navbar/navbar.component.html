@@ -1,5 +1,5 @@
 <nav class="navbar p-3 d-flex gap-3 align-items-center">
-  <!-- Botão Hambúrguer (apenas mobile) -->
+
   <button 
     class="btn text-white hamburger-btn d-flex d-md-none align-items-center p-2" 
     [class.menu-open]="isSidebarOpen"
@@ -9,7 +9,7 @@
     <fa-icon [icon]="isSidebarOpen ? faTimes : faBars"></fa-icon>
   </button>
 
-  <!-- Logo do Portal de Mídias -->
+
   <div class="d-flex flex-column unit-info">
     <small>Você está aqui:</small>
     <div class="d-flex align-items-center gap-2 ">
@@ -23,15 +23,15 @@
     </div>
   </div>
 
-  <!-- Spacer -->
+
   <div class="flex-grow-1"></div>
 
-  <!-- Controles de Acessibilidade -->
+
   <div class="accessibility-controls d-flex align-items-center gap-2">
     <app-accessibility-controls buttonClass="text-white" />
   </div>
 
-  <!-- Ícone de Alerta -->
+
   <button 
     class="btn text-white p-2" 
     title="Alertas"
@@ -39,7 +39,7 @@
     <fa-icon [icon]="faBell"></fa-icon>
   </button>
 
-  <!-- Dropdown de Perfil do Usuário -->
+
   <div class="dropdown">
     <button 
       class="btn dropdown-toggle d-flex align-items-center gap-2 text-white p-2" 

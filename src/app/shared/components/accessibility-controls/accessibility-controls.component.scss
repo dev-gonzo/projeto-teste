@@ -1,11 +1,10 @@
-//Garantir que todos os ícones herdem a cor do texto do botão
 :host {
   .btn {
     mat-icon {
       color: inherit !important;
     }
   }
-  //Classes específicas do Bootstrap
+  
   .btn-outline-light {
     mat-icon {
       color: inherit !important;
@@ -25,7 +24,7 @@
       color: inherit !important;
     }
   }
-  //Classes de texto
+  
   .text-light {
     mat-icon {
       color: var(--color-primary-contrast) !important;
@@ -43,7 +42,7 @@
       color: var(--color-foreground) !important;
     }
   }
-  //Garantir que ícones sempre herdem a cor quando aplicada via style
+  
   button[style*="color"] {
     mat-icon {
       color: inherit !important;

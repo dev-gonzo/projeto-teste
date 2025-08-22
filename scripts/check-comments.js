@@ -37,13 +37,63 @@ class CommentChecker {
   }
 
   checkHtmlComments(filePath, content) {
-    // HTML comment validation disabled
-    return;
+    const matches = content.matchAll(config.patterns.htmlComments);
+    
+    for (const match of matches) {
+      const lines = content.substring(0, match.index).split('\n');
+      const line = lines.length;
+      const column = lines[lines.length - 1].length + 1;
+      
+      this.errors.push({
+        file: filePath,
+        line,
+        column,
+        message: 'HTML comments are not allowed',
+        content: match[0].trim()
+      });
+    }
   }
 
   checkCssComments(filePath, content) {
-    // CSS comments are now allowed - no validation needed
-    return;
+    // Check for block comments
+    const blockMatches = content.matchAll(config.patterns.cssComments.block);
+    
+    for (const match of blockMatches) {
+      const lines = content.substring(0, match.index).split('\n');
+      const line = lines.length;
+      const column = lines[lines.length - 1].length + 1;
+      
+      this.errors.push({
+        file: filePath,
+        line,
+        column,
+        message: 'CSS block comments are not allowed',
+        content: match[0].trim()
+      });
+    }
+
+    // Check for line comments (but exclude URLs with //)
+    const lineMatches = content.matchAll(config.patterns.cssComments.line);
+    
+    for (const match of lineMatches) {
+      // Skip if it's part of a URL (data: or http://)
+      const beforeMatch = content.substring(Math.max(0, match.index - 50), match.index);
+      if (beforeMatch.includes('url(') || beforeMatch.includes('data:') || beforeMatch.includes('http')) {
+        continue;
+      }
+      
+      const lines = content.substring(0, match.index).split('\n');
+      const line = lines.length;
+      const column = lines[lines.length - 1].length + 1;
+      
+      this.errors.push({
+        file: filePath,
+        line,
+        column,
+        message: 'CSS line comments are not allowed',
+        content: match[0].trim()
+      });
+    }
   }
 
   async scanDirectory() {

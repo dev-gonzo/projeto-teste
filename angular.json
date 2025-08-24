@@ -3,7 +3,7 @@
   "version": 1,
   "newProjectRoot": "projects",
   "projects": {
-    "portal-de-midias": {
+    "projeto-teste": {
       "projectType": "application",
       "schematics": {},
       "root": "",
@@ -62,10 +62,10 @@
           "builder": "@angular/build:dev-server",
           "configurations": {
             "production": {
-              "buildTarget": "portal-de-midias:build:production"
+              "buildTarget": "projeto-teste:build:production"
             },
             "development": {
-              "buildTarget": "portal-de-midias:build:development"
+              "buildTarget": "projeto-teste:build:development"
             }
           },
           "defaultConfiguration": "development"

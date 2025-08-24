@@ -1,6 +1,6 @@
-# Portal de Mídias - Almaviva Solutions
+# Projeto Teste
 
-Este repositório é um projeto de referência Angular 20 padronizado pela Almaviva Solutions, conforme as diretrizes do MITH (Modelo Interno de Trabalho Homologado). Ele serve como base para aplicações escaláveis, organizadas e modulares.
+Este repositório é um projeto de referência Angular 20 padronizado conforme as diretrizes do MITH (Modelo Interno de Trabalho Homologado). Ele serve como base para aplicações escaláveis, organizadas e modulares.
 
 ## Tecnologias
 

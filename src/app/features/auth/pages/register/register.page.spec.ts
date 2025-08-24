@@ -248,7 +248,7 @@ describe('RegisterPage', () => {
     it('should render register form elements', () => {
       const compiled = fixture.nativeElement as HTMLElement;
       
-      expect(compiled.querySelector('p')?.textContent).toContain('Crie sua conta no Portal de Mídias.');
+      expect(compiled.querySelector('p')?.textContent).toContain('Crie sua conta no Projeto Teste.');
       expect(compiled.querySelector('h2')?.textContent).toContain('Preencha os dados abaixo');
       expect(compiled.querySelector('app-form-wrapper')).toBeTruthy();
     });

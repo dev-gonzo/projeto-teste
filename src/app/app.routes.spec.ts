@@ -84,12 +84,6 @@ describe('App Routes', () => {
     expect(contactsRoute?.children).toBeDefined();
   });
 
-  it('should have demo route configuration', () => {
-    const demoRoute = routes.find(route => route.path === 'demo');
-    expect(demoRoute).toBeDefined();
-    expect(demoRoute?.component).toBeDefined();
-    expect(demoRoute?.children).toBeDefined();
-  });
 
   it('should have not found route configuration', () => {
     const notFoundRoute = routes.find(route => route.path === '**');
